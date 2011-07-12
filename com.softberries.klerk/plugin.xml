@@ -57,8 +57,23 @@
                   style="push"
                   tooltip="Exits the application">
             </command>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  id="settings"
+                  label="Settings"
+                  style="push"
+                  tooltip="Application Settings">
+            </command>
          </menu>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.softberries.klerk.preferences.DatabasePreferencePage"
+            id="com.softberries.klerk.preferences.database"
+            name="Database Preferences">
+      </page>
    </extension>
 
 </plugin>
