@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="RCP Perspective"
+            name="%perspective.name"
             class="com.softberries.klerk.Perspective"
             id="com.softberries.klerk.perspective">
       </perspective>
@@ -40,7 +40,7 @@
       <command
             defaultHandler="com.softberries.klerk.commands.ExitHandler"
             id="com.softberries.klerk.commands.exit"
-            name="Exit">
+            name="%command.name">
       </command>
    </extension>
    <extension
@@ -50,19 +50,19 @@
             locationURI="menu:org.eclipse.ui.main.menu">
          <menu
                id="fileMenu"
-               label="File">
+               label="%menu.label">
             <command
                   commandId="com.softberries.klerk.commands.exit"
-                  label="Exit"
+                  label="%command.label"
                   style="push"
-                  tooltip="Exits the application">
+                  tooltip="%command.tooltip">
             </command>
             <command
                   commandId="org.eclipse.ui.window.preferences"
                   id="settings"
-                  label="Settings"
+                  label="%command.label.0"
                   style="push"
-                  tooltip="Application Settings">
+                  tooltip="%command.tooltip.0">
             </command>
          </menu>
       </menuContribution>
@@ -72,7 +72,7 @@
       <page
             class="com.softberries.klerk.preferences.DatabasePreferencePage"
             id="com.softberries.klerk.preferences.database"
-            name="Database Preferences">
+            name="%page.name">
       </page>
    </extension>
 

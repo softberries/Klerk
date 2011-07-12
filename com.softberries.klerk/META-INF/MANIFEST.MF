@@ -1,11 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Klerk
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.softberries.klerk; singleton:=true
 Bundle-Version: 1.0.0.0
 Bundle-Activator: com.softberries.klerk.Activator
-Bundle-Vendor: SOFTBERRIES
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
+
