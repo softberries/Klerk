@@ -1,5 +1,8 @@
 package com.softberries.klerk.commands;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
@@ -10,6 +13,12 @@ public class ExitHandler implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		Map<String, Object> props = new HashMap<String,Object>();
+		props.put("eclipselink.ddl-generation", "create-tables");
+		props.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
+		props.put("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/klerk");
+		props.put("javax.persistence.jdbc.user", "root");
+		props.put("javax.persistence.jdbc.password", "adminadmin");
 		HandlerUtil.getActiveWorkbenchWindow(event).close();
 		return null;
 	}
