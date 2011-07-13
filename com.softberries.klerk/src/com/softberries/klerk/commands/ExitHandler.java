@@ -13,6 +13,7 @@ public class ExitHandler implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		
 		Map<String, Object> props = new HashMap<String,Object>();
 		props.put("eclipselink.ddl-generation", "create-tables");
 		props.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");

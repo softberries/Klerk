@@ -10,5 +10,4 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: messages
-Import-Package: org.eclipse.persistence.jpa
 
