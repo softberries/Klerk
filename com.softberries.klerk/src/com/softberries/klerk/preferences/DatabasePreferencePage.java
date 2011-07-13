@@ -1,39 +1,36 @@
 package com.softberries.klerk.preferences;
 
-import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class DatabasePreferencePage extends PreferencePage implements
+import com.softberries.klerk.Activator;
+
+public class DatabasePreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
 	public DatabasePreferencePage() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public DatabasePreferencePage(String title) {
-		super(title);
-		// TODO Auto-generated constructor stub
-	}
-
-	public DatabasePreferencePage(String title, ImageDescriptor image) {
-		super(title, image);
-		// TODO Auto-generated constructor stub
+		super(GRID);
 	}
 
 	@Override
 	public void init(IWorkbench workbench) {
-		// TODO Auto-generated method stub
-
+		setPreferenceStore(Activator.getDefault().getPreferenceStore());
+		setDescription("Database connection settings");
 	}
 
 	@Override
-	protected Control createContents(Composite parent) {
-		// TODO Auto-generated method stub
-		return null;
+	protected void createFieldEditors() {
+		addField(new StringFieldEditor("DB_URL", "&Database URL:",
+				getFieldEditorParent()));
+		addField(new StringFieldEditor("DB_NAME", "&Database name:",
+				getFieldEditorParent()));
+		addField(new StringFieldEditor("DB_USERNAME", "&Database username:",
+				getFieldEditorParent()));
+		StringFieldEditor sfePass = new StringFieldEditor("DB_PASSWORD", "&Database password:", getFieldEditorParent());
+		sfePass.getTextControl(getFieldEditorParent()).setEchoChar('*') ;
+		addField(sfePass);
 	}
 
 }
