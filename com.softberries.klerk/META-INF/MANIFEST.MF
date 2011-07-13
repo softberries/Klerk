@@ -6,8 +6,10 @@ Bundle-Version: 1.0.0.0
 Bundle-Activator: com.softberries.klerk.Activator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ com.softberries.klerk.dao;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: messages
+JPA-PersistenceUnits: com.softberries.klerk.pu
 

@@ -8,6 +8,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.ui.handlers.HandlerUtil;
+import com.softberries.klerk.dao.*;
+import com.softberries.klerk.dao.entity.Product;
 
 public class ExitHandler implements IHandler {
 
@@ -20,6 +22,11 @@ public class ExitHandler implements IHandler {
 		props.put("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/klerk");
 		props.put("javax.persistence.jdbc.user", "root");
 		props.put("javax.persistence.jdbc.password", "adminadmin");
+		ProductDAO dao = new ProductDAO();
+		Product p = new Product();
+		p.setCode("ABC");
+		p.setName("testowy produkt");
+		dao.createProduct(p);
 		HandlerUtil.getActiveWorkbenchWindow(event).close();
 		return null;
 	}
