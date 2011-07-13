@@ -1,6 +1,5 @@
 package com.softberries.klerk.preferences;
 
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -10,6 +9,8 @@ import com.softberries.klerk.Activator;
 public class DatabasePreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
+	private StringFieldEditor sfePass = null;
+	
 	public DatabasePreferencePage() {
 		super(GRID);
 	}
@@ -28,9 +29,16 @@ public class DatabasePreferencePage extends FieldEditorPreferencePage implements
 				getFieldEditorParent()));
 		addField(new StringFieldEditor("DB_USERNAME", "&Database username:",
 				getFieldEditorParent()));
-		StringFieldEditor sfePass = new StringFieldEditor("DB_PASSWORD", "&Database password:", getFieldEditorParent());
+		sfePass = new StringFieldEditor("DB_PASSWORD", "&Database password:", getFieldEditorParent());
 		sfePass.getTextControl(getFieldEditorParent()).setEchoChar('*') ;
 		addField(sfePass);
 	}
+
+	@Override
+	public void applyData(Object data) {
+		//check if connection can be established
+		super.applyData(data);
+	}
+	
 
 }
