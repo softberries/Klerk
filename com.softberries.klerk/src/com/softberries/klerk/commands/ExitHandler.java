@@ -8,11 +8,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.ui.handlers.HandlerUtil;
-import com.softberries.klerk.dao.*;
-import com.softberries.klerk.dao.entity.Product;
 
 public class ExitHandler implements IHandler {
-
+	private static final String PERSISTENCE_UNIT = "com.softberries.klerk.pu";
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
@@ -22,9 +20,7 @@ public class ExitHandler implements IHandler {
 		props.put("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/klerk");
 		props.put("javax.persistence.jdbc.user", "root");
 		props.put("javax.persistence.jdbc.password", "adminadmin");
-		ProductDAO dao = new ProductDAO();
 		
-		dao.createProduct("ABC","testowy produkt");
 		HandlerUtil.getActiveWorkbenchWindow(event).close();
 		return null;
 	}
