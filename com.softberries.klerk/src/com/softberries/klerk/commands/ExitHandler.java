@@ -23,10 +23,8 @@ public class ExitHandler implements IHandler {
 		props.put("javax.persistence.jdbc.user", "root");
 		props.put("javax.persistence.jdbc.password", "adminadmin");
 		ProductDAO dao = new ProductDAO();
-		Product p = new Product();
-		p.setCode("ABC");
-		p.setName("testowy produkt");
-		dao.createProduct(p);
+		
+		dao.createProduct("ABC","testowy produkt");
 		HandlerUtil.getActiveWorkbenchWindow(event).close();
 		return null;
 	}

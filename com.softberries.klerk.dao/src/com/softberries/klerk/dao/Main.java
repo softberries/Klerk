@@ -10,6 +10,6 @@ public class Main {
 		Product p = new Product();
 		p.setCode("ABC");
 		p.setName("testowy produkt");
-		dao.createProduct(p);
+		dao.createProduct(p.getCode(), p.getName());
 	}
 }

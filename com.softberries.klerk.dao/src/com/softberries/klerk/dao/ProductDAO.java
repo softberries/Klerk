@@ -45,10 +45,14 @@ public class ProductDAO {
 		em.close();
 		return products;
 	}
-	public void createProduct(Product p){
+	public void createProduct(String code, String name){
 		EntityManager em = factory.createEntityManager();
+//		Product p = new Product();
+//		p.setName(name);
+//		p.setCode(code);
 		em.getTransaction().begin();
-		em.persist(p);
+		Query query = em.createNativeQuery("insert into PRODUCT (name, code) values ('first product', 'zya')");
+		query.executeUpdate();
 		em.getTransaction().commit();
 		em.close();
 	}
