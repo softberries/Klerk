@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 
 public class  TreeParent extends TreeObject {
-	private ArrayList children;
+	private ArrayList<TreeObject> children;
 	
 	public TreeParent(String name, String iconId) {
 		super(name, iconId);
-		children = new ArrayList();
+		children = new ArrayList<TreeObject>();
 	}
 	public void addChild(TreeObject child) {
 		children.add(child);
