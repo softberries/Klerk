@@ -87,6 +87,11 @@
             id="com.softberries.klerk.gui.views.CategoriesView"
             name="%categories.name">
       </view>
+      <view
+            class="com.softberries.klerk.gui.views.DocumentDetailsView"
+            id="com.softberries.klerk.gui.views.DocumentDetailsView"
+            name="Document Details">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -95,6 +100,19 @@
             id="com.softberries.klerk.gui.editors.DocumentsEditor"
             name="%documents.name">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertiesView">
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="com.softberries.klerk.gui.properties.DocumentPropertiesPage"
+            icon="icons/document_library.png"
+            id="com.softberries.klerk.properties.DocumentProperties"
+            name="Document Properties"
+            objectClass="com.softberries.klerk.dao.to.Product">
+      </page>
    </extension>
 
 </plugin>

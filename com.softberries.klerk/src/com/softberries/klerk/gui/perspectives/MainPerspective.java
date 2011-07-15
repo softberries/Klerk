@@ -15,7 +15,8 @@ public class MainPerspective implements IPerspectiveFactory {
 		addViewShortcuts(layout);
 		addPerspectiveShortcuts(layout);
 		layout.setEditorAreaVisible(true);
-		layout.addView("com.softberries.klerk.gui.views.CategoriesView", IPageLayout.LEFT, 0.39f, IPageLayout.ID_EDITOR_AREA);
+		layout.addView("com.softberries.klerk.gui.views.CategoriesView", IPageLayout.LEFT, 0.25f, IPageLayout.ID_EDITOR_AREA);
+		layout.addView("com.softberries.klerk.gui.views.DocumentDetailsView", IPageLayout.RIGHT, 0.69f, IPageLayout.ID_EDITOR_AREA);
 	
 	}
 

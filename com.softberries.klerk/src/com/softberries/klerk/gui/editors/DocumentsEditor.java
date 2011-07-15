@@ -4,6 +4,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -15,12 +19,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
 
-public class DocumentsEditor extends EditorPart {
+public class DocumentsEditor extends EditorPart implements ISelectionChangedListener, ISelectionListener {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.DocumentsEditor"; //$NON-NLS-1$
 	private TableViewer viewer;
@@ -60,6 +67,8 @@ public class DocumentsEditor extends EditorPart {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 		viewer.getControl().setLayoutData(gridData);
+		viewer.addSelectionChangedListener(this);
+		getSite().getPage().addSelectionListener((ISelectionListener) this);
 	}
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
@@ -137,6 +146,18 @@ public class DocumentsEditor extends EditorPart {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
+	}
+
+	@Override
+	public void selectionChanged(SelectionChangedEvent event) {
+		IStructuredSelection selection = (IStructuredSelection) event
+				.getSelection();
+		System.out.println(selection.getFirstElement());
+	}
+
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		System.out.println(selection);
 	}
 
 }
