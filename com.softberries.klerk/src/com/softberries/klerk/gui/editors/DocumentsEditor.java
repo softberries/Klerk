@@ -4,6 +4,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -20,14 +22,19 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.part.NullEditorInput;
 import org.eclipse.ui.part.EditorPart;
 
 import com.softberries.klerk.dao.to.Product;
+import com.softberries.klerk.gui.editors.input.ProductEditorInput;
 import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
 
-public class DocumentsEditor extends EditorPart implements ISelectionChangedListener, ISelectionListener {
+public class DocumentsEditor extends EditorPart implements
+		ISelectionChangedListener, ISelectionListener, IDoubleClickListener {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.DocumentsEditor"; //$NON-NLS-1$
 	private TableViewer viewer;
@@ -69,6 +76,7 @@ public class DocumentsEditor extends EditorPart implements ISelectionChangedList
 		viewer.getControl().setLayoutData(gridData);
 		viewer.addSelectionChangedListener(this);
 		getSite().getPage().addSelectionListener((ISelectionListener) this);
+		viewer.addDoubleClickListener(this);
 	}
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
@@ -152,12 +160,30 @@ public class DocumentsEditor extends EditorPart implements ISelectionChangedList
 	public void selectionChanged(SelectionChangedEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) event
 				.getSelection();
-		System.out.println(selection.getFirstElement());
+		// System.out.println(selection.getFirstElement());
 	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		System.out.println(selection);
+		// System.out.println(selection);
+	}
+
+	@Override
+	public void doubleClick(DoubleClickEvent event) {
+		IWorkbenchPage page;
+		IStructuredSelection selection = (IStructuredSelection) event
+				.getSelection();
+		if (selection != null) {
+			Product p = (Product) selection.getFirstElement();
+			IEditorInput input = new ProductEditorInput(p);
+			page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage();
+			try {
+				page.openEditor(input, SingleDocumentEditor.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
