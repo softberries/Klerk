@@ -24,7 +24,9 @@ import org.eclipse.ui.part.ViewPart;
 
 
 
+import com.softberries.klerk.ICommandIds;
 import com.softberries.klerk.gui.helpers.IImageKeys;
+import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.tree.*;
 
 public class CategoriesView extends ViewPart implements ISelectionChangedListener, ITreeViewerListener, IDoubleClickListener {
@@ -115,17 +117,17 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 				.getActiveWorkbenchWindow();
 		IHandlerService service = (IHandlerService) this.getSite().getService(
 				IHandlerService.class);
-//		try {
-//			service.executeCommand(ICommandIds.CMD_OPEN, null);
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//		} catch (NotDefinedException e) {
-//			e.printStackTrace();
-//		} catch (NotEnabledException e) {
-//			e.printStackTrace();
-//		} catch (NotHandledException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS, null);
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (NotDefinedException e) {
+			e.printStackTrace();
+		} catch (NotEnabledException e) {
+			e.printStackTrace();
+		} catch (NotHandledException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

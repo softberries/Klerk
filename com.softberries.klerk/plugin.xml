@@ -42,6 +42,11 @@
             id="com.softberries.klerk.commands.exit"
             name="%command.name">
       </command>
+      <command
+            defaultHandler="com.softberries.klerk.commands.OpenDocumentsCommand"
+            id="com.softberries.klerk.commands.opendocuments"
+            name="OpenDocument">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -82,6 +87,14 @@
             id="com.softberries.klerk.gui.views.CategoriesView"
             name="%categories.name">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.softberries.klerk.gui.editors.DocumentsEditor"
+            id="com.softberries.klerk.gui.editors.DocumentsEditor"
+            name="%documents.name">
+      </editor>
    </extension>
 
 </plugin>
