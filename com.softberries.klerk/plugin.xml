@@ -14,9 +14,9 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="%perspective.name"
-            class="com.softberries.klerk.Perspective"
-            id="com.softberries.klerk.perspective">
+            class="com.softberries.klerk.gui.perspectives.MainPerspective"
+            id="com.softberries.klerk.gui.perspectives.MainPerspective"
+            name="%perspective.name">
       </perspective>
    </extension>
    <extension
@@ -74,6 +74,14 @@
             id="com.softberries.klerk.preferences.database"
             name="%page.name">
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="com.softberries.klerk.gui.views.CategoriesView"
+            id="com.softberries.klerk.gui.views.CategoriesView"
+            name="%categories.name">
+      </view>
    </extension>
 
 </plugin>

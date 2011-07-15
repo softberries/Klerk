@@ -21,18 +21,9 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="com.softberries.klerk.dao" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="javax.persistence" version="2.0.3" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.persistence.antlr" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.persistence.asm" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.persistence.core" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.persistence.jpa" version="2.3.0" match="greaterOrEqual"/>
       <import plugin="com.softberries.klerk.libraries.mysql" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="javax.xml.stream"/>
-      <import plugin="javax.mail.glassfish"/>
-      <import plugin="org.eclipse.net4j.jms.api"/>
-      <import plugin="javax.activation"/>
-      <import plugin="org.apache.ant"/>
+      <import plugin="com.softberries.klerk.libraries.eclipselink" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
