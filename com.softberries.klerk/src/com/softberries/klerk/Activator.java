@@ -1,8 +1,16 @@
 package com.softberries.klerk;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+
+import com.softberries.klerk.gui.helpers.IImageKeys;
+
 
 /**
  * The activator class controls the plug-in life cycle
@@ -58,4 +66,15 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
+	@Override
+    protected void initializeImageRegistry(ImageRegistry registry) {
+        super.initializeImageRegistry(registry);
+        Bundle bundle = Platform.getBundle(PLUGIN_ID);
+
+        ImageDescriptor webpageFeed = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.WEBPAGE_FEED), null));
+        registry.put(IImageKeys.WEBPAGE_FEED, webpageFeed);
+        
+        ImageDescriptor webpageRoot = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.WEBPAGE_ROOT), null));
+        registry.put(IImageKeys.WEBPAGE_ROOT, webpageRoot);
+    }
 }
