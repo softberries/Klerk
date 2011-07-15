@@ -6,3 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SOFTBERRIES
 Require-Bundle: org.eclipse.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.softberries.klerk.dao,
+ com.softberries.klerk.dao.to
