@@ -1,5 +1,6 @@
 package com.softberries.klerk.gui.editors;
 
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -34,20 +35,22 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.softberries.klerk.dao.to.Document;
-import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
-import com.softberries.klerk.gui.helpers.table.DocumentComparator;
-import com.softberries.klerk.gui.helpers.table.DocumentFilter;
-import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
+import com.softberries.klerk.dao.to.Product;
+import com.softberries.klerk.gui.editors.input.ProductEditorInput;
+import com.softberries.klerk.gui.editors.input.ProductEditorInput;
+import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
+import com.softberries.klerk.gui.helpers.table.ProductComparator;
+import com.softberries.klerk.gui.helpers.table.ProductFilter;
 
-public class DocumentsEditor extends EditorPart implements IDoubleClickListener {
+public class ProductsEditor extends EditorPart implements
+		ISelectionChangedListener, ISelectionListener, IDoubleClickListener {
 
-	public static final String ID = "com.softberries.klerk.gui.editors.DocumentsEditor"; //$NON-NLS-1$
+	public static final String ID = "com.softberries.klerk.gui.editors.ProductsEditor"; //$NON-NLS-1$
 	private TableViewer viewer;
-	private DocumentComparator comparator;
-	private DocumentFilter filter;
+	private ProductComparator comparator;
+	private ProductFilter filter;
 
-	public DocumentsEditor() {
+	public ProductsEditor() {
 	}
 
 	/**
@@ -66,7 +69,7 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 				| GridData.HORIZONTAL_ALIGN_FILL));
 		createViewer(parent);
 		// Set the sorter for the table
-		comparator = new DocumentComparator();
+		comparator = new ProductComparator();
 		viewer.setComparator(comparator);
 		// New to support the search
 		searchText.addKeyListener(new KeyAdapter() {
@@ -76,7 +79,7 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 			}
 
 		});
-		filter = new DocumentFilter();
+		filter = new ProductFilter();
 		viewer.addFilter(filter);
 	}
 
@@ -91,7 +94,7 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 		viewer.setContentProvider(new ArrayContentProvider());
 		// Get the content for the viewer, setInput will call getElements in the
 		// contentProvider
-		viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments());
+		viewer.setInput(ProductsModelProvider.INSTANCE.getProducts());
 		// Make the selection available to other views
 		getSite().setSelectionProvider(viewer);
 		// Set the sorter for the viewer
@@ -104,56 +107,40 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 		viewer.getControl().setLayoutData(gridData);
+		viewer.addSelectionChangedListener(this);
+		getSite().getPage().addSelectionListener((ISelectionListener) this);
 		viewer.addDoubleClickListener(this);
 	}
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Title", "Notes", "Date Created", "Place Created", "Creator" };
-		int[] bounds = { 100, 100, 100, 100, 100 };
+		String[] titles = { "Code", "Name", "Description"};
+		int[] bounds = { 100, 200, 100 };
 
-		// First column is for the title
+		// First column is for the code
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new CellLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getTitle());
+				cell.setText(((Product) cell.getElement()).getCode());
 			}
 		});
 
-		// Second column is for the notes
+		// Second column is for the name
 		col = createTableViewerColumn(titles[1], bounds[1], 1);
 		col.setLabelProvider(new CellLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getNotes());
+				cell.setText(((Product) cell.getElement()).getName());
 			}
 		});
-		// Now the date
+		// Now the description
 		col = createTableViewerColumn(titles[2], bounds[2], 2);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getDateCreated().toLocaleString());
+				cell.setText(((Product) cell.getElement()).getDescription());
 			}
 		});
-		//place
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getPlaceCreated());
-			}
-		});
-		//creator
-		col = createTableViewerColumn(titles[4], bounds[4], 4);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public void update(ViewerCell cell) {
-				Document doc = ((Document) cell.getElement());
-				cell.setText(doc.getCreator().getFirstName() + " " + doc.getCreator().getLastName());
-			}
-		});
-
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound,
@@ -217,17 +204,29 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 	}
 
 	@Override
+	public void selectionChanged(SelectionChangedEvent event) {
+		IStructuredSelection selection = (IStructuredSelection) event
+				.getSelection();
+		// System.out.println(selection.getFirstElement());
+	}
+
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		// System.out.println(selection);
+	}
+
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		IWorkbenchPage page;
 		IStructuredSelection selection = (IStructuredSelection) event
 				.getSelection();
 		if (selection != null) {
-			Document d = (Document) selection.getFirstElement();
-			IEditorInput input = new DocumentEditorInput(d);
+			Product d = (Product) selection.getFirstElement();
+			IEditorInput input = new ProductEditorInput(d);
 			page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage();
 			try {
-				page.openEditor(input, SingleDocumentEditor.ID);
+				page.openEditor(input, SingleProductEditor.ID);
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}

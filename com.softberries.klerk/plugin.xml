@@ -43,9 +43,14 @@
             name="%command.name">
       </command>
       <command
-            defaultHandler="com.softberries.klerk.commands.OpenDocumentsCommand"
-            id="com.softberries.klerk.commands.opendocuments"
-            name="OpenDocument">
+            defaultHandler="com.softberries.klerk.commands.OpenInvoicesCommand"
+            id="com.softberries.klerk.commands.opendocuments_invoices"
+            name="Invoices">
+      </command>
+      <command
+            defaultHandler="com.softberries.klerk.commands.OpenProductsCommand"
+            id="com.softberries.klerk.commands.openinventory_products"
+            name="Products">
       </command>
    </extension>
    <extension
@@ -107,6 +112,19 @@
             icon="icons/document_library.png"
             id="com.softberries.klerk.gui.editors.SingleDocument"
             name="Single Document">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.ProductsEditor"
+            icon="icons/document_library.png"
+            id="com.softberries.klerk.gui.editors.ProductsEditor"
+            name="Products">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.SingleProductEditor"
+            default="false"
+            icon="icons/document_library.png"
+            id="com.softberries.klerk.gui.editors.SingleProduct"
+            name="Single Product">
       </editor>
    </extension>
    <extension

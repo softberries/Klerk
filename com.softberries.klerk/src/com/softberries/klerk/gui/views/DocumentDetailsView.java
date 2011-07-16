@@ -4,17 +4,19 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.ViewPart;
 
-import com.softberries.klerk.dao.to.Product;
+import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.gui.editors.DocumentsEditor;
 
 public class DocumentDetailsView extends ViewPart implements ISelectionListener {
@@ -47,7 +49,8 @@ public class DocumentDetailsView extends ViewPart implements ISelectionListener 
 		createActions();
 		initializeToolBar();
 		initializeMenu();
-		getSite().getPage().addSelectionListener(DocumentsEditor.ID,(ISelectionListener)this);
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(DocumentsEditor.ID,(ISelectionListener)this);
 	}
 
 	/**
@@ -82,9 +85,9 @@ public class DocumentDetailsView extends ViewPart implements ISelectionListener 
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		System.out.println("SELECTION: " + sel);
 		Object selection = ((IStructuredSelection) sel).getFirstElement();
-		if(selection != null && selection instanceof Product){
-			Product p = (Product)selection;
-			this.lblTest.setText(p.getName());
+		if(selection != null && selection instanceof Document){
+			Document p = (Document)selection;
+			this.lblTest.setText(p.getTitle());
 		}
 	}
 

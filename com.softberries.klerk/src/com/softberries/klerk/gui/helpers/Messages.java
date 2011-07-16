@@ -7,6 +7,8 @@ public class Messages extends NLS {
 	public static String CategoriesView_all_Categories;
 	public static String CategoriesView_documents;
 	public static String CategoriesView_inventory;
+	public static String CategoriesView_invoices;
+	public static String CategoriesView_products;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

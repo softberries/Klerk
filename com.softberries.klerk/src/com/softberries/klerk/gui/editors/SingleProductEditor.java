@@ -7,14 +7,14 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.dao.to.Product;
 
-public class SingleDocumentEditor extends EditorPart {
+public class SingleProductEditor extends EditorPart {
 
-	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument";
-	private Document document;
+	public static final String ID = "com.softberries.klerk.gui.editors.SingleProduct";
+	private Product product;
 	
-	public SingleDocumentEditor() {
+	public SingleProductEditor() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -35,8 +35,8 @@ public class SingleDocumentEditor extends EditorPart {
 			throws PartInitException {
 		setSite(site);
 		setInput(input);
-		document = (Document) input.getAdapter(Document.class);
-		setPartName(document.getTitle());
+		product = (Product) input.getAdapter(Product.class);
+		setPartName(product.getName());
 	}
 
 	@Override

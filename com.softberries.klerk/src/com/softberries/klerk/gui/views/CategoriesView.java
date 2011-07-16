@@ -25,6 +25,7 @@ import org.eclipse.ui.part.ViewPart;
 
 
 import com.softberries.klerk.ICommandIds;
+import com.softberries.klerk.commands.OpenInvoicesCommand;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.tree.*;
@@ -90,35 +91,48 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 	}
 
 	private TreeObject createDummyModel() {
-		TreeObject to1 = new TreeObject(Messages.CategoriesView_documents,
-				IImageKeys.WEBPAGE_FEED);
-		TreeObject to2 = new TreeObject(Messages.CategoriesView_inventory,
-				IImageKeys.WEBPAGE_FEED);
-		TreeParent p1 = new TreeParent(Messages.CategoriesView_all_Categories, IImageKeys.WEBPAGE_ROOT);
-		p1.addChild(to1);
-		p1.addChild(to2);
+		TreeObject invoices = new TreeObject(Messages.CategoriesView_invoices,
+				IImageKeys.MAIN_CATEGORY);
+		TreeObject products = new TreeObject(Messages.CategoriesView_products,
+				IImageKeys.MAIN_CATEGORY);
+		
+		TreeParent docs = new TreeParent(Messages.CategoriesView_documents,
+				IImageKeys.MAIN_CATEGORY);
+		TreeParent inventory = new TreeParent(Messages.CategoriesView_inventory,
+				IImageKeys.MAIN_CATEGORY);
+		docs.addChild(invoices);
+		inventory.addChild(products);
+		
+		TreeParent p1 = new TreeParent(Messages.CategoriesView_all_Categories, IImageKeys.ALL_CATEGORIES);
+		p1.addChild(docs);
+		p1.addChild(inventory);
 
-		TreeParent root = new TreeParent("", IImageKeys.WEBPAGE_ROOT); //$NON-NLS-1$
+		TreeParent root = new TreeParent("", IImageKeys.ALL_CATEGORIES); //$NON-NLS-1$
 		root.addChild(p1);
 		return root;
 	}
 
 	@Override
 	public void doubleClick(DoubleClickEvent event) {
+		TreeObject selectedDomainObject = null;
 		if (viewer.getSelection().isEmpty()) {
 			return;
 		} else {
 			IStructuredSelection selection = (IStructuredSelection) viewer
 					.getSelection();
-			TreeObject selectedDomainObject = (TreeObject) selection.getFirstElement();
-			System.out.println(selectedDomainObject);
+			selectedDomainObject = (TreeObject) selection.getFirstElement();
+			System.out.println(selectedDomainObject + " Messages: " + Messages.CategoriesView_invoices);
 		}
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
-		IHandlerService service = (IHandlerService) this.getSite().getService(
-				IHandlerService.class);
 		try {
-			service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS, null);
+			IWorkbenchWindow window = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow();
+			IHandlerService service = (IHandlerService) this.getSite().getService(
+					IHandlerService.class);
+			if(Messages.CategoriesView_invoices.toString().equals(selectedDomainObject.toString())){
+				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_INVOICES, null);
+			}else if(Messages.CategoriesView_products.toString().equals(selectedDomainObject.toString())){
+				service.executeCommand(ICommandIds.CMD_OPEN_INVENTORY_PRODUCTS, null);
+			}
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		} catch (NotDefinedException e) {

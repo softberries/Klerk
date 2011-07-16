@@ -8,14 +8,14 @@ import com.softberries.klerk.dao.*;
 public enum DocumentsModelProvider {
 	INSTANCE;
 
-	private List<Product> products;
+	private List<Document> documents;
 
 	private DocumentsModelProvider() {
-		products = new ProductDao().findAllProducts();
+		documents = new DocumentDao().findAllDocuments();
 	}
 
-	public List<Product> getProducts() {
-		return products;
+	public List<Document> getDocuments() {
+		return documents;
 	}
 
 }

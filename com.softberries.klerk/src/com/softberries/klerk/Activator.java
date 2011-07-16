@@ -71,10 +71,10 @@ public class Activator extends AbstractUIPlugin {
         super.initializeImageRegistry(registry);
         Bundle bundle = Platform.getBundle(PLUGIN_ID);
 
-        ImageDescriptor webpageFeed = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.WEBPAGE_FEED), null));
-        registry.put(IImageKeys.WEBPAGE_FEED, webpageFeed);
+        ImageDescriptor webpageFeed = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.MAIN_CATEGORY), null));
+        registry.put(IImageKeys.MAIN_CATEGORY, webpageFeed);
         
-        ImageDescriptor webpageRoot = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.WEBPAGE_ROOT), null));
-        registry.put(IImageKeys.WEBPAGE_ROOT, webpageRoot);
+        ImageDescriptor webpageRoot = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.ALL_CATEGORIES), null));
+        registry.put(IImageKeys.ALL_CATEGORIES, webpageRoot);
     }
 }
