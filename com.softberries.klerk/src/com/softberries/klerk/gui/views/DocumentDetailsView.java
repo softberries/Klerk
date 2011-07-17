@@ -50,7 +50,8 @@ public class DocumentDetailsView extends ViewPart implements ISelectionListener 
 		initializeToolBar();
 		initializeMenu();
 		IWorkbench workbench = PlatformUI.getWorkbench();
-		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(DocumentsEditor.ID,(ISelectionListener)this);
+//		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(DocumentsEditor.ID,(ISelectionListener)this);
+		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(this);
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class DocumentDetailsView extends ViewPart implements ISelectionListener 
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		System.out.println("SELECTION: " + sel);
+		System.out.println("SELECTION: " + sel + "PART: " + part);
 		Object selection = ((IStructuredSelection) sel).getFirstElement();
 		if(selection != null && selection instanceof Document){
 			Document p = (Document)selection;
