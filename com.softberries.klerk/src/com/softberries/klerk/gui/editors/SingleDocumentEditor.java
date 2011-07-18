@@ -1,40 +1,36 @@
 package com.softberries.klerk.gui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 
 import com.softberries.klerk.dao.to.Document;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.ColumnLayoutData;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.SWT;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.ui.forms.widgets.FormText;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.custom.ScrolledComposite;
 
 public class SingleDocumentEditor extends EditorPart {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument";
 	private Document document;
-	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
-	private Text txtNewText;
-	
+	private FormToolkit toolkit;
+	private ScrolledForm form;
+
 	public SingleDocumentEditor() {
 		// TODO Auto-generated constructor stub
 	}
@@ -74,46 +70,42 @@ public class SingleDocumentEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
+		toolkit = new FormToolkit(parent.getDisplay());
+		form = toolkit.createScrolledForm(parent);
+		form.setText("INVOICE: " + this.document.getTitle());
+		TableWrapLayout layout = new TableWrapLayout();
+		form.getBody().setLayout(layout);
 		
-		ScrolledForm scrldfrmNewInvoice = formToolkit.createScrolledForm(parent);
-		formToolkit.paintBordersFor(scrldfrmNewInvoice);
-		scrldfrmNewInvoice.setText("New Invoice");
-		scrldfrmNewInvoice.getBody().setLayout(new ColumnLayout());
-		
-		Label lblTitle = formToolkit.createLabel(scrldfrmNewInvoice.getBody(), "Title:", SWT.NONE);
-		ColumnLayoutData cld_lblTitle = new ColumnLayoutData();
-		cld_lblTitle.heightHint = 18;
-		cld_lblTitle.widthHint = 175;
-		lblTitle.setLayoutData(cld_lblTitle);
-		
-		txtNewText = formToolkit.createText(scrldfrmNewInvoice.getBody(), "New Text", SWT.NONE);
-		ColumnLayoutData cld_txtNewText = new ColumnLayoutData();
-		cld_txtNewText.widthHint = 334;
-		txtNewText.setLayoutData(cld_txtNewText);
-		
-		Label lblNewLabel = formToolkit.createLabel(scrldfrmNewInvoice.getBody(), "Creator:", SWT.NONE);
-		
-		ComboViewer comboViewer = new ComboViewer(scrldfrmNewInvoice.getBody(), SWT.NONE);
-		Combo combo = comboViewer.getCombo();
-		formToolkit.paintBordersFor(combo);
-		
-		Label lblNewLabel_1 = formToolkit.createLabel(scrldfrmNewInvoice.getBody(), "Date created:", SWT.NONE);
-		
-		DateTime dateTime = new DateTime(scrldfrmNewInvoice.getBody(), SWT.BORDER);
-		formToolkit.adapt(dateTime);
-		formToolkit.paintBordersFor(dateTime);
-		
-		ScrolledComposite scrolledComposite = new ScrolledComposite(scrldfrmNewInvoice.getBody(), SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-		ColumnLayoutData cld_scrolledComposite = new ColumnLayoutData();
-		cld_scrolledComposite.heightHint = 200;
-		scrolledComposite.setLayoutData(cld_scrolledComposite);
-		formToolkit.adapt(scrolledComposite);
-		formToolkit.paintBordersFor(scrolledComposite);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		// TODO Auto-generated method stub
+		layout.numColumns = 2;
+		TableWrapData td = new TableWrapData();
+		td.colspan = 2;
+		Label label = toolkit.createLabel(form.getBody(), "Text field label:");
+		Text text = toolkit.createText(form.getBody(), "");
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		text.setLayoutData(td);
+		Button button = toolkit.createButton(form.getBody(),
+				"A checkbox in a form", SWT.CHECK);
+		td = new TableWrapData();
+		td.colspan = 2;
+		button.setLayoutData(td);
+		Section section = toolkit.createSection(form.getBody(),
+				Section.DESCRIPTION | Section.TITLE_BAR | Section.TWISTIE
+						| Section.EXPANDED);
+		td = new TableWrapData(TableWrapData.FILL);
+		td.colspan = 2;
+		section.setLayoutData(td);
+		section.addExpansionListener(new ExpansionAdapter() {
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		section.setText("Section title");
+		section.setDescription("This is the description that goes below the title");
+		Composite sectionClient = toolkit.createComposite(section);
+		sectionClient.setLayout(new GridLayout());
+		button = toolkit.createButton(sectionClient, "Radio 1", SWT.RADIO);
+		button = toolkit.createButton(sectionClient, "Radio 2", SWT.RADIO);
+		section.setClient(sectionClient);
 
 	}
 
