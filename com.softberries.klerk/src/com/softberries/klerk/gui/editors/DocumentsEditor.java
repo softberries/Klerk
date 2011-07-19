@@ -108,8 +108,9 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 	}
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Title", "Notes", "Date Created", "Place Created", "Creator" };
-		int[] bounds = { 100, 100, 100, 100, 100 };
+		String[] titles = { "Title", "Notes", "Date Created", "Transaction Date", "Due Date", "Place Created",
+				"Creator" };
+		int[] bounds = { 100, 100, 100, 100, 100, 100, 100 };
 
 		// First column is for the title
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
@@ -128,29 +129,49 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 				cell.setText(((Document) cell.getElement()).getNotes());
 			}
 		});
-		// Now the date
+		// Now the date (created)
 		col = createTableViewerColumn(titles[2], bounds[2], 2);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getDateCreated().toLocaleString());
+				cell.setText(((Document) cell.getElement()).getCreatedDate()
+						.toLocaleString());
 			}
 		});
-		//place
+		// Now the date (transaction)
 		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				cell.setText(((Document) cell.getElement())
+						.getTransactionDate().toLocaleString());
+			}
+		});
+		// Now the date (due)
+		col = createTableViewerColumn(titles[4], bounds[4], 4);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				cell.setText(((Document) cell.getElement()).getDueDate()
+						.toLocaleString());
+			}
+		});
+		// place
+		col = createTableViewerColumn(titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
 				cell.setText(((Document) cell.getElement()).getPlaceCreated());
 			}
 		});
-		//creator
-		col = createTableViewerColumn(titles[4], bounds[4], 4);
+		// creator
+		col = createTableViewerColumn(titles[6], bounds[6], 6);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
 				Document doc = ((Document) cell.getElement());
-				cell.setText(doc.getCreator().getFirstName() + " " + doc.getCreator().getLastName());
+				cell.setText(doc.getCreator().getFirstName() + " "
+						+ doc.getCreator().getLastName());
 			}
 		});
 

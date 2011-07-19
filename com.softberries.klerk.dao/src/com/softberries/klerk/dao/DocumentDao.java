@@ -17,7 +17,9 @@ public class DocumentDao {
 			p.setFirstName("Krzysztof");
 			p.setLastName("Grajek");
 			d.setCreator(p);
-			d.setDateCreated(new Date());
+			d.setCreatedDate(new Date());
+			d.setTransactionDate(new Date());
+			d.setDueDate(new Date());
 			d.setNotes("notes for the document " + i);
 			d.setPlaceCreated("Gdańsk");
 			d.setTitle("Faktura Sprzedaży " + i);

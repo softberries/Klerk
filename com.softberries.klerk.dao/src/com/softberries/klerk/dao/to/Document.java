@@ -7,11 +7,25 @@ public class Document implements Serializable{
 
 	private String title;
 	private String notes;
-	private Date dateCreated;
+	private Date createdDate;
+	private Date transactionDate;
+	private Date dueDate;
 	private String placeCreated;
 	private Person creator;
 	
 	
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+	public Date getDueDate() {
+		return dueDate;
+	}
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -24,11 +38,11 @@ public class Document implements Serializable{
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	public Date getDateCreated() {
-		return dateCreated;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
+	public void setCreatedDate(Date dateCreated) {
+		this.createdDate = dateCreated;
 	}
 	public String getPlaceCreated() {
 		return placeCreated;

@@ -44,12 +44,18 @@ public class DocumentComparator extends ViewerComparator {
 			rc = p1.getCreator().getFirstName().compareTo(p2.getCreator().getFirstName());
 			break;
 		case 2:
-			rc = p1.getDateCreated().compareTo(p2.getDateCreated());
+			rc = p1.getCreatedDate().compareTo(p2.getCreatedDate());
 			break;
 		case 3:
-			rc = p1.getNotes().compareTo(p2.getNotes());
+			rc = p1.getTransactionDate().compareTo(p2.getTransactionDate());
 			break;
 		case 4:
+			rc = p1.getDueDate().compareTo(p2.getDueDate());
+			break;
+		case 5:
+			rc = p1.getNotes().compareTo(p2.getNotes());
+			break;
+		case 6:
 			rc = p1.getPlaceCreated().compareTo(p2.getPlaceCreated());
 			break;
 		default:

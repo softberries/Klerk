@@ -1,40 +1,41 @@
 package com.softberries.klerk.gui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 
 import com.softberries.klerk.dao.to.Document;
-import org.eclipse.ui.forms.widgets.ColumnLayout;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.ColumnLayoutData;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.SWT;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.ui.forms.widgets.FormText;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.layout.GridLayout;
 
 public class SingleDocumentEditor extends EditorPart {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument";
 	private Document document;
-	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
+	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
+	private ScrolledForm form;
 	private Text txtNewText;
-	
+
 	public SingleDocumentEditor() {
 		// TODO Auto-generated constructor stub
 	}
@@ -74,47 +75,114 @@ public class SingleDocumentEditor extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		ScrolledForm scrldfrmNewInvoice = formToolkit.createScrolledForm(parent);
-		formToolkit.paintBordersFor(scrldfrmNewInvoice);
-		scrldfrmNewInvoice.setText("New Invoice");
-		scrldfrmNewInvoice.getBody().setLayout(new ColumnLayout());
-		
-		Label lblTitle = formToolkit.createLabel(scrldfrmNewInvoice.getBody(), "Title:", SWT.NONE);
-		ColumnLayoutData cld_lblTitle = new ColumnLayoutData();
-		cld_lblTitle.heightHint = 18;
-		cld_lblTitle.widthHint = 175;
-		lblTitle.setLayoutData(cld_lblTitle);
-		
-		txtNewText = formToolkit.createText(scrldfrmNewInvoice.getBody(), "New Text", SWT.NONE);
-		ColumnLayoutData cld_txtNewText = new ColumnLayoutData();
-		cld_txtNewText.widthHint = 334;
-		txtNewText.setLayoutData(cld_txtNewText);
-		
-		Label lblNewLabel = formToolkit.createLabel(scrldfrmNewInvoice.getBody(), "Creator:", SWT.NONE);
-		
-		ComboViewer comboViewer = new ComboViewer(scrldfrmNewInvoice.getBody(), SWT.NONE);
-		Combo combo = comboViewer.getCombo();
-		formToolkit.paintBordersFor(combo);
-		
-		Label lblNewLabel_1 = formToolkit.createLabel(scrldfrmNewInvoice.getBody(), "Date created:", SWT.NONE);
-		
-		DateTime dateTime = new DateTime(scrldfrmNewInvoice.getBody(), SWT.BORDER);
-		formToolkit.adapt(dateTime);
-		formToolkit.paintBordersFor(dateTime);
-		
-		ScrolledComposite scrolledComposite = new ScrolledComposite(scrldfrmNewInvoice.getBody(), SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-		ColumnLayoutData cld_scrolledComposite = new ColumnLayoutData();
-		cld_scrolledComposite.heightHint = 200;
-		scrolledComposite.setLayoutData(cld_scrolledComposite);
-		formToolkit.adapt(scrolledComposite);
-		formToolkit.paintBordersFor(scrolledComposite);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		// TODO Auto-generated method stub
+		form = toolkit.createScrolledForm(parent);
+		form.setText("INVOICE: " + document.getTitle());
+		TableWrapLayout twlayout = new TableWrapLayout();
+		twlayout.numColumns = 2;
+		form.getBody().setLayout(twlayout);
 
+		// general section
+		Section sectionGeneral = toolkit.createSection(form.getBody(),
+				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+		sectionGeneral.setText("Main");
+		sectionGeneral.addExpansionListener(new ExpansionAdapter() {
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+
+		toolkit.createCompositeSeparator(sectionGeneral);
+		sectionGeneral.setDescription("Invoice main properties");
+		Composite sectionGeneralClient = toolkit
+				.createComposite(sectionGeneral);
+		TableWrapLayout twLayoutSectionGeneral = new TableWrapLayout();
+		twLayoutSectionGeneral.numColumns = 2;
+		sectionGeneralClient.setLayout(twLayoutSectionGeneral);
+		// invoice title
+		Label titleLbl = toolkit.createLabel(sectionGeneralClient, "Title:");
+		Text titleTxt = toolkit.createText(sectionGeneralClient,
+				this.document.getTitle(), SWT.BORDER);
+		titleTxt.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		// invoice created date
+		Label createdDateLbl = toolkit.createLabel(sectionGeneralClient,
+				"Created Date:");
+		DateTime createDate = new DateTime(sectionGeneralClient, SWT.DATE
+				| SWT.BORDER);
+		// invoice transaction date
+		Label transactionDateLbl = toolkit.createLabel(sectionGeneralClient,
+				"Transaction Date:");
+		DateTime transactionDate = new DateTime(sectionGeneralClient, SWT.DATE
+				| SWT.BORDER);
+		// invoice transaction date
+		Label dueDateLbl = toolkit.createLabel(sectionGeneralClient,
+				"Due Date:");
+		DateTime dueDate = new DateTime(sectionGeneralClient, SWT.DATE
+				| SWT.BORDER);
+		toolkit.adapt(createDate);
+		sectionGeneral.setClient(sectionGeneralClient);
+		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
+		data.colspan = 2;
+		sectionGeneral.setLayoutData(data);
+		// invoid items section
+		Section sectionItems = toolkit.createSection(form.getBody(),
+				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+		sectionItems.setText("Invoice items");
+		sectionItems.addExpansionListener(new ExpansionAdapter() {
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		toolkit.createCompositeSeparator(sectionItems);
+		sectionItems.setDescription("List of items:");
+		Composite sectionItemsClient = toolkit.createComposite(sectionItems);
+		TableWrapLayout twLayoutSectionItems = new TableWrapLayout();
+		twLayoutSectionItems.numColumns = 2;
+		sectionItemsClient.setLayout(twLayoutSectionItems);
+		sectionItems.setClient(sectionItemsClient);
+		data = new TableWrapData(TableWrapData.FILL_GRAB);
+		data.colspan = 2;
+		sectionItems.setLayoutData(data);
+		// section summary
+		Section sectionSummary = toolkit.createSection(form.getBody(),
+				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+		sectionSummary.setText("Invoice Summary");
+		sectionSummary.addExpansionListener(new ExpansionAdapter() {
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		toolkit.createCompositeSeparator(sectionSummary);
+		sectionSummary.setDescription("Summary");
+		Composite sectionSummaryClient = toolkit
+				.createComposite(sectionSummary);
+		TableWrapLayout twLayoutSectionSummary = new TableWrapLayout();
+		twLayoutSectionSummary.numColumns = 2;
+		sectionSummaryClient.setLayout(twLayoutSectionSummary);
+		sectionSummary.setClient(sectionSummaryClient);
+		data = new TableWrapData(TableWrapData.FILL_GRAB);
+		data.colspan = 2;
+		sectionSummary.setLayoutData(data);
+
+		// section notes
+		Section sectionNotes = toolkit.createSection(form.getBody(),
+				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+		sectionNotes.setText("Notes");
+		sectionNotes.addExpansionListener(new ExpansionAdapter() {
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
+		});
+		toolkit.createCompositeSeparator(sectionNotes);
+		Composite sectionNotesClient = toolkit.createComposite(sectionNotes);
+		TableWrapLayout twLayoutsectionNotes = new TableWrapLayout();
+		twLayoutsectionNotes.numColumns = 2;
+		sectionNotesClient.setLayout(twLayoutsectionNotes);
+		Label notesLbl = toolkit.createLabel(sectionNotesClient,
+				this.document.getNotes());
+		sectionNotes.setClient(sectionNotesClient);
+		data = new TableWrapData(TableWrapData.FILL_GRAB);
+		data.colspan = 2;
+		sectionNotes.setLayoutData(data);
 	}
 
 	@Override
