@@ -1,53 +1,39 @@
 package com.softberries.klerk.dao.to;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class Person implements Serializable{
+public class Company {
 
-	private String firstName;
-	private String lastName;
-	private List<Address> addresses;
+	private String name;
+	private String vatid;
 	private String telephone;
 	private String mobile;
 	private String email;
 	private String www;
-	
+	private List<Address> addresses;
 	/**
-	 * @return the addresses
+	 * @return the name
 	 */
-	public List<Address> getAddresses() {
-		return addresses;
+	public String getName() {
+		return name;
 	}
 	/**
-	 * @param addresses the addresses to set
+	 * @param name the name to set
 	 */
-	public void setAddresses(List<Address> addresses) {
-		this.addresses = addresses;
+	public void setName(String name) {
+		this.name = name;
 	}
 	/**
-	 * @return the firstName
+	 * @return the vatid
 	 */
-	public String getFirstName() {
-		return firstName;
+	public String getVatid() {
+		return vatid;
 	}
 	/**
-	 * @param firstName the firstName to set
+	 * @param vatid the vatid to set
 	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
-	/**
-	 * @param lastName the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setVatid(String vatid) {
+		this.vatid = vatid;
 	}
 	/**
 	 * @return the telephone
@@ -97,5 +83,18 @@ public class Person implements Serializable{
 	public void setWww(String www) {
 		this.www = www;
 	}
+	/**
+	 * @return the addresses
+	 */
+	public List<Address> getAddresses() {
+		return addresses;
+	}
+	/**
+	 * @param addresses the addresses to set
+	 */
+	public void setAddresses(List<Address> addresses) {
+		this.addresses = addresses;
+	}
+	
 	
 }
