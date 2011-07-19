@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Money
+Bundle-SymbolicName: com.softberries.klerk.money; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.softberries.klerk.money.Activator
+Bundle-Vendor: SOFTBERRIES
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: com.softberries.klerk.money

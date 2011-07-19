@@ -1,20 +1,8 @@
-package com.softberries.klerk;
+package com.softberries.klerk.money;
 
-import java.math.RoundingMode;
-import java.util.Currency;
-
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import com.softberries.klerk.money.*;
-
-import com.softberries.klerk.gui.helpers.IImageKeys;
-
 
 /**
  * The activator class controls the plug-in life cycle
@@ -22,7 +10,7 @@ import com.softberries.klerk.gui.helpers.IImageKeys;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "com.softberries.klerk"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "com.softberries.klerk.money"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -31,7 +19,6 @@ public class Activator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Activator() {
-
 	}
 
 	/*
@@ -40,8 +27,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		//initialize Money defaults on startup
-		Money.init(Currency.getInstance("PLN"), RoundingMode.HALF_EVEN);
 		plugin = this;
 	}
 
@@ -73,15 +58,4 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
-	@Override
-    protected void initializeImageRegistry(ImageRegistry registry) {
-        super.initializeImageRegistry(registry);
-        Bundle bundle = Platform.getBundle(PLUGIN_ID);
-
-        ImageDescriptor webpageFeed = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.MAIN_CATEGORY), null));
-        registry.put(IImageKeys.MAIN_CATEGORY, webpageFeed);
-        
-        ImageDescriptor webpageRoot = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.ALL_CATEGORIES), null));
-        registry.put(IImageKeys.ALL_CATEGORIES, webpageRoot);
-    }
 }
