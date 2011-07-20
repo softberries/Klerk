@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.dao.to.Person;
+import com.softberries.klerk.dao.to.Product;
 
 public class DocumentDao {
 
@@ -13,6 +15,7 @@ public class DocumentDao {
 		List<Document> documents = new ArrayList<Document>();
 		for(int i = 1; i< 300;i++){
 			Document d = new Document();
+			d.setId(new Long(i));
 			Person p = new Person();
 			p.setFirstName("Krzysztof");
 			p.setLastName("Grajek");
@@ -23,6 +26,25 @@ public class DocumentDao {
 			d.setNotes("notes for the document " + i);
 			d.setPlaceCreated("Gdańsk");
 			d.setTitle("Faktura Sprzedaży " + i);
+			List<DocumentItem> dis = new ArrayList<DocumentItem>();
+			for(int j = 0; j < 10; j++){
+				DocumentItem di = new DocumentItem();
+				di.setDocumentId(d.getId());
+				di.setId(new Long(j));
+				di.setPriceGross("" + j + ".23");
+				di.setPriceNet("" + j + ".00");
+				di.setPriceTax("0.23");
+				Product pr = new Product();
+				pr.setCode("ABC"+j);
+				pr.setDescription("description " + j);
+				pr.setId(new Long(j));
+				pr.setName("Product Name " + j);
+				di.setProduct(pr);
+				di.setQuantity("1.00");
+				di.setTaxValue("23.00");
+				dis.add(di);
+			}
+			d.setItems(dis);
 			documents.add(d);
 		}
 		return documents;

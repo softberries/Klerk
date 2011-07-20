@@ -3,14 +3,21 @@ package com.softberries.klerk.gui.editors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
@@ -18,7 +25,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -31,6 +37,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 
 public class SingleDocumentEditor extends EditorPart {
@@ -39,7 +46,7 @@ public class SingleDocumentEditor extends EditorPart {
 	private Document document;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
 	private ScrolledForm form;
-	private Text txtNewText;
+	private TableViewer itemsTableViewer;	
 
 	public SingleDocumentEditor() {
 		// TODO Auto-generated constructor stub
@@ -145,6 +152,7 @@ public class SingleDocumentEditor extends EditorPart {
 		TableWrapLayout twLayoutSectionItems = new TableWrapLayout();
 		twLayoutSectionItems.numColumns = 2;
 		sectionItemsClient.setLayout(twLayoutSectionItems);
+		createTableViewer(sectionItemsClient);
 		sectionItems.setClient(sectionItemsClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
@@ -192,6 +200,25 @@ public class SingleDocumentEditor extends EditorPart {
 		sectionNotes.setLayoutData(data);
 	}
 
+	private void createTableViewer(Composite parent){
+		itemsTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		createColumns(parent, itemsTableViewer);
+		final Table table = itemsTableViewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+
+		itemsTableViewer.setContentProvider(new ArrayContentProvider());
+		// Get the content for the viewer, setInput will call getElements in the
+		// contentProvider
+		itemsTableViewer.setInput(this.document.getItems());
+		// Make the selection available to other views
+		getSite().setSelectionProvider(itemsTableViewer);
+		
+		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
+		twd.colspan = 2;
+		itemsTableViewer.getControl().setLayoutData(twd);
+	}
 	private void createSectionToolbar(Section section, FormToolkit toolkit) {
 		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
 		ToolBar toolbar = toolBarManager.createControl(section);
@@ -227,6 +254,54 @@ public class SingleDocumentEditor extends EditorPart {
 		section.setTextClient(toolbar);
 	}
 
+	// This will create the columns for the table
+		private void createColumns(final Composite parent, final TableViewer viewer) {
+			String[] titles = { "First name", "Last name", "Gender" };
+			int[] bounds = { 100, 100, 100 };
+
+			// First column is for the first name
+			TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
+			col.setLabelProvider(new ColumnLabelProvider() {
+				@Override
+				public String getText(Object element) {
+					DocumentItem p = (DocumentItem) element;
+					return p.getProduct().getCode();
+				}
+			});
+
+			// Second column is for the last name
+			col = createTableViewerColumn(titles[1], bounds[1], 1);
+			col.setLabelProvider(new ColumnLabelProvider() {
+				@Override
+				public String getText(Object element) {
+					DocumentItem p = (DocumentItem) element;
+					return p.getProduct().getName();
+				}
+			});
+
+			// Now the gender
+			col = createTableViewerColumn(titles[2], bounds[2], 2);
+			col.setLabelProvider(new ColumnLabelProvider() {
+				@Override
+				public String getText(Object element) {
+					DocumentItem p = (DocumentItem) element;
+					return p.getQuantity();
+				}
+			});
+
+		}
+
+		private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
+			final TableViewerColumn viewerColumn = new TableViewerColumn(itemsTableViewer,
+					SWT.NONE);
+			final TableColumn column = viewerColumn.getColumn();
+			column.setText(title);
+			column.setWidth(bound);
+			column.setResizable(true);
+			column.setMoveable(true);
+			return viewerColumn;
+
+		}
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub

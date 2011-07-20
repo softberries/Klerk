@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Document implements Serializable{
 
+	private Long id;
 	private String title;
 	private String notes;
 	private Date createdDate;
@@ -14,6 +15,20 @@ public class Document implements Serializable{
 	private String placeCreated;
 	private Person creator;
 	private List<DocumentItem> items;
+	
+	
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 	/**
 	 * @return the title
 	 */
