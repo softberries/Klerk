@@ -10,8 +10,9 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
@@ -39,6 +40,7 @@ import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.gui.helpers.IImageKeys;
+import com.softberries.klerk.gui.helpers.table.DocumentItemComparator;
 
 public class SingleDocumentEditor extends EditorPart {
 
@@ -46,7 +48,8 @@ public class SingleDocumentEditor extends EditorPart {
 	private Document document;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
 	private ScrolledForm form;
-	private TableViewer itemsTableViewer;	
+	private TableViewer itemsTableViewer;
+	private DocumentItemComparator comparator;
 
 	public SingleDocumentEditor() {
 		// TODO Auto-generated constructor stub
@@ -92,7 +95,7 @@ public class SingleDocumentEditor extends EditorPart {
 		TableWrapLayout twlayout = new TableWrapLayout();
 		twlayout.numColumns = 2;
 		form.getBody().setLayout(twlayout);
-		
+
 		// general section
 		Section sectionGeneral = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
@@ -105,7 +108,7 @@ public class SingleDocumentEditor extends EditorPart {
 
 		toolkit.createCompositeSeparator(sectionGeneral);
 		createSectionToolbar(sectionGeneral, toolkit);
-		
+
 		sectionGeneral.setDescription("Invoice main properties");
 		Composite sectionGeneralClient = toolkit
 				.createComposite(sectionGeneral);
@@ -137,7 +140,7 @@ public class SingleDocumentEditor extends EditorPart {
 		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionGeneral.setLayoutData(data);
-		// invoid items section
+		// invoice items section
 		Section sectionItems = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
 		sectionItems.setText("Invoice items");
@@ -152,7 +155,11 @@ public class SingleDocumentEditor extends EditorPart {
 		TableWrapLayout twLayoutSectionItems = new TableWrapLayout();
 		twLayoutSectionItems.numColumns = 2;
 		sectionItemsClient.setLayout(twLayoutSectionItems);
+		
 		createTableViewer(sectionItemsClient);
+		
+		
+		
 		sectionItems.setClient(sectionItemsClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
@@ -200,7 +207,7 @@ public class SingleDocumentEditor extends EditorPart {
 		sectionNotes.setLayoutData(data);
 	}
 
-	private void createTableViewer(Composite parent){
+	private void createTableViewer(Composite parent) {
 		itemsTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, itemsTableViewer);
@@ -214,11 +221,14 @@ public class SingleDocumentEditor extends EditorPart {
 		itemsTableViewer.setInput(this.document.getItems());
 		// Make the selection available to other views
 		getSite().setSelectionProvider(itemsTableViewer);
-		
+
 		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd.colspan = 2;
 		itemsTableViewer.getControl().setLayoutData(twd);
+		comparator = new DocumentItemComparator();
+		itemsTableViewer.setComparator(comparator);
 	}
+
 	private void createSectionToolbar(Section section, FormToolkit toolkit) {
 		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
 		ToolBar toolbar = toolBarManager.createControl(section);
@@ -236,8 +246,7 @@ public class SingleDocumentEditor extends EditorPart {
 
 		// save
 		CommandContributionItemParameter saveContributionParameter = new CommandContributionItemParameter(
-				this.getSite(), null,
-				"org.eclipse.ui.window.preferences",
+				this.getSite(), null, "org.eclipse.ui.window.preferences",
 				CommandContributionItem.STYLE_PUSH);
 		String imageKey = IImageKeys.ALL_CATEGORIES;
 		AbstractUIPlugin plugin = Activator.getDefault();
@@ -255,53 +264,105 @@ public class SingleDocumentEditor extends EditorPart {
 	}
 
 	// This will create the columns for the table
-		private void createColumns(final Composite parent, final TableViewer viewer) {
-			String[] titles = { "First name", "Last name", "Gender" };
-			int[] bounds = { 100, 100, 100 };
+	private void createColumns(final Composite parent, final TableViewer viewer) {
+		String[] titles = { "Code", "Name", "Quantity", "Price Net", "Tax",
+				"Tax Value", "Price Gross" };
+		int[] bounds = { 100, 200, 100, 100, 100, 100, 100 };
 
-			// First column is for the first name
-			TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
-			col.setLabelProvider(new ColumnLabelProvider() {
-				@Override
-				public String getText(Object element) {
-					DocumentItem p = (DocumentItem) element;
-					return p.getProduct().getCode();
-				}
-			});
+		// code
+		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getProduct().getCode();
+			}
+		});
 
-			// Second column is for the last name
-			col = createTableViewerColumn(titles[1], bounds[1], 1);
-			col.setLabelProvider(new ColumnLabelProvider() {
-				@Override
-				public String getText(Object element) {
-					DocumentItem p = (DocumentItem) element;
-					return p.getProduct().getName();
-				}
-			});
+		// name
+		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getProduct().getName();
+			}
+		});
 
-			// Now the gender
-			col = createTableViewerColumn(titles[2], bounds[2], 2);
-			col.setLabelProvider(new ColumnLabelProvider() {
-				@Override
-				public String getText(Object element) {
-					DocumentItem p = (DocumentItem) element;
-					return p.getQuantity();
-				}
-			});
+		// quantity
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getQuantity();
+			}
+		});
+		// price net
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceNet();
+			}
+		});
+		// tax
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getTaxValue();
+			}
+		});
+		// tax value
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceTax();
+			}
+		});
+		// price gross
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceGross();
+			}
+		});
+	}
 
-		}
+	private TableViewerColumn createTableViewerColumn(String title, int bound,
+			final int colNumber) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(
+				itemsTableViewer, SWT.NONE);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(title);
+		column.setWidth(bound);
+		column.setResizable(true);
+		column.setMoveable(true);
+		column.addSelectionListener(getSelectionAdapter(column, colNumber));
+		return viewerColumn;
 
-		private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
-			final TableViewerColumn viewerColumn = new TableViewerColumn(itemsTableViewer,
-					SWT.NONE);
-			final TableColumn column = viewerColumn.getColumn();
-			column.setText(title);
-			column.setWidth(bound);
-			column.setResizable(true);
-			column.setMoveable(true);
-			return viewerColumn;
+	}
+	private SelectionAdapter getSelectionAdapter(final TableColumn column,
+			final int index) {
+		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				comparator.setColumn(index);
+				int dir = comparator.getDirection();
+				itemsTableViewer.getTable().setSortDirection(dir);
+				itemsTableViewer.refresh();
+			}
+		};
+		return selectionAdapter;
+	}
 
-		}
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
