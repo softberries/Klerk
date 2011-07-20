@@ -5,6 +5,9 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -37,10 +40,12 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import com.softberries.klerk.Activator;
+import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.table.DocumentItemComparator;
+import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuantityES;
 
 public class SingleDocumentEditor extends EditorPart {
 
@@ -150,16 +155,13 @@ public class SingleDocumentEditor extends EditorPart {
 			}
 		});
 		toolkit.createCompositeSeparator(sectionItems);
-		sectionItems.setDescription("List of items:");
 		Composite sectionItemsClient = toolkit.createComposite(sectionItems);
 		TableWrapLayout twLayoutSectionItems = new TableWrapLayout();
 		twLayoutSectionItems.numColumns = 2;
 		sectionItemsClient.setLayout(twLayoutSectionItems);
-		
+
 		createTableViewer(sectionItemsClient);
-		
-		
-		
+
 		sectionItems.setClient(sectionItemsClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
@@ -265,9 +267,9 @@ public class SingleDocumentEditor extends EditorPart {
 
 	// This will create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Code", "Name", "Quantity", "Price Net", "Tax",
-				"Tax Value", "Price Gross" };
-		int[] bounds = { 100, 200, 100, 100, 100, 100, 100 };
+		String[] titles = { "Code", "Name", "Price", "Quantity", "Price Net",
+				"Tax", "Tax Value", "Price Gross" };
+		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100 };
 
 		// code
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
@@ -288,9 +290,18 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getProduct().getName();
 			}
 		});
+		// price for single item
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceNetSingle();
+			}
+		});
 
 		// quantity
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -298,17 +309,18 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getQuantity();
 			}
 		});
+		col.setEditingSupport(new DocumentItemQuantityES(viewer));
 		// price net
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col = createTableViewerColumn(titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				DocumentItem p = (DocumentItem) element;
-				return p.getPriceNet();
+				return p.getPriceNetAll();
 			}
 		});
 		// tax
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col = createTableViewerColumn(titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -317,23 +329,24 @@ public class SingleDocumentEditor extends EditorPart {
 			}
 		});
 		// tax value
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col = createTableViewerColumn(titles[6], bounds[6], 6);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				DocumentItem p = (DocumentItem) element;
-				return p.getPriceTax();
+				return p.getPriceTaxAll();
 			}
 		});
 		// price gross
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col = createTableViewerColumn(titles[7], bounds[7], 7);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				DocumentItem p = (DocumentItem) element;
-				return p.getPriceGross();
+				return p.getPriceGrossAll();
 			}
 		});
+
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound,
@@ -349,6 +362,7 @@ public class SingleDocumentEditor extends EditorPart {
 		return viewerColumn;
 
 	}
+
 	private SelectionAdapter getSelectionAdapter(final TableColumn column,
 			final int index) {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
@@ -357,6 +371,7 @@ public class SingleDocumentEditor extends EditorPart {
 				comparator.setColumn(index);
 				int dir = comparator.getDirection();
 				itemsTableViewer.getTable().setSortDirection(dir);
+				System.out.println("column selected");
 				itemsTableViewer.refresh();
 			}
 		};
@@ -368,4 +383,5 @@ public class SingleDocumentEditor extends EditorPart {
 		// TODO Auto-generated method stub
 
 	}
+
 }

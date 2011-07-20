@@ -5,9 +5,12 @@ public class DocumentItem {
 	private Long id;
 	private Long documentId;
 	private Product product;
-	private String priceNet;
-	private String priceGross;
-	private String priceTax;
+	private String priceNetSingle;
+	private String priceGrossSingle;
+	private String priceTaxSingle;
+	private String priceNetAll;
+	private String priceGrossAll;
+	private String priceTaxAll;
 	private String taxValue;
 	private String quantity;
 	/**
@@ -21,6 +24,43 @@ public class DocumentItem {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getPriceNetSingle() {
+		return priceNetSingle;
+	}
+	public void setPriceNetSingle(String priceNetSingle) {
+		this.priceNetSingle = priceNetSingle;
+	}
+	public String getPriceGrossSingle() {
+		return priceGrossSingle;
+	}
+	public void setPriceGrossSingle(String priceGrossSingle) {
+		this.priceGrossSingle = priceGrossSingle;
+	}
+	public String getPriceTaxSingle() {
+		return priceTaxSingle;
+	}
+	public void setPriceTaxSingle(String priceTaxSingle) {
+		this.priceTaxSingle = priceTaxSingle;
+	}
+	public String getPriceNetAll() {
+		return priceNetAll;
+	}
+	public void setPriceNetAll(String priceNetAll) {
+		this.priceNetAll = priceNetAll;
+	}
+	public String getPriceGrossAll() {
+		return priceGrossAll;
+	}
+	public void setPriceGrossAll(String priceGrossAll) {
+		this.priceGrossAll = priceGrossAll;
+	}
+	public String getPriceTaxAll() {
+		return priceTaxAll;
+	}
+	public void setPriceTaxAll(String priceTaxAll) {
+		this.priceTaxAll = priceTaxAll;
 	}
 	/**
 	 * @return the documentId
@@ -46,42 +86,7 @@ public class DocumentItem {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	/**
-	 * @return the priceNet
-	 */
-	public String getPriceNet() {
-		return priceNet;
-	}
-	/**
-	 * @param priceNet the priceNet to set
-	 */
-	public void setPriceNet(String priceNet) {
-		this.priceNet = priceNet;
-	}
-	/**
-	 * @return the priceGross
-	 */
-	public String getPriceGross() {
-		return priceGross;
-	}
-	/**
-	 * @param priceGross the priceGross to set
-	 */
-	public void setPriceGross(String priceGross) {
-		this.priceGross = priceGross;
-	}
-	/**
-	 * @return the priceTax
-	 */
-	public String getPriceTax() {
-		return priceTax;
-	}
-	/**
-	 * @param priceTax the priceTax to set
-	 */
-	public void setPriceTax(String priceTax) {
-		this.priceTax = priceTax;
-	}
+	
 	/**
 	 * @return the taxValue
 	 */

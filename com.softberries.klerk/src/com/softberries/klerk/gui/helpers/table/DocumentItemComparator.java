@@ -47,16 +47,16 @@ public class DocumentItemComparator extends ViewerComparator {
 			rc = p1.getQuantity().compareTo(p2.getQuantity());
 			break;
 		case 3:
-			rc = p1.getPriceNet().compareTo(p2.getPriceNet());
+			rc = p1.getPriceNetSingle().compareTo(p2.getPriceNetSingle());
 			break;
 		case 4:
 			rc = p1.getTaxValue().compareTo(p2.getTaxValue());
 			break;
 		case 5:
-			rc = p1.getPriceTax().compareTo(p2.getPriceTax());
+			rc = p1.getPriceTaxSingle().compareTo(p2.getPriceTaxSingle());
 			break;
 		case 6:
-			rc = p1.getPriceGross().compareTo(p2.getPriceGross());
+			rc = p1.getPriceGrossSingle().compareTo(p2.getPriceGrossSingle());
 			break;
 		default:
 			rc = 0;

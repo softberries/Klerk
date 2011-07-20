@@ -31,9 +31,12 @@ public class DocumentDao {
 				DocumentItem di = new DocumentItem();
 				di.setDocumentId(d.getId());
 				di.setId(new Long(j));
-				di.setPriceGross("" + j + ".23");
-				di.setPriceNet("" + j + ".00");
-				di.setPriceTax("0.23");
+				di.setPriceGrossSingle("" + j + ".23");
+				di.setPriceNetSingle("" + j + ".00");
+				di.setPriceTaxSingle("0.23");
+				di.setPriceGrossAll("" + j + ".23");
+				di.setPriceNetAll("" + j + ".00");
+				di.setPriceTaxAll("0.23");
 				Product pr = new Product();
 				pr.setCode("ABC"+j);
 				pr.setDescription("description " + j);
