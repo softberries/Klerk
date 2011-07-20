@@ -1,32 +1,37 @@
 package com.softberries.klerk.gui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Document;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.layout.GridLayout;
+import com.softberries.klerk.gui.helpers.IImageKeys;
 
 public class SingleDocumentEditor extends EditorPart {
 
@@ -80,7 +85,7 @@ public class SingleDocumentEditor extends EditorPart {
 		TableWrapLayout twlayout = new TableWrapLayout();
 		twlayout.numColumns = 2;
 		form.getBody().setLayout(twlayout);
-
+		
 		// general section
 		Section sectionGeneral = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
@@ -92,6 +97,8 @@ public class SingleDocumentEditor extends EditorPart {
 		});
 
 		toolkit.createCompositeSeparator(sectionGeneral);
+		createSectionToolbar(sectionGeneral, toolkit);
+		
 		sectionGeneral.setDescription("Invoice main properties");
 		Composite sectionGeneralClient = toolkit
 				.createComposite(sectionGeneral);
@@ -183,6 +190,41 @@ public class SingleDocumentEditor extends EditorPart {
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionNotes.setLayoutData(data);
+	}
+
+	private void createSectionToolbar(Section section, FormToolkit toolkit) {
+		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+		ToolBar toolbar = toolBarManager.createControl(section);
+		final Cursor handCursor = new Cursor(Display.getCurrent(),
+				SWT.CURSOR_HAND);
+		toolbar.setCursor(handCursor);
+		// Cursor needs to be explicitly disposed
+		toolbar.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
+					handCursor.dispose();
+				}
+			}
+		});
+
+		// save
+		CommandContributionItemParameter saveContributionParameter = new CommandContributionItemParameter(
+				this.getSite(), null,
+				"org.eclipse.ui.window.preferences",
+				CommandContributionItem.STYLE_PUSH);
+		String imageKey = IImageKeys.ALL_CATEGORIES;
+		AbstractUIPlugin plugin = Activator.getDefault();
+		ImageRegistry imageRegistry = plugin.getImageRegistry();
+		saveContributionParameter.icon = imageRegistry.getDescriptor(imageKey);
+
+		CommandContributionItem saveMenu = new CommandContributionItem(
+				saveContributionParameter);
+
+		toolBarManager.add(saveMenu);
+
+		toolBarManager.update(true);
+
+		section.setTextClient(toolbar);
 	}
 
 	@Override
