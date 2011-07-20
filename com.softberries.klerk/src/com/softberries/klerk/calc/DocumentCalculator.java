@@ -20,8 +20,12 @@ public class DocumentCalculator {
 			Money tax = new Money(new BigDecimal(di.getPriceTaxSingle()));
 			Money taxAll = new Money(new BigDecimal(di.getPriceTaxAll()));
 			
+			//calculated
+			Money grossSingle = priceNet.times(taxPercent.getAmount().doubleValue());
+			
 			di.setPriceNetAll(priceNet.times(quantity.getAmount().doubleValue()).getAmount().setScale(2).toPlainString());
-			di.setPriceGrossSingle(priceNet.times(taxPercent.getAmount().doubleValue()).getAmount().setScale(2).toPlainString());
+			di.setPriceGrossSingle(grossSingle.getAmount().setScale(2).toPlainString());
+			di.setPriceGrossAll(grossSingle.times(quantity.getAmount().doubleValue()).getAmount().setScale(2).toPlainString());
 //			di.setPriceNet(priceNet.times(quantity.getAmount().doubleValue()).getAmount().setScale(2).toPlainString());
 			return di;
 		}catch(NumberFormatException nfe){
