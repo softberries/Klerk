@@ -5,6 +5,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -123,29 +124,58 @@ public class SingleDocumentEditor extends EditorPart {
 		Composite sectionGeneralClient = toolkit
 				.createComposite(sectionGeneral);
 		TableWrapLayout twLayoutSectionGeneral = new TableWrapLayout();
-		twLayoutSectionGeneral.numColumns = 2;
+		twLayoutSectionGeneral.numColumns = 4;
 		sectionGeneralClient.setLayout(twLayoutSectionGeneral);
 		// invoice title
 		Label titleLbl = toolkit.createLabel(sectionGeneralClient, "Title:");
 		Text titleTxt = toolkit.createText(sectionGeneralClient,
 				this.document.getTitle(), SWT.BORDER);
-		titleTxt.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		TableWrapData twd_titleTxt = new TableWrapData(TableWrapData.FILL_GRAB);
+		twd_titleTxt.colspan = 3;
+		titleTxt.setLayoutData(twd_titleTxt);
 		// invoice created date
 		Label createdDateLbl = toolkit.createLabel(sectionGeneralClient,
 				"Created Date:");
 		DateTime createDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
+		// invoice seller
+		Label sellerLbl = toolkit.createLabel(sectionGeneralClient, "Seller:");
+		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_sellerLbl.indent = 50;
+		sellerLbl.setLayoutData(twd_sellerLbl);
+		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller", SWT.BORDER);
+		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_sellerTxt.align = TableWrapData.FILL;
+		sellerTxt.setLayoutData(twd_sellerTxt);
 		// invoice transaction date
 		Label transactionDateLbl = toolkit.createLabel(sectionGeneralClient,
 				"Transaction Date:");
 		DateTime transactionDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
+		// invoice buyer
+		Label buyerLbl = toolkit.createLabel(sectionGeneralClient, "Buyer:");
+		TableWrapData twd_buyerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_buyerLbl.indent = 50;
+		buyerLbl.setLayoutData(twd_buyerLbl);
+		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER);
+		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_buyerTxt.align = TableWrapData.FILL;
+		buyerTxt.setLayoutData(twd_buyerTxt);
 		// invoice transaction date
 		Label dueDateLbl = toolkit.createLabel(sectionGeneralClient,
 				"Due Date:");
 		DateTime dueDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
 		toolkit.adapt(createDate);
+		//invoice created by
+		Label createdByLbl = toolkit.createLabel(sectionGeneralClient, "Created by:");
+		TableWrapData twd_createdByLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_createdByLbl.indent = 50;
+		createdByLbl.setLayoutData(twd_createdByLbl);
+		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER);
+		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_createdByTxt.align = TableWrapData.FILL;
+		createdByTxt.setLayoutData(twd_createdByTxt);
 		sectionGeneral.setClient(sectionGeneralClient);
 		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
