@@ -45,7 +45,12 @@ import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.table.DocumentItemComparator;
+import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemBasePriceES;
+import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceGrossAllES;
+import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceNetAllES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuantityES;
+import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
+import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPriceAllES;
 
 public class SingleDocumentEditor extends EditorPart {
 
@@ -268,7 +273,7 @@ public class SingleDocumentEditor extends EditorPart {
 	// This will create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
 		String[] titles = { "Code", "Name", "Price", "Quantity", "Price Net",
-				"Tax", "Tax Value", "Price Gross" };
+				"Tax[%]", "Tax", "Price Gross" };
 		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100 };
 
 		// code
@@ -299,7 +304,7 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getPriceNetSingle();
 			}
 		});
-
+		col.setEditingSupport(new DocumentItemBasePriceES(viewer));
 		// quantity
 		col = createTableViewerColumn(titles[3], bounds[3], 3);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -310,7 +315,7 @@ public class SingleDocumentEditor extends EditorPart {
 			}
 		});
 		col.setEditingSupport(new DocumentItemQuantityES(viewer));
-		// price net
+		// price net all
 		col = createTableViewerColumn(titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -319,7 +324,8 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getPriceNetAll();
 			}
 		});
-		// tax
+		col.setEditingSupport(new DocumentItemPriceNetAllES(viewer));
+		// tax percent
 		col = createTableViewerColumn(titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -328,6 +334,7 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getTaxValue();
 			}
 		});
+		col.setEditingSupport(new DocumentItemTaxPercentES(viewer));
 		// tax value
 		col = createTableViewerColumn(titles[6], bounds[6], 6);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -337,6 +344,7 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getPriceTaxAll();
 			}
 		});
+		col.setEditingSupport(new DocumentItemTaxPriceAllES(viewer));
 		// price gross
 		col = createTableViewerColumn(titles[7], bounds[7], 7);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -346,7 +354,7 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getPriceGrossAll();
 			}
 		});
-
+		col.setEditingSupport(new DocumentItemPriceGrossAllES(viewer));
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound,

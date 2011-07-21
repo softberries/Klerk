@@ -5,21 +5,21 @@ import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.to.DocumentItem;
 
 
-public class DocumentItemQuantityES extends DocumentItemCellEditingSupport {
+public class DocumentItemBasePriceES extends DocumentItemCellEditingSupport {
 
-	public DocumentItemQuantityES(TableViewer viewer) {
+	public DocumentItemBasePriceES(TableViewer viewer) {
 		super(viewer);
 	}
 
 	@Override
 	protected Object getValue(Object element) {
-		return ((DocumentItem) element).getQuantity();
+		return ((DocumentItem) element).getPriceNetSingle();
 	}
 
 	@Override
 	protected void setValue(Object element, Object value) {
 		DocumentItem di = ((DocumentItem) element);
-		di = new DocumentCalculator().calculateByQuantity(di, value);
+		di = new DocumentCalculator().calculateByBasePrice(di, value);
 		viewer.refresh();
 	}
 }
