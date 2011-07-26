@@ -41,7 +41,6 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import com.softberries.klerk.Activator;
-import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.gui.helpers.IImageKeys;
@@ -51,7 +50,6 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceG
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceNetAllES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuantityES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
-import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPriceAllES;
 
 public class SingleDocumentEditor extends EditorPart {
 
@@ -302,7 +300,7 @@ public class SingleDocumentEditor extends EditorPart {
 
 	// This will create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Code", "Name", "Price", "Quantity", "Price Net",
+		String[] titles = { "Code", "Name", "Base Price", "Quantity", "Price Net",
 				"Tax[%]", "Tax", "Price Gross" };
 		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100 };
 
@@ -374,7 +372,6 @@ public class SingleDocumentEditor extends EditorPart {
 				return p.getPriceTaxAll();
 			}
 		});
-		col.setEditingSupport(new DocumentItemTaxPriceAllES(viewer));
 		// price gross
 		col = createTableViewerColumn(titles[7], bounds[7], 7);
 		col.setLabelProvider(new ColumnLabelProvider() {

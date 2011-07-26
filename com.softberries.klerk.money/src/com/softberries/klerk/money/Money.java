@@ -149,6 +149,7 @@ public final class Money implements Comparable<Money>, Serializable {
   */
   public Money(BigDecimal aAmount){
     this(aAmount, DEFAULT_CURRENCY, DEFAULT_ROUNDING);
+    aAmount.setScale(2);
   }
   
   /**

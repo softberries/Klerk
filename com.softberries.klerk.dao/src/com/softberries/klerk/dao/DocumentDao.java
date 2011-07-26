@@ -44,7 +44,7 @@ public class DocumentDao {
 				pr.setName("Product Name " + j);
 				di.setProduct(pr);
 				di.setQuantity("1.00");
-				di.setTaxValue("0.23");
+				di.setTaxValue("23");
 				dis.add(di);
 			}
 			d.setItems(dis);
