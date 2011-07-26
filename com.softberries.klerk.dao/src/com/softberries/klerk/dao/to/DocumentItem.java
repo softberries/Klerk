@@ -13,6 +13,7 @@ public class DocumentItem {
 	private String priceTaxAll;
 	private String taxValue;
 	private String quantity;
+	private boolean selected;
 	/**
 	 * @return the id
 	 */
@@ -26,6 +27,12 @@ public class DocumentItem {
 		this.id = id;
 	}
 	
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 	public String getPriceNetSingle() {
 		return priceNetSingle;
 	}

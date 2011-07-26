@@ -5,10 +5,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -17,6 +13,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
@@ -49,15 +46,19 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemBasePr
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceGrossAllES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceNetAllES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuantityES;
+import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelectedES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
 
 public class SingleDocumentEditor extends EditorPart {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument";
+	private static final Image CHECKED = Activator.getImageDescriptor(IImageKeys.CHECKED).createImage();
+	private static final Image UNCHECKED = Activator.getImageDescriptor(IImageKeys.UNCHECKED).createImage();
+
 	private Document document;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
 	private ScrolledForm form;
-	private TableViewer itemsTableViewer;
+	private TableViewer itemsTableViewer;	
 	private DocumentItemComparator comparator;
 
 	public SingleDocumentEditor() {
@@ -301,8 +302,8 @@ public class SingleDocumentEditor extends EditorPart {
 	// This will create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
 		String[] titles = { "Code", "Name", "Base Price", "Quantity", "Price Net",
-				"Tax[%]", "Tax", "Price Gross" };
-		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100 };
+				"Tax[%]", "Tax", "Price Gross", "Selected"};
+		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100, 40};
 
 		// code
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
@@ -382,6 +383,24 @@ public class SingleDocumentEditor extends EditorPart {
 			}
 		});
 		col.setEditingSupport(new DocumentItemPriceGrossAllES(viewer));
+		
+		col = createTableViewerColumn(titles[8], bounds[8], 8);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (((DocumentItem) element).isSelected()) {
+					return CHECKED;
+				} else {
+					return UNCHECKED;
+				}
+			}
+		});
+		col.setEditingSupport(new DocumentItemSelectedES(viewer));
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound,
