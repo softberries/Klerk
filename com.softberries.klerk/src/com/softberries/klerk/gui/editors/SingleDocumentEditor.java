@@ -2,6 +2,13 @@ package com.softberries.klerk.gui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.bindings.keys.ParseException;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -52,13 +59,15 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPer
 public class SingleDocumentEditor extends EditorPart {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument";
-	private static final Image CHECKED = Activator.getImageDescriptor(IImageKeys.CHECKED).createImage();
-	private static final Image UNCHECKED = Activator.getImageDescriptor(IImageKeys.UNCHECKED).createImage();
+	private static final Image CHECKED = Activator.getImageDescriptor(
+			IImageKeys.CHECKED).createImage();
+	private static final Image UNCHECKED = Activator.getImageDescriptor(
+			IImageKeys.UNCHECKED).createImage();
 
 	private Document document;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
 	private ScrolledForm form;
-	private TableViewer itemsTableViewer;	
+	private TableViewer itemsTableViewer;
 	private DocumentItemComparator comparator;
 
 	public SingleDocumentEditor() {
@@ -139,13 +148,18 @@ public class SingleDocumentEditor extends EditorPart {
 				| SWT.BORDER);
 		// invoice seller
 		Label sellerLbl = toolkit.createLabel(sectionGeneralClient, "Seller:");
-		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
-		twd_sellerLbl.indent = 50;
+		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT,
+				TableWrapData.TOP, 1, 1);
+		twd_sellerLbl.indent = 55;
 		sellerLbl.setLayoutData(twd_sellerLbl);
-		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller", SWT.BORDER);
-		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller",
+				SWT.BORDER);
+		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT,
+				TableWrapData.TOP, 1, 1);
+		twd_sellerTxt.indent = 5;
 		twd_sellerTxt.align = TableWrapData.FILL;
 		sellerTxt.setLayoutData(twd_sellerTxt);
+
 		// invoice transaction date
 		Label transactionDateLbl = toolkit.createLabel(sectionGeneralClient,
 				"Transaction Date:");
@@ -153,12 +167,18 @@ public class SingleDocumentEditor extends EditorPart {
 				| SWT.BORDER);
 		// invoice buyer
 		Label buyerLbl = toolkit.createLabel(sectionGeneralClient, "Buyer:");
-		TableWrapData twd_buyerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
-		twd_buyerLbl.indent = 50;
+		TableWrapData twd_buyerLbl = new TableWrapData(TableWrapData.LEFT,
+				TableWrapData.TOP, 1, 1);
+		twd_buyerLbl.indent = 55;
 		buyerLbl.setLayoutData(twd_buyerLbl);
-		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER);
-		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer",
+				SWT.BORDER);
+		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT,
+				TableWrapData.TOP, 1, 1);
+		twd_buyerTxt.indent = 5;
 		twd_buyerTxt.align = TableWrapData.FILL;
+		createDeco(buyerTxt, new String[] { "ProposalOne", "ProposalTwo",
+				"ProposalThree" });
 		buyerTxt.setLayoutData(twd_buyerTxt);
 		// invoice transaction date
 		Label dueDateLbl = toolkit.createLabel(sectionGeneralClient,
@@ -166,13 +186,20 @@ public class SingleDocumentEditor extends EditorPart {
 		DateTime dueDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
 		toolkit.adapt(createDate);
-		//invoice created by
-		Label createdByLbl = toolkit.createLabel(sectionGeneralClient, "Created by:");
-		TableWrapData twd_createdByLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
-		twd_createdByLbl.indent = 50;
+		// invoice created by
+		Label createdByLbl = toolkit.createLabel(sectionGeneralClient,
+				"Created by:");
+		TableWrapData twd_createdByLbl = new TableWrapData(TableWrapData.LEFT,
+				TableWrapData.TOP, 1, 1);
+		twd_createdByLbl.indent = 55;
 		createdByLbl.setLayoutData(twd_createdByLbl);
-		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER);
-		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer",
+				SWT.BORDER);
+		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT,
+				TableWrapData.TOP, 1, 1);
+		twd_createdByTxt.indent = 5;
+		createDeco(createdByTxt, new String[] { "ProposalOne", "ProposalTwo",
+		"ProposalThree" });
 		twd_createdByTxt.align = TableWrapData.FILL;
 		createdByTxt.setLayoutData(twd_createdByTxt);
 		sectionGeneral.setClient(sectionGeneralClient);
@@ -243,6 +270,30 @@ public class SingleDocumentEditor extends EditorPart {
 		sectionNotes.setLayoutData(data);
 	}
 
+	private void createDeco(Text text, String[] options) {
+		ControlDecoration deco = new ControlDecoration(text, SWT.LEFT);
+		deco.setDescriptionText("Use CTRL + SPACE to see possible values");
+		deco.setImage(FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION)
+				.getImage());
+		deco.setShowOnlyOnFocus(false);
+		// Help the user with the possible inputs
+		// "." and "#" will also activate the content proposals
+		char[] autoActivationCharacters = new char[] { '.', '#' };
+		KeyStroke keyStroke;
+		try {
+			//
+			keyStroke = KeyStroke.getInstance("Ctrl+Space");
+			// assume that myTextControl has already been created in some way
+			ContentProposalAdapter adapter = new ContentProposalAdapter(text,
+					new TextContentAdapter(),
+					new SimpleContentProposalProvider(options), keyStroke,
+					autoActivationCharacters);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void createTableViewer(Composite parent) {
 		itemsTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
@@ -301,90 +352,12 @@ public class SingleDocumentEditor extends EditorPart {
 
 	// This will create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Code", "Name", "Base Price", "Quantity", "Price Net",
-				"Tax[%]", "Tax", "Price Gross", "Selected"};
-		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100, 40};
+		String[] titles = { " ", "Code", "Name", "Base Price", "Quantity",
+				"Price Net", "Tax[%]", "Tax", "Price Gross" };
+		int[] bounds = { 20, 100, 200, 100, 100, 100, 100, 100, 100 };
 
-		// code
+		// selection column
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getProduct().getCode();
-			}
-		});
-
-		// name
-		col = createTableViewerColumn(titles[1], bounds[1], 1);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getProduct().getName();
-			}
-		});
-		// price for single item
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceNetSingle();
-			}
-		});
-		col.setEditingSupport(new DocumentItemBasePriceES(viewer));
-		// quantity
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getQuantity();
-			}
-		});
-		col.setEditingSupport(new DocumentItemQuantityES(viewer));
-		// price net all
-		col = createTableViewerColumn(titles[4], bounds[4], 4);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceNetAll();
-			}
-		});
-		col.setEditingSupport(new DocumentItemPriceNetAllES(viewer));
-		// tax percent
-		col = createTableViewerColumn(titles[5], bounds[5], 5);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getTaxValue();
-			}
-		});
-		col.setEditingSupport(new DocumentItemTaxPercentES(viewer));
-		// tax value
-		col = createTableViewerColumn(titles[6], bounds[6], 6);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceTaxAll();
-			}
-		});
-		// price gross
-		col = createTableViewerColumn(titles[7], bounds[7], 7);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceGrossAll();
-			}
-		});
-		col.setEditingSupport(new DocumentItemPriceGrossAllES(viewer));
-		
-		col = createTableViewerColumn(titles[8], bounds[8], 8);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -401,6 +374,87 @@ public class SingleDocumentEditor extends EditorPart {
 			}
 		});
 		col.setEditingSupport(new DocumentItemSelectedES(viewer));
+
+		// code
+		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getProduct().getCode();
+			}
+		});
+
+		// name
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getProduct().getName();
+			}
+		});
+		
+		// price for single item
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceNetSingle();
+			}
+		});
+		col.setEditingSupport(new DocumentItemBasePriceES(viewer));
+		// quantity
+		col = createTableViewerColumn(titles[4], bounds[4], 4);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getQuantity();
+			}
+		});
+		col.setEditingSupport(new DocumentItemQuantityES(viewer));
+		// price net all
+		col = createTableViewerColumn(titles[5], bounds[5], 5);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceNetAll();
+			}
+		});
+		col.setEditingSupport(new DocumentItemPriceNetAllES(viewer));
+		// tax percent
+		col = createTableViewerColumn(titles[6], bounds[6], 6);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getTaxValue();
+			}
+		});
+		col.setEditingSupport(new DocumentItemTaxPercentES(viewer));
+		// tax value
+		col = createTableViewerColumn(titles[7], bounds[7], 7);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceTaxAll();
+			}
+		});
+		// price gross
+		col = createTableViewerColumn(titles[8], bounds[8], 8);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceGrossAll();
+			}
+		});
+		col.setEditingSupport(new DocumentItemPriceGrossAllES(viewer));
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound,
@@ -412,6 +466,22 @@ public class SingleDocumentEditor extends EditorPart {
 		column.setWidth(bound);
 		column.setResizable(true);
 		column.setMoveable(true);
+		column.addSelectionListener(getSelectionAdapter(column, colNumber));
+		return viewerColumn;
+
+	}
+	private TableViewerColumn createTableViewerColumn(String title, int bound,
+			final int colNumber, boolean fill) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(
+				itemsTableViewer, SWT.NONE);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(title);
+		column.setWidth(bound);
+		column.setResizable(true);
+		column.setMoveable(true);
+		if(fill){
+			column.setWidth(SWT.FILL);
+			}
 		column.addSelectionListener(getSelectionAdapter(column, colNumber));
 		return viewerColumn;
 
