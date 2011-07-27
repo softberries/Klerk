@@ -1,6 +1,7 @@
 package com.softberries.klerk.gui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -18,6 +19,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -177,19 +179,8 @@ public class SingleProductEditor extends EditorPart {
 		});
 
 		// save
-		CommandContributionItemParameter saveContributionParameter = new CommandContributionItemParameter(
-				this.getSite(), null, "org.eclipse.ui.window.preferences",
-				CommandContributionItem.STYLE_PUSH);
-		String imageKey = IImageKeys.ALL_CATEGORIES;
-		AbstractUIPlugin plugin = Activator.getDefault();
-		ImageRegistry imageRegistry = plugin.getImageRegistry();
-		saveContributionParameter.icon = imageRegistry.getDescriptor(imageKey);
-
-		CommandContributionItem saveMenu = new CommandContributionItem(
-				saveContributionParameter);
-
-		toolBarManager.add(saveMenu);
-
+		ActionContributionItem saveMenuAction = new ActionContributionItem(ActionFactory.SAVE.create(getEditorSite().getWorkbenchWindow()));
+		toolBarManager.add(saveMenuAction);
 		toolBarManager.update(true);
 
 		section.setTextClient(toolbar);
