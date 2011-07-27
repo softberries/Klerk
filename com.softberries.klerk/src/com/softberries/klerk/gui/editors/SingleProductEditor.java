@@ -6,15 +6,17 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -38,21 +40,21 @@ public class SingleProductEditor extends EditorPart {
 	private Product product;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
 	private ScrolledForm form;
+	private boolean dirty;
 	
 	public SingleProductEditor() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-
+		System.out.println("do save");
+		dirty = false;
+		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
-
+		System.out.println("do save as");
 	}
 
 	@Override
@@ -67,13 +69,13 @@ public class SingleProductEditor extends EditorPart {
 	@Override
 	public boolean isDirty() {
 		// TODO Auto-generated method stub
-		return false;
+		return dirty;
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -107,6 +109,14 @@ public class SingleProductEditor extends EditorPart {
 		Label nameLbl = toolkit.createLabel(sectionGeneralClient, "Name:");
 		Text nameTxt = toolkit.createText(sectionGeneralClient,
 				this.product.getName(), SWT.BORDER);
+		nameTxt.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+		});
 		TableWrapData twd_titleTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_titleTxt.colspan = 3;
 		nameTxt.setLayoutData(twd_titleTxt);
@@ -132,7 +142,14 @@ public class SingleProductEditor extends EditorPart {
 		sectionDescClient.setLayout(twLayoutSectionDesc);
 		Text descTxt = toolkit.createText(sectionDescClient,
 				this.product.getName(), SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		
+		descTxt.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+		});
 		TableWrapData twd_descTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_descTxt.heightHint = 180;
 		twd_descTxt.grabVertical = true;
@@ -179,8 +196,7 @@ public class SingleProductEditor extends EditorPart {
 	}
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }
