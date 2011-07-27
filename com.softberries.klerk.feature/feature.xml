@@ -26,6 +26,9 @@
       <import plugin="org.eclipse.jface" version="3.6.0" match="compatible"/>
       <import plugin="com.ibm.icu"/>
       <import plugin="org.eclipse.osgi"/>
+      <import plugin="com.softberries.klerk.money" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.libraries.h2" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.libraries.dbutils" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -64,6 +67,13 @@
 
    <plugin
          id="com.softberries.klerk.libraries.h2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.libraries.dbutils"
          download-size="0"
          install-size="0"
          version="0.0.0"
