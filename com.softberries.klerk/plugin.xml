@@ -97,6 +97,12 @@
             id="com.softberries.klerk.gui.views.DocumentDetailsView"
             name="Document Details">
       </view>
+      <view
+            class="com.softberries.klerk.gui.views.ProductDetailsView"
+            id="com.softberries.klerk.gui.views.ProductDetailsView"
+            name="Product Details"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
