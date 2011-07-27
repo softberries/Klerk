@@ -1,5 +1,7 @@
 package com.softberries.klerk.dao;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,5 +19,21 @@ public class ProductDao {
 			products.add(p1);
 		}
 		return products;
+	}
+	public void init(){
+		try {
+			Class.forName("org.h2.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:h2:~/.klerk/klerk", "sa", "");
+	        // add application code here
+	        conn.close();
+	        System.out.println("connection closed");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void main(String[] art){
+		ProductDao dao = new ProductDao();
+		dao.init();
 	}
 }
