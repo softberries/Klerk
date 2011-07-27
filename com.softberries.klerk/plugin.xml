@@ -52,6 +52,11 @@
             id="com.softberries.klerk.commands.openinventory_products"
             name="Products">
       </command>
+      <command
+            defaultHandler="com.softberries.klerk.commands.AddProductCommand"
+            id="com.softberries.klerk.commands.AddProductHandler"
+            name="Add Product">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

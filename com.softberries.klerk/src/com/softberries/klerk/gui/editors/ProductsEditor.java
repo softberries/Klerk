@@ -2,6 +2,7 @@ package com.softberries.klerk.gui.editors;
 
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -21,6 +22,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -34,14 +36,17 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wb.swt.ResourceManager;
 
+import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.editors.input.ProductEditorInput;
-import com.softberries.klerk.gui.editors.input.ProductEditorInput;
+import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
-import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 import com.softberries.klerk.gui.helpers.table.ProductComparator;
 import com.softberries.klerk.gui.helpers.table.ProductFilter;
+import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 
 public class ProductsEditor extends EditorPart implements
 		ISelectionChangedListener, ISelectionListener, IDoubleClickListener {
@@ -61,17 +66,25 @@ public class ProductsEditor extends EditorPart implements
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(4, false);
 		parent.setLayout(layout);
 		Label searchLabel = new Label(parent, SWT.NONE);
 		searchLabel.setText(Messages.ProductsEditor_Search);
 		final Text searchText = new Text(parent, SWT.BORDER | SWT.SEARCH);
 		searchText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.HORIZONTAL_ALIGN_FILL));
+		Button addBtn = new Button(parent,  SWT.BORDER);
+		addBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.ADD_ITEM)));
+		
+		Button editBtn = new Button(parent,  SWT.BORDER);
+		editBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.EDIT_ITEM)));
+		
 		createViewer(parent);
 		// Set the sorter for the table
 		comparator = new ProductComparator();
 		viewer.setComparator(comparator);
+		new Label(parent, SWT.NONE);
+		new Label(parent, SWT.NONE);
 		// New to support the search
 		searchText.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke) {
@@ -103,7 +116,7 @@ public class ProductsEditor extends EditorPart implements
 		// Layout the viewer
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 2;
+		gridData.horizontalSpan = 4;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
