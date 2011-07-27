@@ -52,8 +52,7 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPer
 public class SingleDocumentEditor extends EditorPart {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument";
-	private static final Image CHECKED = Activator.getImageDescriptor(IImageKeys.CHECKED).createImage();
-	private static final Image UNCHECKED = Activator.getImageDescriptor(IImageKeys.UNCHECKED).createImage();
+	
 
 	private Document document;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
@@ -394,9 +393,9 @@ public class SingleDocumentEditor extends EditorPart {
 			@Override
 			public Image getImage(Object element) {
 				if (((DocumentItem) element).isSelected()) {
-					return CHECKED;
+					return IImageKeys.CHECKED;
 				} else {
-					return UNCHECKED;
+					return IImageKeys.UNCHECKED;
 				}
 			}
 		});
