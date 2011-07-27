@@ -2,6 +2,13 @@ package com.softberries.klerk.gui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.bindings.keys.ParseException;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -140,7 +147,7 @@ public class SingleDocumentEditor extends EditorPart {
 		// invoice seller
 		Label sellerLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Seller);
 		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
-		twd_sellerLbl.indent = 50;
+		twd_sellerLbl.indent = 55;
 		sellerLbl.setLayoutData(twd_sellerLbl);
 		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
@@ -154,11 +161,14 @@ public class SingleDocumentEditor extends EditorPart {
 		// invoice buyer
 		Label buyerLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Buyer);
 		TableWrapData twd_buyerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
-		twd_buyerLbl.indent = 50;
+		twd_buyerLbl.indent = 55;
 		buyerLbl.setLayoutData(twd_buyerLbl);
 		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_buyerTxt.indent = 5;
 		twd_buyerTxt.align = TableWrapData.FILL;
+		createDeco(buyerTxt, new String[] { "ProposalOne", "ProposalTwo",
+				"ProposalThree" });
 		buyerTxt.setLayoutData(twd_buyerTxt);
 		// invoice transaction date
 		Label dueDateLbl = toolkit.createLabel(sectionGeneralClient,
@@ -173,6 +183,9 @@ public class SingleDocumentEditor extends EditorPart {
 		createdByLbl.setLayoutData(twd_createdByLbl);
 		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_createdByTxt.indent = 5;
+		createDeco(createdByTxt, new String[] { "ProposalOne", "ProposalTwo",
+		"ProposalThree" });
 		twd_createdByTxt.align = TableWrapData.FILL;
 		createdByTxt.setLayoutData(twd_createdByTxt);
 		sectionGeneral.setClient(sectionGeneralClient);
@@ -438,4 +451,27 @@ public class SingleDocumentEditor extends EditorPart {
 
 	}
 
+	private void createDeco(Text text, String[] options) {
+		ControlDecoration deco = new ControlDecoration(text, SWT.LEFT);
+		deco.setDescriptionText("Use CTRL + SPACE to see possible values");
+		deco.setImage(FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION)
+				.getImage());
+		deco.setShowOnlyOnFocus(false);
+		// Help the user with the possible inputs
+		// "." and "#" will also activate the content proposals
+		char[] autoActivationCharacters = new char[] { '.', '#' };
+		KeyStroke keyStroke;
+		try {
+			//
+			keyStroke = KeyStroke.getInstance("Ctrl+Space");
+			// assume that myTextControl has already been created in some way
+			ContentProposalAdapter adapter = new ContentProposalAdapter(text,
+					new TextContentAdapter(),
+					new SimpleContentProposalProvider(options), keyStroke,
+					autoActivationCharacters);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 }
