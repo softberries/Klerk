@@ -38,6 +38,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.editors.input.ProductEditorInput;
 import com.softberries.klerk.gui.editors.input.ProductEditorInput;
+import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 import com.softberries.klerk.gui.helpers.table.ProductComparator;
 import com.softberries.klerk.gui.helpers.table.ProductFilter;
@@ -63,7 +64,7 @@ public class ProductsEditor extends EditorPart implements
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		Label searchLabel = new Label(parent, SWT.NONE);
-		searchLabel.setText("Search: ");
+		searchLabel.setText(Messages.ProductsEditor_Search);
 		final Text searchText = new Text(parent, SWT.BORDER | SWT.SEARCH);
 		searchText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.HORIZONTAL_ALIGN_FILL));
@@ -113,7 +114,7 @@ public class ProductsEditor extends EditorPart implements
 	}
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Code", "Name", "Description"};
+		String[] titles = { Messages.ProductsEditor_Code, Messages.ProductsEditor_Name, Messages.ProductsEditor_Description};
 		int[] bounds = { 100, 200, 100 };
 
 		// First column is for the code

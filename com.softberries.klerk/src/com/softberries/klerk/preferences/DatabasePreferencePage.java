@@ -5,6 +5,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.softberries.klerk.Activator;
+import com.softberries.klerk.gui.helpers.Messages;
 
 public class DatabasePreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
@@ -18,18 +19,18 @@ public class DatabasePreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Database connection settings");
+		setDescription(Messages.DatabasePreferencePage_Database_connection_settings);
 	}
 
 	@Override
 	protected void createFieldEditors() {
-		addField(new StringFieldEditor("DB_URL", "&Database URL:",
+		addField(new StringFieldEditor("DB_URL", Messages.DatabasePreferencePage_database_url, //$NON-NLS-1$
 				getFieldEditorParent()));
-		addField(new StringFieldEditor("DB_NAME", "&Database name:",
+		addField(new StringFieldEditor("DB_NAME", Messages.DatabasePreferencePage_database_name, //$NON-NLS-1$
 				getFieldEditorParent()));
-		addField(new StringFieldEditor("DB_USERNAME", "&Database username:",
+		addField(new StringFieldEditor("DB_USERNAME", Messages.DatabasePreferencePage_database_username, //$NON-NLS-1$
 				getFieldEditorParent()));
-		sfePass = new StringFieldEditor("DB_PASSWORD", "&Database password:", getFieldEditorParent());
+		sfePass = new StringFieldEditor("DB_PASSWORD", Messages.DatabasePreferencePage_database_password, getFieldEditorParent()); //$NON-NLS-1$
 		sfePass.getTextControl(getFieldEditorParent()).setEchoChar('*') ;
 		addField(sfePass);
 	}

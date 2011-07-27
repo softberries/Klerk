@@ -12,6 +12,6 @@ Require-Bundle: org.eclipse.ui,
  com.softberries.klerk.money;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Bundle-Localization: messages
+Bundle-Localization: src/com/softberries/klerk/gui/helpers/messages
 Eclipse-RegisterBuddy: com.softberries.klerk.dao
 

@@ -36,6 +36,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
+import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.DocumentComparator;
 import com.softberries.klerk.gui.helpers.table.DocumentFilter;
 import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
@@ -60,7 +61,7 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		Label searchLabel = new Label(parent, SWT.NONE);
-		searchLabel.setText("Search: ");
+		searchLabel.setText(Messages.DocumentsEditor_search);
 		final Text searchText = new Text(parent, SWT.BORDER | SWT.SEARCH);
 		searchText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.HORIZONTAL_ALIGN_FILL));
@@ -108,8 +109,8 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 	}
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Title", "Notes", "Date Created", "Transaction Date", "Due Date", "Place Created",
-				"Creator" };
+		String[] titles = { Messages.DocumentsEditor_title, Messages.DocumentsEditor_notes, Messages.DocumentsEditor_date_created, Messages.DocumentsEditor_transaction_date, Messages.DocumentsEditor_due_date, Messages.DocumentsEditor_place_created,
+				Messages.DocumentsEditor_creator };
 		int[] bounds = { 100, 100, 100, 100, 100, 100, 100 };
 
 		// First column is for the title
@@ -170,7 +171,7 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 			@Override
 			public void update(ViewerCell cell) {
 				Document doc = ((Document) cell.getElement());
-				cell.setText(doc.getCreator().getFirstName() + " "
+				cell.setText(doc.getCreator().getFirstName() + " " //$NON-NLS-1$
 						+ doc.getCreator().getLastName());
 			}
 		});

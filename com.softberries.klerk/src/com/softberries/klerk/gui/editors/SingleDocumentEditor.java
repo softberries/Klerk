@@ -41,6 +41,7 @@ import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.gui.helpers.IImageKeys;
+import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.DocumentItemComparator;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemBasePriceES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceGrossAllES;
@@ -51,7 +52,7 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPer
 
 public class SingleDocumentEditor extends EditorPart {
 
-	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument";
+	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument"; //$NON-NLS-1$
 	
 
 	private Document document;
@@ -100,7 +101,7 @@ public class SingleDocumentEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		form = toolkit.createScrolledForm(parent);
-		form.setText("INVOICE: " + document.getTitle());
+		form.setText(Messages.SingleDocumentEditor_INVOICE + document.getTitle());
 		TableWrapLayout twlayout = new TableWrapLayout();
 		twlayout.numColumns = 2;
 		form.getBody().setLayout(twlayout);
@@ -108,7 +109,7 @@ public class SingleDocumentEditor extends EditorPart {
 		// general section
 		Section sectionGeneral = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
-		sectionGeneral.setText("Main");
+		sectionGeneral.setText(Messages.SingleDocumentEditor_Main);
 		sectionGeneral.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
@@ -118,14 +119,14 @@ public class SingleDocumentEditor extends EditorPart {
 		toolkit.createCompositeSeparator(sectionGeneral);
 		createSectionToolbar(sectionGeneral, toolkit);
 
-		sectionGeneral.setDescription("Invoice main properties");
+		sectionGeneral.setDescription(Messages.SingleDocumentEditor_Invoice_main_properties);
 		Composite sectionGeneralClient = toolkit
 				.createComposite(sectionGeneral);
 		TableWrapLayout twLayoutSectionGeneral = new TableWrapLayout();
 		twLayoutSectionGeneral.numColumns = 4;
 		sectionGeneralClient.setLayout(twLayoutSectionGeneral);
 		// invoice title
-		Label titleLbl = toolkit.createLabel(sectionGeneralClient, "Title:");
+		Label titleLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Title);
 		Text titleTxt = toolkit.createText(sectionGeneralClient,
 				this.document.getTitle(), SWT.BORDER);
 		TableWrapData twd_titleTxt = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -133,44 +134,44 @@ public class SingleDocumentEditor extends EditorPart {
 		titleTxt.setLayoutData(twd_titleTxt);
 		// invoice created date
 		Label createdDateLbl = toolkit.createLabel(sectionGeneralClient,
-				"Created Date:");
+				Messages.SingleDocumentEditor_Created_Date);
 		DateTime createDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
 		// invoice seller
-		Label sellerLbl = toolkit.createLabel(sectionGeneralClient, "Seller:");
+		Label sellerLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Seller);
 		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_sellerLbl.indent = 50;
 		sellerLbl.setLayoutData(twd_sellerLbl);
-		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller", SWT.BORDER);
+		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_sellerTxt.align = TableWrapData.FILL;
 		sellerTxt.setLayoutData(twd_sellerTxt);
 		// invoice transaction date
 		Label transactionDateLbl = toolkit.createLabel(sectionGeneralClient,
-				"Transaction Date:");
+				Messages.SingleDocumentEditor_Transaction_Date);
 		DateTime transactionDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
 		// invoice buyer
-		Label buyerLbl = toolkit.createLabel(sectionGeneralClient, "Buyer:");
+		Label buyerLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Buyer);
 		TableWrapData twd_buyerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerLbl.indent = 50;
 		buyerLbl.setLayoutData(twd_buyerLbl);
-		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER);
+		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerTxt.align = TableWrapData.FILL;
 		buyerTxt.setLayoutData(twd_buyerTxt);
 		// invoice transaction date
 		Label dueDateLbl = toolkit.createLabel(sectionGeneralClient,
-				"Due Date:");
+				Messages.SingleDocumentEditor_due_date);
 		DateTime dueDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
 		toolkit.adapt(createDate);
 		//invoice created by
-		Label createdByLbl = toolkit.createLabel(sectionGeneralClient, "Created by:");
+		Label createdByLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_created_by);
 		TableWrapData twd_createdByLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_createdByLbl.indent = 50;
 		createdByLbl.setLayoutData(twd_createdByLbl);
-		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER);
+		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_createdByTxt.align = TableWrapData.FILL;
 		createdByTxt.setLayoutData(twd_createdByTxt);
@@ -181,7 +182,7 @@ public class SingleDocumentEditor extends EditorPart {
 		// invoice items section
 		Section sectionItems = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
-		sectionItems.setText("Invoice items");
+		sectionItems.setText(Messages.SingleDocumentEditor_Invoice_Items);
 		sectionItems.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
@@ -202,14 +203,14 @@ public class SingleDocumentEditor extends EditorPart {
 		// section summary
 		Section sectionSummary = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
-		sectionSummary.setText("Invoice Summary");
+		sectionSummary.setText(Messages.SingleDocumentEditor_Invoice_Summary);
 		sectionSummary.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
 		});
 		toolkit.createCompositeSeparator(sectionSummary);
-		sectionSummary.setDescription("Summary");
+		sectionSummary.setDescription(Messages.SingleDocumentEditor_Summary);
 		Composite sectionSummaryClient = toolkit
 				.createComposite(sectionSummary);
 		TableWrapLayout twLayoutSectionSummary = new TableWrapLayout();
@@ -223,7 +224,7 @@ public class SingleDocumentEditor extends EditorPart {
 		// section notes
 		Section sectionNotes = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
-		sectionNotes.setText("Notes");
+		sectionNotes.setText(Messages.SingleDocumentEditor_Notes);
 		sectionNotes.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
@@ -281,7 +282,7 @@ public class SingleDocumentEditor extends EditorPart {
 
 		// save
 		CommandContributionItemParameter saveContributionParameter = new CommandContributionItemParameter(
-				this.getSite(), null, "org.eclipse.ui.window.preferences",
+				this.getSite(), null, Messages.SingleDocumentEditor_Preferences,
 				CommandContributionItem.STYLE_PUSH);
 		String imageKey = IImageKeys.ALL_CATEGORIES;
 		AbstractUIPlugin plugin = Activator.getDefault();
@@ -300,8 +301,8 @@ public class SingleDocumentEditor extends EditorPart {
 
 	// This will create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { "Code", "Name", "Base Price", "Quantity", "Price Net",
-				"Tax[%]", "Tax", "Price Gross", "Selected"};
+		String[] titles = { Messages.SingleDocumentEditor_Code, Messages.SingleDocumentEditor_Name, Messages.SingleDocumentEditor_Base_Price, Messages.SingleDocumentEditor_Quantity, Messages.SingleDocumentEditor_Price_Net,
+				Messages.SingleDocumentEditor_Tax_Percent, Messages.SingleDocumentEditor_Tax, Messages.SingleDocumentEditor_Price_Gross, Messages.SingleDocumentEditor_Selected};
 		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100, 40};
 
 		// code
@@ -424,7 +425,7 @@ public class SingleDocumentEditor extends EditorPart {
 				comparator.setColumn(index);
 				int dir = comparator.getDirection();
 				itemsTableViewer.getTable().setSortDirection(dir);
-				System.out.println("column selected");
+				System.out.println("column selected"); //$NON-NLS-1$
 				itemsTableViewer.refresh();
 			}
 		};

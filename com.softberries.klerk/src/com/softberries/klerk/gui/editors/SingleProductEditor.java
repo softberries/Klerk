@@ -35,10 +35,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.IImageKeys;
+import com.softberries.klerk.gui.helpers.Messages;
 
 public class SingleProductEditor extends EditorPart {
 
-	public static final String ID = "com.softberries.klerk.gui.editors.SingleProduct";
+	public static final String ID = "com.softberries.klerk.gui.editors.SingleProduct"; //$NON-NLS-1$
 	private Product product;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
 	private ScrolledForm form;
@@ -49,14 +50,14 @@ public class SingleProductEditor extends EditorPart {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		System.out.println("do save");
+		System.out.println("do save"); //$NON-NLS-1$
 		dirty = false;
 		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
 
 	@Override
 	public void doSaveAs() {
-		System.out.println("do save as");
+		System.out.println("do save as"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class SingleProductEditor extends EditorPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		form = toolkit.createScrolledForm(parent);
-		form.setText("PRODUCT: " + this.product.getName());
+		form.setText(Messages.SingleProductEditor_PRODUCT + this.product.getName());
 		TableWrapLayout twlayout = new TableWrapLayout();
 		twlayout.numColumns = 2;
 		form.getBody().setLayout(twlayout);
@@ -91,7 +92,7 @@ public class SingleProductEditor extends EditorPart {
 		// general section
 		Section sectionGeneral = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
-		sectionGeneral.setText("Main");
+		sectionGeneral.setText(Messages.SingleProductEditor_Main);
 		sectionGeneral.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
@@ -101,14 +102,14 @@ public class SingleProductEditor extends EditorPart {
 		toolkit.createCompositeSeparator(sectionGeneral);
 		createSectionToolbar(sectionGeneral, toolkit);
 
-		sectionGeneral.setDescription("Product main properties");
+		sectionGeneral.setDescription(Messages.SingleProductEditor_Product_main_properties);
 		Composite sectionGeneralClient = toolkit
 				.createComposite(sectionGeneral);
 		TableWrapLayout twLayoutSectionGeneral = new TableWrapLayout();
 		twLayoutSectionGeneral.numColumns = 4;
 		sectionGeneralClient.setLayout(twLayoutSectionGeneral);
 		// product title
-		Label nameLbl = toolkit.createLabel(sectionGeneralClient, "Name:");
+		Label nameLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleProductEditor_Name);
 		Text nameTxt = toolkit.createText(sectionGeneralClient,
 				this.product.getName(), SWT.BORDER);
 		nameTxt.addModifyListener(new ModifyListener() {
@@ -130,14 +131,14 @@ public class SingleProductEditor extends EditorPart {
 		// product description section
 		Section sectionDescription = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
-		sectionDescription.setText("Description");
+		sectionDescription.setText(Messages.SingleProductEditor_Description);
 		sectionDescription.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
 		});
 		toolkit.createCompositeSeparator(sectionDescription);
-		sectionDescription.setDescription("Product Description:");
+		sectionDescription.setDescription(Messages.SingleProductEditor_Product_Description);
 		Composite sectionDescClient = toolkit.createComposite(sectionDescription);
 		TableWrapLayout twLayoutSectionDesc = new TableWrapLayout();
 		twLayoutSectionDesc.numColumns = 1;

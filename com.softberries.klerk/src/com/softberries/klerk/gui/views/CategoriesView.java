@@ -95,13 +95,15 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 				IImageKeys.MAIN_CATEGORY);
 		TreeObject products = new TreeObject(Messages.CategoriesView_products,
 				IImageKeys.MAIN_CATEGORY);
-		
+		TreeObject companies = new TreeObject(Messages.CategoriesView_companies,
+				IImageKeys.MAIN_CATEGORY);
 		TreeParent docs = new TreeParent(Messages.CategoriesView_documents,
 				IImageKeys.MAIN_CATEGORY);
 		TreeParent inventory = new TreeParent(Messages.CategoriesView_inventory,
 				IImageKeys.MAIN_CATEGORY);
 		docs.addChild(invoices);
 		inventory.addChild(products);
+		inventory.addChild(companies);
 		
 		TreeParent p1 = new TreeParent(Messages.CategoriesView_all_Categories, IImageKeys.ALL_CATEGORIES);
 		p1.addChild(docs);
@@ -121,7 +123,7 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 			IStructuredSelection selection = (IStructuredSelection) viewer
 					.getSelection();
 			selectedDomainObject = (TreeObject) selection.getFirstElement();
-			System.out.println(selectedDomainObject + " Messages: " + Messages.CategoriesView_invoices);
+			System.out.println(selectedDomainObject + Messages.CategoriesView_messages + Messages.CategoriesView_invoices);
 		}
 		try {
 			IWorkbenchWindow window = PlatformUI.getWorkbench()
