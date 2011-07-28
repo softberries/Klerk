@@ -67,7 +67,7 @@ public class ProductsEditor extends EditorPart implements
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		GridLayout layout = new GridLayout(5, false);
+		GridLayout layout = new GridLayout(6, false);
 		parent.setLayout(layout);
 		Label searchLabel = new Label(parent, SWT.NONE);
 		searchLabel.setText(Messages.ProductsEditor_Search);
@@ -77,7 +77,7 @@ public class ProductsEditor extends EditorPart implements
 		
 		Button addBtn = new Button(parent,  SWT.BORDER);
 		addBtn.setToolTipText("Add new product");
-		addBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.ADD_ITEM)));
+		addBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/add.png"));
 		addBtn.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -94,11 +94,25 @@ public class ProductsEditor extends EditorPart implements
 			}
 		});
 		Button editBtn = new Button(parent,  SWT.BORDER);
-		editBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.EDIT_ITEM)));
+		editBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/edit.png"));
+		Button deleteBtn = new Button(parent,  SWT.BORDER);
+		deleteBtn.setToolTipText("Delete Product");
+		deleteBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/remove.png"));
+		deleteBtn.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("delete product");
+				viewer.setInput(ProductsModelProvider.INSTANCE.getProducts());
+				viewer.refresh();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		//refresh button
 		Button refreshBtn = new Button(parent,  SWT.BORDER);
 		refreshBtn.setToolTipText("Refresh");
-		refreshBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.REFRESH_ALL)));
+		refreshBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/refresh.png"));
 		refreshBtn.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -114,6 +128,8 @@ public class ProductsEditor extends EditorPart implements
 		// Set the sorter for the table
 		comparator = new ProductComparator();
 		viewer.setComparator(comparator);
+		new Label(parent, SWT.NONE);
+		new Label(parent, SWT.NONE);
 		new Label(parent, SWT.NONE);
 		new Label(parent, SWT.NONE);
 		// New to support the search
@@ -147,7 +163,7 @@ public class ProductsEditor extends EditorPart implements
 		// Layout the viewer
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 5;
+		gridData.horizontalSpan = 6;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;

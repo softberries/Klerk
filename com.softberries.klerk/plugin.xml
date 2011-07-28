@@ -109,11 +109,13 @@
       </view>
       <view
             class="com.softberries.klerk.gui.views.DocumentDetailsView"
+            icon="icons/png/documents.png"
             id="com.softberries.klerk.gui.views.DocumentDetailsView"
             name="Document Details">
       </view>
       <view
             class="com.softberries.klerk.gui.views.ProductDetailsView"
+            icon="icons/png/product.png"
             id="com.softberries.klerk.gui.views.ProductDetailsView"
             name="Product Details"
             restorable="true">
@@ -123,39 +125,41 @@
          point="org.eclipse.ui.editors">
       <editor
             class="com.softberries.klerk.gui.editors.DocumentsEditor"
-            icon="icons/document_library.png"
+            icon="icons/png/documents.png"
             id="com.softberries.klerk.gui.editors.DocumentsEditor"
             name="%documents.name">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.SingleDocumentEditor"
             default="false"
-            icon="icons/document_library.png"
+            icon="icons/png/invoices.png"
             id="com.softberries.klerk.gui.editors.SingleDocument"
             name="Single Document">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.ProductsEditor"
-            icon="icons/document_library.png"
+            icon="icons/png/products.png"
             id="com.softberries.klerk.gui.editors.ProductsEditor"
             name="Products">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.SingleProductEditor"
             default="false"
-            icon="icons/document_library.png"
+            icon="icons/png/products.png"
             id="com.softberries.klerk.gui.editors.SingleProduct"
             name="Single Product">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.CompaniesEditor"
             default="false"
+            icon="icons/png/companies.png"
             id="com.softberries.klerk.gui.editors.CompaniesEditor"
             name="Companies Editor">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.PeopleEditor"
             default="false"
+            icon="icons/png/people.png"
             id="com.softberries.klerk.gui.editors.PeopleEditor"
             name="People Editor">
       </editor>

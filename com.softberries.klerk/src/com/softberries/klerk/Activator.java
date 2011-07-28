@@ -78,10 +78,31 @@ public class Activator extends AbstractUIPlugin {
         super.initializeImageRegistry(registry);
         Bundle bundle = Platform.getBundle(PLUGIN_ID);
 
-        ImageDescriptor webpageFeed = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.MAIN_CATEGORY), null));
-        registry.put(IImageKeys.MAIN_CATEGORY, webpageFeed);
+        ImageDescriptor mainCategory = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.MAIN_CATEGORY), null));
+        registry.put(IImageKeys.MAIN_CATEGORY, mainCategory);
         
-        ImageDescriptor webpageRoot = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.ALL_CATEGORIES), null));
-        registry.put(IImageKeys.ALL_CATEGORIES, webpageRoot);
+        ImageDescriptor allCategories = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.ALL_CATEGORIES), null));
+        registry.put(IImageKeys.ALL_CATEGORIES, allCategories);
+        
+        ImageDescriptor documents = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_DOCUMENTS), null));
+        registry.put(IImageKeys.CATEGORY_DOCUMENTS, documents);
+        
+        ImageDescriptor invoices = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_INVOICES), null));
+        registry.put(IImageKeys.CATEGORY_INVOICES, invoices);
+        
+        ImageDescriptor inventory = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_INVENTORY), null));
+        registry.put(IImageKeys.CATEGORY_INVENTORY, inventory);
+        
+        ImageDescriptor products = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_PRODUCTS), null));
+        registry.put(IImageKeys.CATEGORY_PRODUCTS, products);
+        
+        ImageDescriptor companies = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_COMPANIES), null));
+        registry.put(IImageKeys.CATEGORY_COMPANIES, companies);
+        
+        ImageDescriptor administration = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_ADMINISTRATION), null));
+        registry.put(IImageKeys.CATEGORY_ADMINISTRATION, administration);
+        
+        ImageDescriptor people = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_PEOPLE), null));
+        registry.put(IImageKeys.CATEGORY_PEOPLE, people);
     }
 }

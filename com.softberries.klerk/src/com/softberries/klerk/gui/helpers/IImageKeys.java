@@ -6,7 +6,7 @@ import com.softberries.klerk.Activator;
 
 public interface IImageKeys {
 
-	public static final String ALL_CATEGORIES = "icons/networking.png";
+	public static final String ALL_CATEGORIES = "icons/png/database.png";
 	public static final String MAIN_CATEGORY = "icons/document_library.png";
 	public static final String DELETE_DOC_ITEM = "icons/del_doc_item.png";
 	public static final String CHECKED_KEY = "icons/checked.gif";
@@ -17,11 +17,11 @@ public interface IImageKeys {
 	public static final String ADD_ITEM = "icons/networking.png";
 	public static final String EDIT_ITEM = "icons/networking.png";
 	public static final String REFRESH_ALL = "icons/networking.png";
-	public static final String CATEGORY_INVOICES = "icons/networking.png";
-	public static final String CATEGORY_PRODUCTS = "icons/networking.png";
-	public static final String CATEGORY_COMPANIES = "icons/networking.png";
-	public static final String CATEGORY_PEOPLE = "icons/networking.png";
-	public static final String CATEGORY_DOCUMENTS = "icons/networking.png";
-	public static final String CATEGORY_INVENTORY = "icons/networking.png";
-	public static final String CATEGORY_ADMINISTRATION = "icons/networking.png";
+	public static final String CATEGORY_INVOICES = "icons/png/invoices.png";
+	public static final String CATEGORY_PRODUCTS = "icons/png/products.png";
+	public static final String CATEGORY_COMPANIES = "icons/png/companies.png";
+	public static final String CATEGORY_PEOPLE = "icons/png/people.png";
+	public static final String CATEGORY_DOCUMENTS = "icons/png/documents.png";
+	public static final String CATEGORY_INVENTORY = "icons/png/inventory.png";
+	public static final String CATEGORY_ADMINISTRATION = "icons/png/admin.png";
 }
