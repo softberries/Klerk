@@ -51,5 +51,17 @@ public class ProductEditorInput implements IEditorInput {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object arg0) {
+		if(arg0 instanceof ProductEditorInput){
+			ProductEditorInput p = (ProductEditorInput)arg0;
+			return this.getProduct().getCode().equals(p.getProduct().getCode());
+		}else{
+			return super.equals(arg0);
+		}
+	}
 	
 }
