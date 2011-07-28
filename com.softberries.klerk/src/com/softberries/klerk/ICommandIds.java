@@ -11,5 +11,6 @@ public interface ICommandIds {
 
     public static final String CMD_OPEN_DOCUMENTS_INVOICES = "com.softberries.klerk.commands.opendocuments_invoices";
     public static final String CMD_OPEN_INVENTORY_PRODUCTS = "com.softberries.klerk.commands.openinventory_products";
-    
+    public static final String CMD_OPEN_ADMINISTRATION_PEOPLE = "com.softberries.klerk.commands.openadministration_people";
+    public static final String CMD_OPEN_INVENTORY_COMPANIES = "com.softberries.klerk.commands.openinventory_companies";
 }

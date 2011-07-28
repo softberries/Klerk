@@ -97,21 +97,24 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 				IImageKeys.CATEGORY_PRODUCTS);
 		TreeObject companies = new TreeObject(Messages.CategoriesView_companies,
 				IImageKeys.CATEGORY_COMPANIES);
-		TreeObject people = new TreeObject("People",
+		TreeObject people = new TreeObject(Messages.CategoriesView_people,
 				IImageKeys.CATEGORY_PEOPLE);
 		TreeParent docs = new TreeParent(Messages.CategoriesView_documents,
 				IImageKeys.CATEGORY_DOCUMENTS);
 		TreeParent inventory = new TreeParent(Messages.CategoriesView_inventory,
 				IImageKeys.CATEGORY_INVENTORY);
+		TreeParent administration = new TreeParent(Messages.CategoriesView_administration,
+				IImageKeys.CATEGORY_ADMINISTRATION);
+		
 		docs.addChild(invoices);
 		inventory.addChild(products);
 		inventory.addChild(companies);
-		inventory.addChild(people);
+		administration.addChild(people);
 		
 		TreeParent p1 = new TreeParent(Messages.CategoriesView_all_Categories, IImageKeys.ALL_CATEGORIES);
 		p1.addChild(docs);
 		p1.addChild(inventory);
-
+		p1.addChild(administration);
 		TreeParent root = new TreeParent("", IImageKeys.ALL_CATEGORIES); //$NON-NLS-1$
 		root.addChild(p1);
 		return root;
@@ -137,6 +140,10 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_INVOICES, null);
 			}else if(Messages.CategoriesView_products.toString().equals(selectedDomainObject.toString())){
 				service.executeCommand(ICommandIds.CMD_OPEN_INVENTORY_PRODUCTS, null);
+			}else if(Messages.CategoriesView_companies.toString().equals(selectedDomainObject.toString())){
+				service.executeCommand(ICommandIds.CMD_OPEN_INVENTORY_COMPANIES, null);
+			}else if(Messages.CategoriesView_people.toString().equals(selectedDomainObject.toString())){
+				service.executeCommand(ICommandIds.CMD_OPEN_ADMINISTRATION_PEOPLE, null);
 			}
 		} catch (ExecutionException e) {
 			e.printStackTrace();

@@ -4,12 +4,14 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.softberries.klerk.gui.helpers.messages"; //$NON-NLS-1$
+	public static String CategoriesView_administration;
 	public static String CategoriesView_all_Categories;
 	public static String CategoriesView_companies;
 	public static String CategoriesView_documents;
 	public static String CategoriesView_inventory;
 	public static String CategoriesView_invoices;
 	public static String CategoriesView_messages;
+	public static String CategoriesView_people;
 	public static String CategoriesView_products;
 	public static String DatabasePreferencePage_Database_connection_settings;
 	public static String DatabasePreferencePage_database_name;

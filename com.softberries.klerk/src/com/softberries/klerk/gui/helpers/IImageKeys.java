@@ -23,4 +23,5 @@ public interface IImageKeys {
 	public static final String CATEGORY_PEOPLE = "icons/networking.png";
 	public static final String CATEGORY_DOCUMENTS = "icons/networking.png";
 	public static final String CATEGORY_INVENTORY = "icons/networking.png";
+	public static final String CATEGORY_ADMINISTRATION = "icons/networking.png";
 }

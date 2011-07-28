@@ -57,6 +57,16 @@
             id="com.softberries.klerk.commands.AddProductHandler"
             name="Add Product">
       </command>
+      <command
+            defaultHandler="com.softberries.klerk.commands.OpenPeopleCommand"
+            id="com.softberries.klerk.commands.openadministration_people"
+            name="Open People Editor">
+      </command>
+      <command
+            defaultHandler="com.softberries.klerk.commands.OpenCompaniesCommand"
+            id="com.softberries.klerk.commands.openinventory_companies"
+            name="Open Companies Command">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -136,6 +146,18 @@
             icon="icons/document_library.png"
             id="com.softberries.klerk.gui.editors.SingleProduct"
             name="Single Product">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.CompaniesEditor"
+            default="false"
+            id="com.softberries.klerk.gui.editors.CompaniesEditor"
+            name="Companies Editor">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.PeopleEditor"
+            default="false"
+            id="com.softberries.klerk.gui.editors.PeopleEditor"
+            name="People Editor">
       </editor>
    </extension>
    <extension
