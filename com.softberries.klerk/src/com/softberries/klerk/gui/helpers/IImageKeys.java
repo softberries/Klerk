@@ -17,4 +17,10 @@ public interface IImageKeys {
 	public static final String ADD_ITEM = "icons/networking.png";
 	public static final String EDIT_ITEM = "icons/networking.png";
 	public static final String REFRESH_ALL = "icons/networking.png";
+	public static final String CATEGORY_INVOICES = "icons/networking.png";
+	public static final String CATEGORY_PRODUCTS = "icons/networking.png";
+	public static final String CATEGORY_COMPANIES = "icons/networking.png";
+	public static final String CATEGORY_PEOPLE = "icons/networking.png";
+	public static final String CATEGORY_DOCUMENTS = "icons/networking.png";
+	public static final String CATEGORY_INVENTORY = "icons/networking.png";
 }

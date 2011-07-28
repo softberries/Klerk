@@ -92,18 +92,21 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 
 	private TreeObject createDummyModel() {
 		TreeObject invoices = new TreeObject(Messages.CategoriesView_invoices,
-				IImageKeys.MAIN_CATEGORY);
+				IImageKeys.CATEGORY_INVOICES);
 		TreeObject products = new TreeObject(Messages.CategoriesView_products,
-				IImageKeys.MAIN_CATEGORY);
+				IImageKeys.CATEGORY_PRODUCTS);
 		TreeObject companies = new TreeObject(Messages.CategoriesView_companies,
-				IImageKeys.MAIN_CATEGORY);
+				IImageKeys.CATEGORY_COMPANIES);
+		TreeObject people = new TreeObject("People",
+				IImageKeys.CATEGORY_PEOPLE);
 		TreeParent docs = new TreeParent(Messages.CategoriesView_documents,
-				IImageKeys.MAIN_CATEGORY);
+				IImageKeys.CATEGORY_DOCUMENTS);
 		TreeParent inventory = new TreeParent(Messages.CategoriesView_inventory,
-				IImageKeys.MAIN_CATEGORY);
+				IImageKeys.CATEGORY_INVENTORY);
 		docs.addChild(invoices);
 		inventory.addChild(products);
 		inventory.addChild(companies);
+		inventory.addChild(people);
 		
 		TreeParent p1 = new TreeParent(Messages.CategoriesView_all_Categories, IImageKeys.ALL_CATEGORIES);
 		p1.addChild(docs);
