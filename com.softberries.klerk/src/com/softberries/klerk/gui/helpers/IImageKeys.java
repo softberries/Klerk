@@ -16,4 +16,5 @@ public interface IImageKeys {
 	public static final Image UNCHECKED = Activator.getImageDescriptor(IImageKeys.UNCHECKED_KEY).createImage();
 	public static final String ADD_ITEM = "icons/networking.png";
 	public static final String EDIT_ITEM = "icons/networking.png";
+	public static final String REFRESH_ALL = "icons/networking.png";
 }

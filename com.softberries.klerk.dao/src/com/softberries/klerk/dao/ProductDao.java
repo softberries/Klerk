@@ -119,6 +119,7 @@ public class ProductDao {
 		run = new QueryRunner();
 		Class.forName("org.h2.Driver");
 		conn = DriverManager.getConnection("jdbc:h2:~/.klerk/klerk", "sa", "");
+//		conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "");
 	}
 	
 	protected void close(Connection con, PreparedStatement stm,

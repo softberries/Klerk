@@ -1,9 +1,12 @@
 package com.softberries.klerk.gui.editors;
 
+import java.sql.SQLException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -27,15 +30,15 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.part.EditorPart;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.softberries.klerk.Activator;
+import com.softberries.klerk.Application;
+import com.softberries.klerk.dao.ProductDao;
 import com.softberries.klerk.dao.to.Product;
-import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
+import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 
 public class SingleProductEditor extends EditorPart {
 
@@ -51,6 +54,16 @@ public class SingleProductEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		System.out.println("do save"); //$NON-NLS-1$
+		ProductDao dao = new ProductDao();
+		try {
+			dao.createProduct(product);
+			if(product.getId() != null){
+				ProductsModelProvider.INSTANCE.getProducts().add(product);
+			}
+		} catch (SQLException e) {
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Sorry, couldn't add product.", e);
+			StatusManager.getManager().handle(status, StatusManager.SHOW);
+		}
 		dirty = false;
 		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
@@ -108,14 +121,32 @@ public class SingleProductEditor extends EditorPart {
 		TableWrapLayout twLayoutSectionGeneral = new TableWrapLayout();
 		twLayoutSectionGeneral.numColumns = 4;
 		sectionGeneralClient.setLayout(twLayoutSectionGeneral);
+		// product code
+		final Label codeLbl = toolkit.createLabel(sectionGeneralClient, "Code:");
+		final Text codeTxt = toolkit.createText(sectionGeneralClient, this.product.getCode(), SWT.BORDER);
+		codeTxt.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				product.setCode(codeTxt.getText());
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+		});
+		TableWrapData twd_codeTxt = new TableWrapData(TableWrapData.FILL_GRAB);
+		twd_codeTxt.colspan = 3;
+		codeTxt.setLayoutData(twd_codeTxt);
 		// product title
-		Label nameLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleProductEditor_Name);
-		Text nameTxt = toolkit.createText(sectionGeneralClient,
+		final Label nameLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleProductEditor_Name);
+		final Text nameTxt = toolkit.createText(sectionGeneralClient,
 				this.product.getName(), SWT.BORDER);
 		nameTxt.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
+				product.setName(nameTxt.getText());
+				form.setText(Messages.SingleProductEditor_PRODUCT + product.getName());
+				setPartName(product.getName());
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			}
@@ -143,12 +174,13 @@ public class SingleProductEditor extends EditorPart {
 		TableWrapLayout twLayoutSectionDesc = new TableWrapLayout();
 		twLayoutSectionDesc.numColumns = 1;
 		sectionDescClient.setLayout(twLayoutSectionDesc);
-		Text descTxt = toolkit.createText(sectionDescClient,
-				this.product.getName(), SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		final Text descTxt = toolkit.createText(sectionDescClient,
+				this.product.getDescription(), SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		descTxt.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
+				product.setDescription(descTxt.getText());
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			}

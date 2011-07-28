@@ -2,7 +2,6 @@ package com.softberries.klerk.gui.editors;
 
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -20,11 +19,14 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -36,7 +38,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wb.swt.ResourceManager;
 
 import com.softberries.klerk.Activator;
@@ -66,19 +67,49 @@ public class ProductsEditor extends EditorPart implements
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		GridLayout layout = new GridLayout(4, false);
+		GridLayout layout = new GridLayout(5, false);
 		parent.setLayout(layout);
 		Label searchLabel = new Label(parent, SWT.NONE);
 		searchLabel.setText(Messages.ProductsEditor_Search);
 		final Text searchText = new Text(parent, SWT.BORDER | SWT.SEARCH);
 		searchText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.HORIZONTAL_ALIGN_FILL));
-		Button addBtn = new Button(parent,  SWT.BORDER);
-		addBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.ADD_ITEM)));
 		
+		Button addBtn = new Button(parent,  SWT.BORDER);
+		addBtn.setToolTipText("Add new product");
+		addBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.ADD_ITEM)));
+		addBtn.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Product newP = new Product();
+				newP.setCode("Enter the code...");
+				newP.setName("New Product");
+				newP.setDescription("");
+				openSingleProductEditor(newP);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		Button editBtn = new Button(parent,  SWT.BORDER);
 		editBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.EDIT_ITEM)));
-		
+		//refresh button
+		Button refreshBtn = new Button(parent,  SWT.BORDER);
+		refreshBtn.setToolTipText("Refresh");
+		refreshBtn.setImage(ResourceManager.getImage(Activator.getDefault().getImageRegistry().getDescriptor(IImageKeys.REFRESH_ALL)));
+		refreshBtn.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("refresh model");
+				viewer.setInput(ProductsModelProvider.INSTANCE.getProducts());
+				viewer.refresh();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		createViewer(parent);
 		// Set the sorter for the table
 		comparator = new ProductComparator();
@@ -116,7 +147,7 @@ public class ProductsEditor extends EditorPart implements
 		// Layout the viewer
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 4;
+		gridData.horizontalSpan = 5;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
@@ -236,14 +267,24 @@ public class ProductsEditor extends EditorPart implements
 				.getSelection();
 		if (selection != null) {
 			Product d = (Product) selection.getFirstElement();
-			IEditorInput input = new ProductEditorInput(d);
-			page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage();
-			try {
-				page.openEditor(input, SingleProductEditor.ID);
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}
+			openSingleProductEditor(d);
+		}
+	}
+
+	/**
+	 * Opens {@code SingleProductEditor} to edit the product details
+	 * 
+	 * @param p Product to be edited
+	 */
+	private void openSingleProductEditor(Product p) {
+		IWorkbenchPage page;
+		IEditorInput input = new ProductEditorInput(p);
+		page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getActivePage();
+		try {
+			page.openEditor(input, SingleProductEditor.ID);
+		} catch (PartInitException e) {
+			e.printStackTrace();
 		}
 	}
 

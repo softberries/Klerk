@@ -19,16 +19,13 @@
 
    <requires>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="com.softberries.klerk.dao" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.forms" version="3.5.100" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.money" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.libraries.h2" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.libraries.dbutils" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="compatible"/>
       <import plugin="org.eclipse.jface" version="3.6.0" match="compatible"/>
       <import plugin="com.ibm.icu"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="com.softberries.klerk.money" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.softberries.klerk.libraries.h2" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.softberries.klerk.libraries.dbutils" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
