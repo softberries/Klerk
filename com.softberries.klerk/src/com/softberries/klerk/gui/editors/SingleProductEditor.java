@@ -35,6 +35,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.Application;
+import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.ProductDao;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.Messages;
@@ -60,11 +61,12 @@ public class SingleProductEditor extends EditorPart {
 				dao.createProduct(product);
 				ProductsModelProvider.INSTANCE.getProducts().add(product);
 			}else{
+				LogUtil.logInfo("Updating product: " + product.getId());
 				dao.updateProduct(product);
 			}
 			
 		} catch (SQLException e) {
-			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Sorry, couldn't add product.", e);
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Sorry, couldn't update product database.", e);
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
 		dirty = false;
