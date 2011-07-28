@@ -1,5 +1,6 @@
 package com.softberries.klerk.gui.helpers.table;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.softberries.klerk.dao.ProductDao;
@@ -11,7 +12,11 @@ public enum ProductsModelProvider {
 	private List<Product> products;
 
 	private ProductsModelProvider() {
-		products = new ProductDao().findAllProducts();
+		try {
+			products = new ProductDao().findAllProducts();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<Product> getProducts() {

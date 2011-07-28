@@ -151,6 +151,7 @@ public class SingleDocumentEditor extends EditorPart {
 		sellerLbl.setLayoutData(twd_sellerLbl);
 		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_sellerTxt.indent = 5;
 		twd_sellerTxt.align = TableWrapData.FILL;
 		sellerTxt.setLayoutData(twd_sellerTxt);
 		// invoice transaction date
@@ -179,7 +180,7 @@ public class SingleDocumentEditor extends EditorPart {
 		//invoice created by
 		Label createdByLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_created_by);
 		TableWrapData twd_createdByLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
-		twd_createdByLbl.indent = 50;
+		twd_createdByLbl.indent = 55;
 		createdByLbl.setLayoutData(twd_createdByLbl);
 		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
@@ -314,90 +315,12 @@ public class SingleDocumentEditor extends EditorPart {
 
 	// This will create the columns for the table
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { Messages.SingleDocumentEditor_Code, Messages.SingleDocumentEditor_Name, Messages.SingleDocumentEditor_Base_Price, Messages.SingleDocumentEditor_Quantity, Messages.SingleDocumentEditor_Price_Net,
-				Messages.SingleDocumentEditor_Tax_Percent, Messages.SingleDocumentEditor_Tax, Messages.SingleDocumentEditor_Price_Gross, Messages.SingleDocumentEditor_Selected};
-		int[] bounds = { 100, 200, 100, 100, 100, 100, 100, 100, 40};
-
-		// code
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getProduct().getCode();
-			}
-		});
-
-		// name
-		col = createTableViewerColumn(titles[1], bounds[1], 1);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getProduct().getName();
-			}
-		});
-		// price for single item
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceNetSingle();
-			}
-		});
-		col.setEditingSupport(new DocumentItemBasePriceES(viewer));
-		// quantity
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getQuantity();
-			}
-		});
-		col.setEditingSupport(new DocumentItemQuantityES(viewer));
-		// price net all
-		col = createTableViewerColumn(titles[4], bounds[4], 4);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceNetAll();
-			}
-		});
-		col.setEditingSupport(new DocumentItemPriceNetAllES(viewer));
-		// tax percent
-		col = createTableViewerColumn(titles[5], bounds[5], 5);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getTaxValue();
-			}
-		});
-		col.setEditingSupport(new DocumentItemTaxPercentES(viewer));
-		// tax value
-		col = createTableViewerColumn(titles[6], bounds[6], 6);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceTaxAll();
-			}
-		});
-		// price gross
-		col = createTableViewerColumn(titles[7], bounds[7], 7);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				DocumentItem p = (DocumentItem) element;
-				return p.getPriceGrossAll();
-			}
-		});
-		col.setEditingSupport(new DocumentItemPriceGrossAllES(viewer));
+		String[] titles = { Messages.SingleDocumentEditor_Selected, Messages.SingleDocumentEditor_Code, Messages.SingleDocumentEditor_Name, Messages.SingleDocumentEditor_Base_Price, Messages.SingleDocumentEditor_Quantity, Messages.SingleDocumentEditor_Price_Net,
+				Messages.SingleDocumentEditor_Tax_Percent, Messages.SingleDocumentEditor_Tax, Messages.SingleDocumentEditor_Price_Gross};
+		int[] bounds = {24, 50, 200, 100, 100, 100, 100, 100, 100};
 		
-		col = createTableViewerColumn(titles[8], bounds[8], 8);
+		//selected
+		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -414,6 +337,84 @@ public class SingleDocumentEditor extends EditorPart {
 			}
 		});
 		col.setEditingSupport(new DocumentItemSelectedES(viewer));
+		// code
+		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getProduct().getCode();
+			}
+		});
+
+		// name
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getProduct().getName();
+			}
+		});
+		// price for single item
+		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceNetSingle();
+			}
+		});
+		col.setEditingSupport(new DocumentItemBasePriceES(viewer));
+		// quantity
+		col = createTableViewerColumn(titles[4], bounds[4], 4);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getQuantity();
+			}
+		});
+		col.setEditingSupport(new DocumentItemQuantityES(viewer));
+		// price net all
+		col = createTableViewerColumn(titles[5], bounds[5], 5);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceNetAll();
+			}
+		});
+		col.setEditingSupport(new DocumentItemPriceNetAllES(viewer));
+		// tax percent
+		col = createTableViewerColumn(titles[6], bounds[6], 6);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getTaxValue();
+			}
+		});
+		col.setEditingSupport(new DocumentItemTaxPercentES(viewer));
+		// tax value
+		col = createTableViewerColumn(titles[7], bounds[7], 7);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceTaxAll();
+			}
+		});
+		// price gross
+		col = createTableViewerColumn(titles[8], bounds[8], 8);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				DocumentItem p = (DocumentItem) element;
+				return p.getPriceGrossAll();
+			}
+		});
+		col.setEditingSupport(new DocumentItemPriceGrossAllES(viewer));
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound,

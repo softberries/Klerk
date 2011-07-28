@@ -7,7 +7,8 @@ Bundle-Vendor: SOFTBERRIES
 Require-Bundle: org.eclipse.ui,
  com.softberries.klerk.money;bundle-version="1.0.0",
  com.softberries.klerk.libraries.h2;bundle-version="1.0.0",
- com.softberries.klerk.libraries.dbutils;bundle-version="1.0.0"
+ com.softberries.klerk.libraries.dbutils;bundle-version="1.0.0",
+ org.junit;resolution:=optional;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.softberries.klerk.dao,
  com.softberries.klerk.dao.to
