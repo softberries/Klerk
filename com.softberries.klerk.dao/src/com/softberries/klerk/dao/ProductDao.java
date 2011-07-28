@@ -23,6 +23,7 @@ public class ProductDao {
 	private static final String SQL_FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCT WHERE id = ?";
 	private static final String SQL_DELETE_ALL_PRODUCTS = "DELETE FROM PRODUCT WHERE id > 0";
 	private static final String SQL_FIND_PRODUCT_ALL = "SELECT * FROM PRODUCT";
+	private static final String SQL_UPDATE_PRODUCT = "UPDATE PRODUCT SET code = ?, name = ?, description = ? WHERE id = ?";
 	
 	private Connection conn = null;
 	private PreparedStatement st = null;
@@ -114,7 +115,26 @@ public class ProductDao {
 			close(conn, st, generatedKeys);
 		}
 	}
-	
+	public void updateProduct(Product p) throws SQLException {
+		try {
+			init();
+			st = conn.prepareStatement(SQL_UPDATE_PRODUCT); 
+			st.setString(1, p.getCode());
+			st.setString(2, p.getName());
+			st.setString(3, p.getDescription());
+	        st.setLong(4, p.getId());
+	        // run the query
+	        int i = st.executeUpdate();    
+	        System.out.println("i: " + i);
+	        if (i == -1) {
+	            System.out.println("db error : " + SQL_UPDATE_PRODUCT);
+	        }
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally{
+			close(conn, st, generatedKeys);
+		}
+	}
 	public void init() throws ClassNotFoundException, SQLException{
 		run = new QueryRunner();
 		Class.forName("org.h2.Driver");

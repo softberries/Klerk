@@ -56,10 +56,13 @@ public class SingleProductEditor extends EditorPart {
 		System.out.println("do save"); //$NON-NLS-1$
 		ProductDao dao = new ProductDao();
 		try {
-			dao.createProduct(product);
-			if(product.getId() != null){
+			if(product.getId() == null){
+				dao.createProduct(product);
 				ProductsModelProvider.INSTANCE.getProducts().add(product);
+			}else{
+				dao.updateProduct(product);
 			}
+			
 		} catch (SQLException e) {
 			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Sorry, couldn't add product.", e);
 			StatusManager.getManager().handle(status, StatusManager.SHOW);

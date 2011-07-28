@@ -93,5 +93,26 @@ public class ProductDaoTest {
 		//clean the db
 		dao.deleteProduct(p.getId());
 	}
+	@Test
+	public void testUpdateProduct() throws SQLException{
+		System.out.println("updateProduct");
+		ProductDao dao = new ProductDao();
+		//crate product
+		Product p = new Product();
+		p.setName("TO_DEL");
+		p.setCode("TO_DEL");
+		dao.createProduct(p);
+		assertTrue(p.getId().longValue() > 0);
+		//update product
+		p.setCode("ABCD");
+		dao.updateProduct(p);
+		//find product
+		Product pf = dao.findProduct(p.getId());
+		assertNotNull(pf);
+		assertTrue(pf.getId().longValue() == p.getId().longValue());
+		assertTrue(pf.getCode().equals("ABCD"));
+		//delete product
+		dao.deleteProduct(pf.getId());
+	}
 
 }
