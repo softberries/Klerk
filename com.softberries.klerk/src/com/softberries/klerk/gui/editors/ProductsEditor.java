@@ -132,6 +132,7 @@ public class ProductsEditor extends EditorPart implements
 		new Label(parent, SWT.NONE);
 		new Label(parent, SWT.NONE);
 		new Label(parent, SWT.NONE);
+		new Label(parent, SWT.NONE);
 		// New to support the search
 		searchText.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke) {
@@ -149,8 +150,8 @@ public class ProductsEditor extends EditorPart implements
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, viewer);
 		final Table table = viewer.getTable();
-		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
 
 		viewer.setContentProvider(new ArrayContentProvider());
 		// Get the content for the viewer, setInput will call getElements in the
