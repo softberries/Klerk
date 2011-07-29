@@ -4,18 +4,19 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Product;
 
-public class ProductEditorInput implements IEditorInput {
+public class CompanyEditorInput implements IEditorInput {
 
-	private Product product;
+	private Company company;
 	
-	public ProductEditorInput(Product p){
-		this.product = p;
+	public CompanyEditorInput(Company c){
+		this.company = c;
 	}
 	@Override
 	public Object getAdapter(Class adapter) {
-		return this.product;
+		return this.company;
 	}
 
 	@Override
@@ -30,33 +31,34 @@ public class ProductEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return this.product.getName();
+		return this.company.getName();
 	}
 
 	@Override
 	public IPersistableElement getPersistable() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getToolTipText() {
-		return this.product.getName();
+		return this.company.getName();
 	}
-	public Product getProduct() {
-		return product;
+	public Company getCompany() {
+		return company;
 	}
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProduct(Company c) {
+		this.company = c;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object arg0) {
-		if(arg0 instanceof ProductEditorInput){
-			ProductEditorInput p = (ProductEditorInput)arg0;
-			return this.getProduct().getCode().equals(p.getProduct().getCode());
+		if(arg0 instanceof CompanyEditorInput){
+			CompanyEditorInput p = (CompanyEditorInput)arg0;
+			boolean nameIsSame = this.getCompany().getName().equals(p.getCompany().getName());
+			boolean vatidIsSame = this.getCompany().getVatid().equals(p.getCompany().getVatid());
+			return nameIsSame && vatidIsSame;
 		}else{
 			return super.equals(arg0);
 		}

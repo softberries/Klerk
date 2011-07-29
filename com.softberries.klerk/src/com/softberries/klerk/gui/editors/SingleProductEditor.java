@@ -41,17 +41,11 @@ import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 
-public class SingleProductEditor extends EditorPart {
+public class SingleProductEditor extends SingleObjectEditor {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleProduct"; //$NON-NLS-1$
 	private Product product;
-	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
-	private ScrolledForm form;
-	private boolean dirty;
 	
-	public SingleProductEditor() {
-	}
-
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		System.out.println("do save"); //$NON-NLS-1$
@@ -74,29 +68,12 @@ public class SingleProductEditor extends EditorPart {
 	}
 
 	@Override
-	public void doSaveAs() {
-		System.out.println("do save as"); //$NON-NLS-1$
-	}
-
-	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		setSite(site);
 		setInput(input);
 		product = (Product) input.getAdapter(Product.class);
 		setPartName(product.getName());
-	}
-
-	@Override
-	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return dirty;
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
-		return true;
 	}
 
 	@Override
@@ -199,33 +176,6 @@ public class SingleProductEditor extends EditorPart {
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionDescription.setLayoutData(data);
-	}
-
-	private void createSectionToolbar(Section section, FormToolkit toolkit) {
-		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
-		ToolBar toolbar = toolBarManager.createControl(section);
-		final Cursor handCursor = new Cursor(Display.getCurrent(),
-				SWT.CURSOR_HAND);
-		toolbar.setCursor(handCursor);
-		// Cursor needs to be explicitly disposed
-		toolbar.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
-					handCursor.dispose();
-				}
-			}
-		});
-
-		// save
-		ActionContributionItem saveMenuAction = new ActionContributionItem(ActionFactory.SAVE.create(getEditorSite().getWorkbenchWindow()));
-		toolBarManager.add(saveMenuAction);
-		toolBarManager.update(true);
-
-		section.setTextClient(toolbar);
-	}
-	@Override
-	public void setFocus() {
-		
 	}
 
 }
