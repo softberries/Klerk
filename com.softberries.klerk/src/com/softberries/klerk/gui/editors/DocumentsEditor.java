@@ -1,114 +1,34 @@
 package com.softberries.klerk.gui.editors;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.EditorPart;
-
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.DocumentComparator;
 import com.softberries.klerk.gui.helpers.table.DocumentFilter;
 import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
+import com.softberries.klerk.gui.helpers.table.SimpleKlerkComparator;
+import com.softberries.klerk.gui.helpers.table.SimpleKlerkFilter;
 
-public class DocumentsEditor extends EditorPart implements IDoubleClickListener {
+public class DocumentsEditor extends GenericKlerkEditor{
 
 	public static final String ID = "com.softberries.klerk.gui.editors.DocumentsEditor"; //$NON-NLS-1$
-	private TableViewer viewer;
-	private DocumentComparator comparator;
-	private DocumentFilter filter;
-
-	public DocumentsEditor() {
+	public DocumentsEditor(SimpleKlerkComparator comp, SimpleKlerkFilter filter, Object input) {
+		super(comp, filter, input);
 	}
 
-	/**
-	 * Create contents of the editor part.
-	 * 
-	 * @param parent
-	 */
+	public DocumentsEditor(){
+		super(new DocumentComparator(), new DocumentFilter(), DocumentsModelProvider.INSTANCE.getDocuments());
+	}
+	
 	@Override
-	public void createPartControl(Composite parent) {
-		GridLayout layout = new GridLayout(2, false);
-		parent.setLayout(layout);
-		Label searchLabel = new Label(parent, SWT.NONE);
-		searchLabel.setText(Messages.DocumentsEditor_search);
-		final Text searchText = new Text(parent, SWT.BORDER | SWT.SEARCH);
-		searchText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-				| GridData.HORIZONTAL_ALIGN_FILL));
-		createViewer(parent);
-		// Set the sorter for the table
-		comparator = new DocumentComparator();
-		viewer.setComparator(comparator);
-		// New to support the search
-		searchText.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent ke) {
-				filter.setSearchText(searchText.getText());
-				viewer.refresh();
-			}
-
-		});
-		filter = new DocumentFilter();
-		viewer.addFilter(filter);
-	}
-
-	private void createViewer(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-		createColumns(parent, viewer);
-		final Table table = viewer.getTable();
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-
-		viewer.setContentProvider(new ArrayContentProvider());
-		// Get the content for the viewer, setInput will call getElements in the
-		// contentProvider
-		viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments());
-		// Make the selection available to other views
-		getSite().setSelectionProvider(viewer);
-		// Set the sorter for the viewer
-
-		// Layout the viewer
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 2;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.horizontalAlignment = GridData.FILL;
-		viewer.getControl().setLayoutData(gridData);
-		viewer.addDoubleClickListener(this);
-	}
-
-	private void createColumns(final Composite parent, final TableViewer viewer) {
+	protected void createColumns(final Composite parent, final TableViewer viewer) {
 		String[] titles = { Messages.DocumentsEditor_title, Messages.DocumentsEditor_notes, Messages.DocumentsEditor_date_created, Messages.DocumentsEditor_transaction_date, Messages.DocumentsEditor_due_date, Messages.DocumentsEditor_place_created,
 				Messages.DocumentsEditor_creator };
 		int[] bounds = { 100, 100, 100, 100, 100, 100, 100 };
@@ -178,82 +98,34 @@ public class DocumentsEditor extends EditorPart implements IDoubleClickListener 
 
 	}
 
-	private TableViewerColumn createTableViewerColumn(String title, int bound,
-			final int colNumber) {
-		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer,
-				SWT.NONE);
-		final TableColumn column = viewerColumn.getColumn();
-		column.setText(title);
-		column.setWidth(bound);
-		column.setResizable(true);
-		column.setMoveable(true);
-		column.addSelectionListener(getSelectionAdapter(column, colNumber));
-		return viewerColumn;
-
-	}
-
-	private SelectionAdapter getSelectionAdapter(final TableColumn column,
-			final int index) {
-		SelectionAdapter selectionAdapter = new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				comparator.setColumn(index);
-				int dir = comparator.getDirection();
-				viewer.getTable().setSortDirection(dir);
-				viewer.refresh();
-			}
-		};
-		return selectionAdapter;
+	@Override
+	protected void addButtonClicked() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void setFocus() {
-		viewer.getControl().setFocus();
+	protected void deleteButtonClicked() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void doSave(IProgressMonitor monitor) {
-		// Do the Save operation
+	protected void editButtonClicked() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void doSaveAs() {
-		// Do the Save As operation
+	protected void refreshButtonClicked() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		setSite(site);
-		setInput(input);
-	}
-
-	@Override
-	public boolean isDirty() {
-		return false;
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
-
-	@Override
-	public void doubleClick(DoubleClickEvent event) {
-		IWorkbenchPage page;
-		IStructuredSelection selection = (IStructuredSelection) event
-				.getSelection();
-		if (selection != null) {
-			Document d = (Document) selection.getFirstElement();
-			IEditorInput input = new DocumentEditorInput(d);
-			page = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage();
-			try {
-				page.openEditor(input, SingleDocumentEditor.ID);
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}
-		}
+	protected void onDoubleClick(IStructuredSelection selection) {
+		Document d = (Document) selection.getFirstElement();
+		openSingleObjectEditor(new DocumentEditorInput(d), SingleDocumentEditor.ID);
 	}
 
 }
