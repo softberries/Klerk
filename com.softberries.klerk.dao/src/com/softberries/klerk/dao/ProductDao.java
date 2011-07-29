@@ -100,7 +100,7 @@ public class ProductDao extends GenericDao<Product>{
 			int i = st.executeUpdate();
 			System.out.println("i: " + i);
 	        if (i == -1) {
-	            System.out.println("db error : " + SQL_DELETE_PRODUCT);
+	            System.out.println("db error : " + SQL_DELETE_ALL_PRODUCTS);
 	        }
 		}catch (ClassNotFoundException e) {
 			e.printStackTrace();

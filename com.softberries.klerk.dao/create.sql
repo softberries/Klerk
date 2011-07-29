@@ -1,12 +1,3 @@
---DROP TABLE IF EXISTS `PRODUCT` ;
---CREATE  TABLE IF NOT EXISTS `PRODUCT` (
---  `id` INT NOT NULL AUTO_INCREMENT ,
---  `name` VARCHAR(200) NOT NULL ,
---  `code` VARCHAR(45) NOT NULL ,
---  `description` TEXT NULL ,
---  PRIMARY KEY (`id`) ,
---  UNIQUE INDEX `code_UNIQUE` (`code` ASC) );
-
 -- -----------------------------------------------------
 -- Table `product`
 -- -----------------------------------------------------
@@ -66,8 +57,8 @@ DROP TABLE IF EXISTS `company` ;
 
 CREATE  TABLE IF NOT EXISTS `company` (
   `id` DECIMAL(10,0)  NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(400) NULL ,
-  `vatid` VARCHAR(45) NULL ,
+  `name` VARCHAR(400) NOT NULL ,
+  `vatid` VARCHAR(45) NOT NULL ,
   `telephone` VARCHAR(45) NULL ,
   `mobile` VARCHAR(45) NULL ,
   `email` VARCHAR(200) NULL ,

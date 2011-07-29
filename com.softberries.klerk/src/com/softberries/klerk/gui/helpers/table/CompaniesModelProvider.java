@@ -1,5 +1,6 @@
 package com.softberries.klerk.gui.helpers.table;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.softberries.klerk.dao.CompanyDao;
@@ -11,7 +12,11 @@ public enum CompaniesModelProvider {
 	private List<Company> companies;
 
 	private CompaniesModelProvider() {
-		companies = new CompanyDao().findAllCompanies();
+		try {
+			companies = new CompanyDao().findAll();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<Company> getCompanies() {

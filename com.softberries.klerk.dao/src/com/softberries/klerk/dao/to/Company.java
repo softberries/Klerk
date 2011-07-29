@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Company {
 
+	private Long id;
 	private String name;
 	private String vatid;
 	private String telephone;
@@ -11,6 +12,14 @@ public class Company {
 	private String email;
 	private String www;
 	private List<Address> addresses;
+	
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	/**
 	 * @return the name
 	 */
