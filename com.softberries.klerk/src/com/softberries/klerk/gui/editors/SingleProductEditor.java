@@ -58,11 +58,11 @@ public class SingleProductEditor extends EditorPart {
 		ProductDao dao = new ProductDao();
 		try {
 			if(product.getId() == null){
-				dao.createProduct(product);
+				dao.create(product);
 				ProductsModelProvider.INSTANCE.getProducts().add(product);
 			}else{
 				LogUtil.logInfo("Updating product: " + product.getId());
-				dao.updateProduct(product);
+				dao.update(product);
 			}
 			
 		} catch (SQLException e) {

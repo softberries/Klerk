@@ -2,6 +2,7 @@ package com.softberries.klerk.dao.to;
 
 public class Address {
 
+	private Long id;
 	private String country;
 	private String city;
 	private String street;
@@ -10,7 +11,29 @@ public class Address {
 	private String flatNumber;
 	private String notes;
 	private boolean main;
+	private Long person_id;
+	private Long company_id;
 	
+	
+	
+	public Long getPerson_id() {
+		return person_id;
+	}
+	public void setPerson_id(Long person_id) {
+		this.person_id = person_id;
+	}
+	public Long getCompany_id() {
+		return company_id;
+	}
+	public void setCompany_id(Long company_id) {
+		this.company_id = company_id;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	/**
 	 * @return the main
 	 */

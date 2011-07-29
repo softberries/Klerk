@@ -13,7 +13,7 @@ public enum ProductsModelProvider {
 
 	private ProductsModelProvider() {
 		try {
-			products = new ProductDao().findAllProducts();
+			products = new ProductDao().findAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

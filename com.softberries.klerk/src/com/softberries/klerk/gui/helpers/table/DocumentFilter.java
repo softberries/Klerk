@@ -5,14 +5,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import com.softberries.klerk.dao.to.Document;
 
-public class DocumentFilter extends ViewerFilter {
-
-	private String searchString;
-
-	public void setSearchText(String s) {
-		// Search must be a substring of the existing value
-		this.searchString = ".*" + s + ".*";
-	}
+public class DocumentFilter extends SimpleKlerkFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
