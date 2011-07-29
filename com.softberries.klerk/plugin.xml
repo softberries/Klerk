@@ -127,7 +127,7 @@
             class="com.softberries.klerk.gui.editors.DocumentsEditor"
             icon="icons/png/documents.png"
             id="com.softberries.klerk.gui.editors.DocumentsEditor"
-            name="%documents.name">
+            name="Document Editor">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.SingleDocumentEditor"
@@ -162,6 +162,20 @@
             icon="icons/png/people.png"
             id="com.softberries.klerk.gui.editors.PeopleEditor"
             name="People Editor">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.SinglePersonEditor"
+            default="false"
+            icon="icons/png/person.png"
+            id="com.softberries.klerk.gui.editors.SinglePersonEditor"
+            name="Single Person Editor">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.SingleCompanyEditor"
+            default="false"
+            icon="icons/png/companies.png"
+            id="com.softberries.klerk.gui.editors.SingleCompanyEditor"
+            name="Single Company Editor">
       </editor>
    </extension>
    <extension

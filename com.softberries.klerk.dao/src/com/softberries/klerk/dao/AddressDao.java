@@ -11,7 +11,7 @@ import com.softberries.klerk.dao.to.Address;
 
 public class AddressDao extends GenericDao<Address>{
 	
-	private static final String SQL_INSERT_ADDRESS = "INSERT INTO ADDRESS(country, city, street, postCode, houseNumber, flatNumber, notes, main, person_id, company_id) VALUES(?, ?, ?, ?, ?, ?)";
+	private static final String SQL_INSERT_ADDRESS = "INSERT INTO ADDRESS(country, city, street, postCode, houseNumber, flatNumber, notes, main, person_id, company_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_ADDRESS = "DELETE FROM ADDRESS WHERE id = ?";
 	private static final String SQL_FIND_ADDRESS_BY_ID = "SELECT * FROM ADDRESS WHERE id = ?";
 	private static final String SQL_DELETE_ALL_ADDRESSES = "DELETE FROM ADDRESS WHERE id > 0";
@@ -61,8 +61,19 @@ public class AddressDao extends GenericDao<Address>{
 	        st.setString(6, c.getFlatNumber());
 	        st.setString(7, c.getNotes());
 	        st.setBoolean(8, c.isMain());
-	        st.setLong(9, c.getPerson_id());
-	        st.setLong(10, c.getCompany_id());
+	        if(c.getPerson_id() == null && c.getCompany_id() == null){
+	        	throw new SQLException("Either Person or Company needs to be specified");
+	        }
+	        if(c.getPerson_id() != null){
+	        	st.setLong(9, c.getPerson_id());
+	        }else{
+	        	st.setNull(9, java.sql.Types.NUMERIC);
+	        }
+	        if(c.getCompany_id() != null){
+	        	st.setLong(10, c.getCompany_id());
+	        }else{
+	        	st.setNull(10, java.sql.Types.NUMERIC);
+	        }
 	        // run the query
 	        int i = st.executeUpdate();    
 	        System.out.println("i: " + i);
@@ -95,9 +106,20 @@ public class AddressDao extends GenericDao<Address>{
 	        st.setString(6, c.getFlatNumber());
 	        st.setString(7, c.getNotes());
 	        st.setBoolean(8, c.isMain());
-	        st.setLong(9, c.getPerson_id());
-	        st.setLong(10, c.getCompany_id());
-	        st.setLong(7, c.getId());
+	        if(c.getPerson_id() == null && c.getCompany_id() == null){
+	        	throw new SQLException("Either Person or Company needs to be specified");
+	        }
+	        if(c.getPerson_id() != null){
+	        	st.setLong(9, c.getPerson_id());
+	        }else{
+	        	st.setNull(9, java.sql.Types.NUMERIC);
+	        }
+	        if(c.getCompany_id() != null){
+	        	st.setLong(10, c.getCompany_id());
+	        }else{
+	        	st.setNull(10, java.sql.Types.NUMERIC);
+	        }
+	        st.setLong(11, c.getId());
 	        // run the query
 	        int i = st.executeUpdate();    
 	        System.out.println("i: " + i);

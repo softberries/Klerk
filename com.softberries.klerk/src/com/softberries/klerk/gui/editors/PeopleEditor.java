@@ -39,7 +39,7 @@ public class PeopleEditor extends GenericKlerkEditor{
 		Person newP = new Person();
 		newP.setFirstName("First name..");
 		newP.setLastName("Last Name..");
-		openSingleObjectEditor(new PersonEditorInput(newP), "some id");
+		openSingleObjectEditor(new PersonEditorInput(newP), SinglePersonEditor.ID);
 	}
 	@Override
 	public void deleteButtonClicked() {
@@ -95,6 +95,6 @@ public class PeopleEditor extends GenericKlerkEditor{
 
 	protected void onDoubleClick(IStructuredSelection selection){
 		Person p = (Person) selection.getFirstElement();
-		openSingleObjectEditor(new PersonEditorInput(p), "some id");
+		openSingleObjectEditor(new PersonEditorInput(p), SinglePersonEditor.ID);
 	}
 }

@@ -56,9 +56,13 @@ public class PersonEditorInput implements IEditorInput {
 	public boolean equals(Object arg0) {
 		if(arg0 instanceof PersonEditorInput){
 			PersonEditorInput p = (PersonEditorInput)arg0;
-			long id1 = this.getPerson().getId().longValue();
-			long id2 = this.getPerson().getId().longValue();
-			return id1 == id2;
+			if(p.getPerson().getId() != null && this.getPerson().getId() != null){
+				long id1 = this.getPerson().getId().longValue();
+				long id2 = p.getPerson().getId().longValue();
+				return id1 == id2;
+			}else{
+				return super.equals(arg0);
+			}
 		}else{
 			return super.equals(arg0);
 		}

@@ -8,6 +8,9 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
 import com.softberries.klerk.dao.to.Company;
+import com.softberries.klerk.dao.to.Person;
+import com.softberries.klerk.gui.editors.input.CompanyEditorInput;
+import com.softberries.klerk.gui.editors.input.PersonEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 import com.softberries.klerk.gui.helpers.table.CompanyComparator;
@@ -88,8 +91,10 @@ public class CompaniesEditor extends GenericKlerkEditor {
 
 	@Override
 	protected void addButtonClicked() {
-		// TODO Auto-generated method stub
-
+		Company newC = new Company();
+		newC.setName("Comapny name..");
+		newC.setVatid("VAT ID ..");
+		openSingleObjectEditor(new CompanyEditorInput(newC), SingleCompanyEditor.ID);
 	}
 
 	@Override
@@ -112,8 +117,8 @@ public class CompaniesEditor extends GenericKlerkEditor {
 
 	@Override
 	protected void onDoubleClick(IStructuredSelection selection) {
-		// TODO Auto-generated method stub
-
+		Company p = (Company) selection.getFirstElement();
+		openSingleObjectEditor(new CompanyEditorInput(p), SingleCompanyEditor.ID);
 	}
 
 }
