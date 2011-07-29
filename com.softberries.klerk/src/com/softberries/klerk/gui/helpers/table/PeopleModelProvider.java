@@ -13,7 +13,7 @@ public enum PeopleModelProvider  {
 
 	private PeopleModelProvider() {
 		try {
-			people = new PeopleDao().findAllPeople();
+			people = new PeopleDao().findAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -35,7 +35,7 @@ public class ProductDaoTest {
 			p1.setCode("ABC" + i);
 			p1.setName("Product Testowy " + i);
 			p1.setDescription("Opis produktu testowego numer " + i);
-			dao.createProduct(p1);
+			dao.create(p1);
 		}
 	}
 	
@@ -46,7 +46,7 @@ public class ProductDaoTest {
 	public static void afterClass() throws Exception {
 		System.out.println("afterClass()");
 		ProductDao dao = new ProductDao();
-		dao.deleteAllProducts();
+		dao.deleteAll();
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ProductDaoTest {
 	public void testFindAllProducts() throws SQLException {
 		System.out.println("testFindAllProducts");
 		ProductDao dao = new ProductDao();
-		List<Product> products = dao.findAllProducts();
+		List<Product> products = dao.findAll();
 		assertTrue(products.size() >= 10);
 	}
 
@@ -73,9 +73,9 @@ public class ProductDaoTest {
 		p.setCode("ABC");
 		p.setName("NAME");
 		p.setDescription("DESCRIPTION");
-		dao.createProduct(p);
+		dao.create(p);
 		assertTrue(p.getId().longValue() > 0);
-		dao.deleteProduct(p.getId());
+		dao.delete(p.getId());
 	}
 	@Test
 	public void testFindProductById() throws SQLException{
@@ -85,13 +85,13 @@ public class ProductDaoTest {
 		Product p = new Product();
 		p.setName("TO_DEL");
 		p.setCode("TO_DEL");
-		dao.createProduct(p);
+		dao.create(p);
 		assertTrue(p.getId().longValue() > 0);
 		//find product
-		Product pf = dao.findProduct(p.getId());
+		Product pf = dao.find(p.getId());
 		assertNotNull(pf);
 		//clean the db
-		dao.deleteProduct(p.getId());
+		dao.delete(p.getId());
 	}
 	@Test
 	public void testUpdateProduct() throws SQLException{
@@ -101,18 +101,18 @@ public class ProductDaoTest {
 		Product p = new Product();
 		p.setName("TO_DEL");
 		p.setCode("TO_DEL");
-		dao.createProduct(p);
+		dao.create(p);
 		assertTrue(p.getId().longValue() > 0);
 		//update product
 		p.setCode("ABCD");
-		dao.updateProduct(p);
+		dao.update(p);
 		//find product
-		Product pf = dao.findProduct(p.getId());
+		Product pf = dao.find(p.getId());
 		assertNotNull(pf);
 		assertTrue(pf.getId().longValue() == p.getId().longValue());
 		assertTrue(pf.getCode().equals("ABCD"));
 		//delete product
-		dao.deleteProduct(pf.getId());
+		dao.delete(pf.getId());
 	}
 
 }
