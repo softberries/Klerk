@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Person implements Serializable{
 
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private List<Address> addresses;
@@ -13,6 +14,13 @@ public class Person implements Serializable{
 	private String email;
 	private String www;
 	
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	/**
 	 * @return the addresses
 	 */

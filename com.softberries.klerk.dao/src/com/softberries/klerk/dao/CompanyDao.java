@@ -88,9 +88,9 @@ public class CompanyDao extends GenericDao<Company>{
 			st.setString(1, c.getName());
 	        st.setString(2, c.getVatid());
 	        st.setString(3, c.getTelephone());
-	        st.setString(4, c.getTelephone());
-	        st.setString(5, c.getTelephone());
-	        st.setString(6, c.getTelephone());
+	        st.setString(4, c.getMobile());
+	        st.setString(5, c.getEmail());
+	        st.setString(6, c.getWww());
 	        st.setLong(7, c.getId());
 	        // run the query
 	        int i = st.executeUpdate();    

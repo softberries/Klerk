@@ -20,7 +20,7 @@ CREATE  TABLE IF NOT EXISTS `product` (
 DROP TABLE IF EXISTS `person` ;
 
 CREATE  TABLE IF NOT EXISTS `person` (
-  `id` DECIMAL(10,0)  NOT NULL ,
+  `id` DECIMAL(10,0)  NOT NULL AUTO_INCREMENT ,
   `firstName` VARCHAR(45) NULL ,
   `lastName` VARCHAR(45) NULL ,
   `telephone` VARCHAR(45) NULL ,
