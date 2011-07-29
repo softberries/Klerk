@@ -10,5 +10,4 @@ public abstract class SimpleKlerkFilter extends ViewerFilter {
 		// Search must be a substring of the existing value
 		this.searchString = ".*" + s + ".*";
 	}
-
 }

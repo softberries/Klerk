@@ -29,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkComparator;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkFilter;
 
@@ -40,10 +41,10 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 	protected SimpleKlerkFilter filter;
 	protected Object input;
 	
-	private String addBtnTooltipText = "Add";
-	private String editBtnTooltipText = "Edit";
-	private String deleteBtnTooltipText = "Delete";
-	private String refreshBtnTooltipText = "Refresh";
+	private String addBtnTooltipText = Messages.GenericKlerkEditor_add;
+	private String editBtnTooltipText = Messages.GenericKlerkEditor_edit;
+	private String deleteBtnTooltipText = Messages.GenericKlerkEditor_delete;
+	private String refreshBtnTooltipText = Messages.GenericKlerkEditor_refresh;
 	
 	public GenericKlerkEditor(SimpleKlerkComparator comp, SimpleKlerkFilter filter, Object input){
 		this.comparator = comp;
@@ -71,14 +72,14 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 		GridLayout layout = new GridLayout(6, false);
 		parent.setLayout(layout);
 		Label searchLabel = new Label(parent, SWT.NONE);
-		searchLabel.setText("Search:");
+		searchLabel.setText(Messages.GenericKlerkEditor_search);
 		final Text searchText = new Text(parent, SWT.BORDER | SWT.SEARCH);
 		searchText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.HORIZONTAL_ALIGN_FILL));
 		
 		Button addBtn = new Button(parent,  SWT.BORDER);
 		addBtn.setToolTipText(this.addBtnTooltipText);
-		addBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/add.png"));
+		addBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/add.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		addBtn.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -89,7 +90,7 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 			}
 		});
 		Button editBtn = new Button(parent,  SWT.BORDER);
-		editBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/edit.png"));
+		editBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/edit.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		editBtn.setToolTipText(this.editBtnTooltipText);
 		editBtn.addSelectionListener(new SelectionListener() {
 			@Override
@@ -102,7 +103,7 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 		});
 		Button deleteBtn = new Button(parent,  SWT.BORDER);
 		deleteBtn.setToolTipText(this.deleteBtnTooltipText);
-		deleteBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/remove.png"));
+		deleteBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/remove.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		deleteBtn.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -115,7 +116,7 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 		//refresh button
 		Button refreshBtn = new Button(parent,  SWT.BORDER);
 		refreshBtn.setToolTipText(this.refreshBtnTooltipText);
-		refreshBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/refresh.png"));
+		refreshBtn.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/refresh.png")); //$NON-NLS-1$ //$NON-NLS-2$
 		refreshBtn.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

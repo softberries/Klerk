@@ -13,6 +13,12 @@ public class Messages extends NLS {
 	public static String CategoriesView_messages;
 	public static String CategoriesView_people;
 	public static String CategoriesView_products;
+	public static String CompaniesEditor_email;
+	public static String CompaniesEditor_mobile;
+	public static String CompaniesEditor_name;
+	public static String CompaniesEditor_telephone;
+	public static String CompaniesEditor_vatid;
+	public static String CompaniesEditor_www;
 	public static String DatabasePreferencePage_Database_connection_settings;
 	public static String DatabasePreferencePage_database_name;
 	public static String DatabasePreferencePage_database_password;
@@ -26,6 +32,11 @@ public class Messages extends NLS {
 	public static String DocumentsEditor_search;
 	public static String DocumentsEditor_title;
 	public static String DocumentsEditor_transaction_date;
+	public static String GenericKlerkEditor_add;
+	public static String GenericKlerkEditor_delete;
+	public static String GenericKlerkEditor_edit;
+	public static String GenericKlerkEditor_refresh;
+	public static String GenericKlerkEditor_search;
 	public static String ProductsEditor_Code;
 	public static String ProductsEditor_Description;
 	public static String ProductsEditor_Name;
