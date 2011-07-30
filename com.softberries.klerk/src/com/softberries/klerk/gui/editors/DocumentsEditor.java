@@ -128,4 +128,10 @@ public class DocumentsEditor extends GenericKlerkEditor{
 		openSingleObjectEditor(new DocumentEditorInput(d), SingleDocumentEditor.ID);
 	}
 
+	@Override
+	protected void setSelectedObject(Object selection) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -1,5 +1,8 @@
 package com.softberries.klerk.gui.editors;
 
+import java.sql.SQLException;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -7,19 +10,24 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+
+import com.softberries.klerk.dao.ProductDao;
 import com.softberries.klerk.dao.to.Company;
-import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.gui.editors.input.CompanyEditorInput;
-import com.softberries.klerk.gui.editors.input.PersonEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 import com.softberries.klerk.gui.helpers.table.CompanyComparator;
 import com.softberries.klerk.gui.helpers.table.CompanyFilter;
+import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkComparator;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkFilter;
 
 public class CompaniesEditor extends GenericKlerkEditor {
 
+	private Company selectedCompany;
+	
 	public CompaniesEditor(SimpleKlerkComparator comp,
 			SimpleKlerkFilter filter, Object input) {
 		super(comp, filter, input);
@@ -99,20 +107,41 @@ public class CompaniesEditor extends GenericKlerkEditor {
 
 	@Override
 	protected void deleteButtonClicked() {
-		// TODO Auto-generated method stub
-
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if(this.getSelectedCompany() == null || this.getSelectedCompany().getId() == null){
+			MessageDialog.openInformation(shell, "Information", "Nothing to delete");
+			return;
+		}
+		boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete this company?");
+		if(confirmed){
+			ProductDao dao = new ProductDao();
+			try {
+				dao.delete(this.getSelectedCompany().getId());
+				closeOpenedEditorForThisItem(new CompanyEditorInput(this.getSelectedCompany()));
+				CompaniesModelProvider.INSTANCE.getCompanies().remove(this.getSelectedCompany());
+				this.setSelectedCompany(null);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			viewer.setInput(ProductsModelProvider.INSTANCE.getProducts());
+			viewer.refresh();
+		}
 	}
 
 	@Override
 	protected void editButtonClicked() {
-		// TODO Auto-generated method stub
-
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if(this.getSelectedCompany() == null || this.getSelectedCompany().getId() == null){
+			MessageDialog.openInformation(shell, "Information", "Nothing to edit");
+			return;
+		}
+		openSingleObjectEditor(new CompanyEditorInput(this.getSelectedCompany()), SingleCompanyEditor.ID);
 	}
 
 	@Override
 	protected void refreshButtonClicked() {
-		// TODO Auto-generated method stub
-
+		viewer.setInput(CompaniesModelProvider.INSTANCE.getCompanies());
+		viewer.refresh();
 	}
 
 	@Override
@@ -121,4 +150,26 @@ public class CompaniesEditor extends GenericKlerkEditor {
 		openSingleObjectEditor(new CompanyEditorInput(p), SingleCompanyEditor.ID);
 	}
 
+	@Override
+	protected void setSelectedObject(Object selection) {
+		if(selection != null && selection instanceof Company){
+			this.setSelectedCompany((Company) selection);
+		}
+	}
+
+	/**
+	 * @return the selectedCompany
+	 */
+	public Company getSelectedCompany() {
+		return selectedCompany;
+	}
+
+	/**
+	 * @param selectedCompany the selectedCompany to set
+	 */
+	public void setSelectedCompany(Company selectedCompany) {
+		this.selectedCompany = selectedCompany;
+	}
+
+	
 }

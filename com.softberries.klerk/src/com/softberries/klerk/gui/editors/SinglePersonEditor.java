@@ -1,6 +1,10 @@
 package com.softberries.klerk.gui.editors;
 
+import java.sql.SQLException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -16,10 +20,17 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.statushandlers.StatusManager;
 
+import com.softberries.klerk.Activator;
+import com.softberries.klerk.LogUtil;
+import com.softberries.klerk.dao.CompanyDao;
+import com.softberries.klerk.dao.PeopleDao;
 import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.Messages;
+import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
+import com.softberries.klerk.gui.helpers.table.PeopleModelProvider;
 
 public class SinglePersonEditor extends SingleObjectEditor{
 
@@ -28,8 +39,22 @@ public class SinglePersonEditor extends SingleObjectEditor{
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-		
+		PeopleDao dao = new PeopleDao();
+		try {
+			if(person.getId() == null){
+				dao.create(person);
+				PeopleModelProvider.INSTANCE.getPeople().add(person);
+			}else{
+				LogUtil.logInfo("Updating person: " + person.getId());
+				dao.update(person);
+			}
+			
+		} catch (SQLException e) {
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Sorry, couldn't update companies database.", e);
+			StatusManager.getManager().handle(status, StatusManager.SHOW);
+		}
+		dirty = false;
+		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
 
 	@Override
@@ -170,14 +195,14 @@ public class SinglePersonEditor extends SingleObjectEditor{
 		// person addresses section
 		Section sectionDescription = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
-		sectionDescription.setText("Addresses:");
+		sectionDescription.setText("Addreses:");
 		sectionDescription.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
 		});
 		toolkit.createCompositeSeparator(sectionDescription);
-		sectionDescription.setDescription("Addresses List:");
+		sectionDescription.setDescription("Addreses List:");
 		Composite sectionDescClient = toolkit.createComposite(sectionDescription);
 		TableWrapLayout twLayoutSectionDesc = new TableWrapLayout();
 		twLayoutSectionDesc.numColumns = 1;

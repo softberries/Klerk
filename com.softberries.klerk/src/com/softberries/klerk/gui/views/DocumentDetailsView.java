@@ -50,7 +50,6 @@ public class DocumentDetailsView extends ViewPart implements ISelectionListener 
 		initializeToolBar();
 		initializeMenu();
 		IWorkbench workbench = PlatformUI.getWorkbench();
-//		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(DocumentsEditor.ID,(ISelectionListener)this);
 		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(this);
 	}
 

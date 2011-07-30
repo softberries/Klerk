@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -22,8 +23,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
@@ -34,7 +39,7 @@ import com.softberries.klerk.gui.helpers.table.SimpleKlerkComparator;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkFilter;
 
 
-public abstract class GenericKlerkEditor extends EditorPart implements IDoubleClickListener{
+public abstract class GenericKlerkEditor extends EditorPart implements IDoubleClickListener, ISelectionListener{
 
 	protected TableViewer viewer;
 	protected SimpleKlerkComparator comparator;
@@ -66,7 +71,21 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 		}
 	}
 
-	
+	/**
+	 * When deleting an item this method make sure that
+	 * any open editor which was editing same item will be closed
+	 * <p>
+	 * Make sure you {@code IEditorInput} properly overrides {@code equals() } method
+	 * 
+	 * @param editorInput
+	 */
+	protected void closeOpenedEditorForThisItem(IEditorInput editorInput) {
+		IEditorPart toClose = getSite().getWorkbenchWindow().getActivePage().findEditor(editorInput);
+		if(toClose != null){
+			getSite().getWorkbenchWindow().getActivePage().closeEditor(toClose, false);
+		}
+	}
+
 	@Override
 	public void createPartControl(Composite parent) {
 		GridLayout layout = new GridLayout(6, false);
@@ -142,6 +161,8 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 
 		});
 		viewer.addFilter(filter);
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(this);
 	}
 
 	private void createViewer(Composite parent, Object input) {
@@ -232,6 +253,11 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 	public boolean isDirty() {
 		return false;
 	}
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
+		Object selection = ((IStructuredSelection) sel).getFirstElement();
+		setSelectedObject(selection);
+	}
 	
 	public String getAddBtnTooltipText() {
 		return addBtnTooltipText;
@@ -263,4 +289,5 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 	protected abstract void editButtonClicked();
 	protected abstract void refreshButtonClicked();
 	protected abstract void onDoubleClick(IStructuredSelection selection);
+	protected abstract void setSelectedObject(Object selection);
 }

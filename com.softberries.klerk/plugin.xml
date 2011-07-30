@@ -16,7 +16,7 @@
       <perspective
             class="com.softberries.klerk.gui.perspectives.MainPerspective"
             id="com.softberries.klerk.gui.perspectives.MainPerspective"
-            name="%perspective.name">
+            name="Main">
       </perspective>
    </extension>
    <extension
