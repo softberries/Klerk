@@ -45,6 +45,7 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+		setPartName(Messages.CategoriesView_categories);
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		{

@@ -6,6 +6,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.softberries.klerk.gui.helpers.messages"; //$NON-NLS-1$
 	public static String CategoriesView_administration;
 	public static String CategoriesView_all_Categories;
+	public static String CategoriesView_categories;
 	public static String CategoriesView_companies;
 	public static String CategoriesView_documents;
 	public static String CategoriesView_inventory;

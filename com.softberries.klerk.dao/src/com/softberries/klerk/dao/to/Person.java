@@ -105,5 +105,12 @@ public class Person implements Serializable{
 	public void setWww(String www) {
 		this.www = www;
 	}
+	/**
+	 * Utility method to return full name of this {@code Person}
+	 * @return
+	 */
+	public String getFullName() {
+		return this.getFirstName() + " " + this.getLastName();
+	}
 	
 }
