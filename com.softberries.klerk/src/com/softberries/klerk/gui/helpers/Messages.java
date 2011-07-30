@@ -14,6 +14,8 @@ public class Messages extends NLS {
 	public static String CategoriesView_messages;
 	public static String CategoriesView_people;
 	public static String CategoriesView_products;
+	public static String CategoriesView_Purchases;
+	public static String CategoriesView_Sales;
 	public static String CompaniesEditor_email;
 	public static String CompaniesEditor_mobile;
 	public static String CompaniesEditor_name;

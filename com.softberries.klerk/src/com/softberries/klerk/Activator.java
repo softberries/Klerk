@@ -104,5 +104,11 @@ public class Activator extends AbstractUIPlugin {
         
         ImageDescriptor people = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_PEOPLE), null));
         registry.put(IImageKeys.CATEGORY_PEOPLE, people);
+        
+        ImageDescriptor invPurchase = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_INVOICES_PURCHASE), null));
+        registry.put(IImageKeys.CATEGORY_INVOICES_PURCHASE, invPurchase);
+        
+        ImageDescriptor invSales = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(IImageKeys.CATEGORY_INVOICES_SALES), null));
+        registry.put(IImageKeys.CATEGORY_INVOICES_SALES, invSales);
     }
 }

@@ -85,7 +85,7 @@ public class SinglePersonEditor extends SingleObjectEditor{
 		twd_codeTxt.colspan = 3;
 		fnTxt.setLayoutData(twd_codeTxt);
 		// person Last Name
-		final Label lnLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleProductEditor_Name);
+		final Label lnLbl = toolkit.createLabel(sectionGeneralClient, "Last Name:");
 		final Text lnTxt = toolkit.createText(sectionGeneralClient,
 				this.person.getLastName(), SWT.BORDER);
 		lnTxt.addModifyListener(new ModifyListener() {

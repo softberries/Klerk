@@ -24,4 +24,6 @@ public interface IImageKeys {
 	public static final String CATEGORY_DOCUMENTS = "icons/png/documents.png";
 	public static final String CATEGORY_INVENTORY = "icons/png/inventory.png";
 	public static final String CATEGORY_ADMINISTRATION = "icons/png/admin.png";
+	public static final String CATEGORY_INVOICES_PURCHASE = "icons/png/invoices.png";
+	public static final String CATEGORY_INVOICES_SALES = "icons/png/invoices.png";
 }

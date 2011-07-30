@@ -92,7 +92,7 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 	}
 
 	private TreeObject createDummyModel() {
-		TreeObject invoices = new TreeObject(Messages.CategoriesView_invoices,
+		TreeParent invoices = new TreeParent(Messages.CategoriesView_invoices,
 				IImageKeys.CATEGORY_INVOICES);
 		TreeObject products = new TreeObject(Messages.CategoriesView_products,
 				IImageKeys.CATEGORY_PRODUCTS);
@@ -107,6 +107,12 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 		TreeParent administration = new TreeParent(Messages.CategoriesView_administration,
 				IImageKeys.CATEGORY_ADMINISTRATION);
 		
+		TreeObject invPurchase = new TreeObject(Messages.CategoriesView_Purchases,
+				IImageKeys.CATEGORY_INVOICES_PURCHASE);
+		TreeObject invSales = new TreeObject(Messages.CategoriesView_Sales,
+				IImageKeys.CATEGORY_INVOICES_SALES);
+		invoices.addChild(invPurchase);
+		invoices.addChild(invSales);
 		docs.addChild(invoices);
 		inventory.addChild(products);
 		inventory.addChild(companies);
@@ -137,7 +143,9 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 					.getActiveWorkbenchWindow();
 			IHandlerService service = (IHandlerService) this.getSite().getService(
 					IHandlerService.class);
-			if(Messages.CategoriesView_invoices.toString().equals(selectedDomainObject.toString())){
+			if(Messages.CategoriesView_Purchases.toString().equals(selectedDomainObject.toString())){
+				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_INVOICES, null);
+			}else if(Messages.CategoriesView_Sales.toString().equals(selectedDomainObject.toString())){
 				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_INVOICES, null);
 			}else if(Messages.CategoriesView_products.toString().equals(selectedDomainObject.toString())){
 				service.executeCommand(ICommandIds.CMD_OPEN_INVENTORY_PRODUCTS, null);
