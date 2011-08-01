@@ -5,7 +5,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.softberries.klerk.dao.to.Company;
-import com.softberries.klerk.dao.to.Product;
 
 public class CompanyEditorInput implements IEditorInput {
 

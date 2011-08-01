@@ -11,6 +11,7 @@ public class AutocompleteTextSelector extends AutocompleteText {
 		super(text, selectionItems);
 	}
 
+	@Override
 	protected AutocompleteContentProposalProvider getContentProposalProvider(String[] proposals) {
 		return new AutocompleteSelectorContentProposalProvider(proposals, this.text);
 	}

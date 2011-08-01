@@ -154,6 +154,7 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 		new Label(parent, SWT.NONE);
 		// New to support the search
 		searchText.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent ke) {
 				filter.setSearchText(searchText.getText());
 				viewer.refresh();

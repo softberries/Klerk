@@ -11,13 +11,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.softberries.klerk.dao.to.Document;
-import com.softberries.klerk.gui.editors.DocumentsEditor;
 
 public class DocumentDetailsView extends ViewPart implements ISelectionListener {
 

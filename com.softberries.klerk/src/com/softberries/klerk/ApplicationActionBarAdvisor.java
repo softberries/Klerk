@@ -18,13 +18,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         super(configurer);
     }
 
-    protected void makeActions(IWorkbenchWindow window) {
+    @Override
+	protected void makeActions(IWorkbenchWindow window) {
     	showViewMenuMgr = new MenuManager("Show View","showview");
     	showViewItem = ContributionItemFactory.VIEWS_SHORTLIST.create(window); 
     	
     }
 
-    protected void fillMenuBar(IMenuManager menuBar) {
+    @Override
+	protected void fillMenuBar(IMenuManager menuBar) {
     	MenuManager windowMenu = new MenuManager("&Start",IWorkbenchActionConstants.M_WINDOW);
     	showViewMenuMgr.add(showViewItem);
     	windowMenu.add(showViewMenuMgr);

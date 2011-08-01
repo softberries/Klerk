@@ -11,7 +11,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.part.NullEditorInput;
 
 import com.softberries.klerk.gui.editors.CompaniesEditor;
-import com.softberries.klerk.gui.editors.DocumentsEditor;
 
 public class OpenCompaniesCommand implements IHandler {
 

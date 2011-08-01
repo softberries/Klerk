@@ -2,7 +2,6 @@ package com.softberries.klerk.gui.helpers.table;
 
 import java.util.List;
 
-import com.softberries.klerk.dao.test.*;
 import com.softberries.klerk.dao.to.*;
 import com.softberries.klerk.dao.*;
 

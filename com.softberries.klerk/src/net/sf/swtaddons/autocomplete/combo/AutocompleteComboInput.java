@@ -11,6 +11,7 @@ public class AutocompleteComboInput extends AutocompleteCombo {
 		super(combo);
 	}
 
+	@Override
 	protected AutocompleteContentProposalProvider getContentProposalProvider(String[] proposals) {
 		return new AutocompleteInputContentProposalProvider(proposals);
 	}

@@ -11,10 +11,12 @@ import org.eclipse.swt.widgets.Combo;
 public abstract class AutocompleteCombo extends AutocompleteWidget {
 	
 	private final class ProposalUpdateFocusListener implements FocusListener {
+		@Override
 		public void focusGained(FocusEvent e) {
 			provider.setProposals(combo.getItems());
 		}
 
+		@Override
 		public void focusLost(FocusEvent e) {
 			// do nothing
 		}

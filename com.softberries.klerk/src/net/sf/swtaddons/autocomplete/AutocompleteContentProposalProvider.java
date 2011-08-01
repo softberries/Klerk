@@ -37,6 +37,7 @@ public class AutocompleteContentProposalProvider implements IContentProposalProv
 	 * @return the array of Objects that represent valid proposals for the field
 	 *         given its current content.
 	 */
+	@Override
 	public IContentProposal [] getProposals(String contents, int position) {
 		List contentProposals = getMatchingProposals(this.proposals, contents);
 		return (IContentProposal[]) contentProposals.toArray(new IContentProposal[contentProposals.size()]);
@@ -71,15 +72,19 @@ public class AutocompleteContentProposalProvider implements IContentProposalProv
 		for (int i=0; i<matchingProposals.length; i++) {
 			final String proposal = matchingProposals[i];
 			contentProposals.add(new IContentProposal() {
+				@Override
 				public String getContent() {
 					return proposal;
 				}
+				@Override
 				public String getDescription() {
 					return null;
 				}
+				@Override
 				public String getLabel() {
 					return null;
 				}
+				@Override
 				public int getCursorPosition() {
 					return proposal.length();
 				}

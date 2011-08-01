@@ -42,6 +42,7 @@ public abstract class SingleObjectEditor extends EditorPart {
 		toolbar.setCursor(handCursor);
 		// Cursor needs to be explicitly disposed
 		toolbar.addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
 					handCursor.dispose();

@@ -17,6 +17,7 @@ import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
@@ -72,9 +73,10 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 
 		// general section
 		Section sectionGeneral = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionGeneral.setText("General Info");
 		sectionGeneral.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
@@ -188,9 +190,10 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 		sectionGeneral.setLayoutData(data);
 		// person addresses section
 		Section sectionDescription = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionDescription.setText("Addreses:");
 		sectionDescription.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}

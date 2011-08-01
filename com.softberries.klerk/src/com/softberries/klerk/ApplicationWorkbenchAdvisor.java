@@ -9,10 +9,12 @@ import com.softberries.klerk.gui.perspectives.MainPerspective;
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 
-    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+    @Override
+	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         return new ApplicationWorkbenchWindowAdvisor(configurer);
     }
 
+	@Override
 	public String getInitialWindowPerspectiveId() {
 		return MainPerspective.ID;
 	}

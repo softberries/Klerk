@@ -9,7 +9,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.part.NullEditorInput;
 
-import com.softberries.klerk.gui.editors.DocumentsEditor;
 import com.softberries.klerk.gui.editors.ProductsEditor;
 
 

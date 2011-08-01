@@ -6,7 +6,6 @@ import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -14,8 +13,6 @@ import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -37,13 +34,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -65,7 +61,7 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuanti
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelectedES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
 
-public class SingleDocumentEditor extends EditorPart implements ISelectionListener{
+public class SingleDocumentEditor extends EditorPart{
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument"; //$NON-NLS-1$
 	
@@ -123,9 +119,10 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 
 		// general section
 		Section sectionGeneral = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionGeneral.setText(Messages.SingleDocumentEditor_Main);
 		sectionGeneral.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
@@ -203,9 +200,10 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 		sectionGeneral.setLayoutData(data);
 		// invoice items section
 		Section sectionItems = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionItems.setText(Messages.SingleDocumentEditor_Invoice_Items);
 		sectionItems.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
@@ -225,9 +223,10 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 		sectionItems.setLayoutData(data);
 		// section summary
 		Section sectionSummary = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionSummary.setText(Messages.SingleDocumentEditor_Invoice_Summary);
 		sectionSummary.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
@@ -246,9 +245,10 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 
 		// section notes
 		Section sectionNotes = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionNotes.setText(Messages.SingleDocumentEditor_Notes);
 		sectionNotes.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
@@ -296,6 +296,7 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 		toolbar.setCursor(handCursor);
 		// Cursor needs to be explicitly disposed
 		toolbar.addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
 					handCursor.dispose();
@@ -318,6 +319,7 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 		toolbar.setCursor(handCursor);
 		// Cursor needs to be explicitly disposed
 		toolbar.addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
 					handCursor.dispose();
@@ -531,12 +533,8 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 	    	public void widgetSelected(SelectionEvent e) {
 	                DocumentItemDialog dialog = new DocumentItemDialog(PlatformUI.getWorkbench().
 	                        getActiveWorkbenchWindow().getShell());
-	                int status = dialog.open();
-	                
-	                if(status == Dialog.OK){
-	                	int index = dialog.getProductCombo().getSelectionIndex();
-	                	System.out.println("index: " + index);
-	                }
+	                DocumentItem it = dialog.getItemFromDialog();
+	                System.out.println(it);
 	            }
 	        });
 			return button;
@@ -564,13 +562,5 @@ public class SingleDocumentEditor extends EditorPart implements ISelectionListen
 		}
 		
 	}
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		System.out.println("SELECTION SingleDoc: " + sel + "PART: " + part);
-		Object selection = ((IStructuredSelection) sel).getFirstElement();
-		if(selection != null && selection instanceof DocumentItem){
-			DocumentItem p = (DocumentItem)selection;
-			System.out.println("DocumentItem: " + p);
-		}
-	}
+	
 }

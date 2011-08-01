@@ -3,7 +3,6 @@ package com.softberries.klerk.gui.helpers.table;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.softberries.klerk.dao.to.Company;
-import com.softberries.klerk.dao.to.Document;
 
 public class CompanyComparator extends SimpleKlerkComparator {
 

@@ -1,9 +1,6 @@
 package com.softberries.klerk.gui.helpers.table;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.swt.SWT;
-
 import com.softberries.klerk.dao.to.Document;
 
 public class DocumentComparator extends SimpleKlerkComparator {

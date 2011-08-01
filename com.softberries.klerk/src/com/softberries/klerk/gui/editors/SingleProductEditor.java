@@ -5,36 +5,25 @@ import java.sql.SQLException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.softberries.klerk.Activator;
-import com.softberries.klerk.Application;
 import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.ProductDao;
 import com.softberries.klerk.dao.to.Product;
@@ -86,9 +75,10 @@ public class SingleProductEditor extends SingleObjectEditor {
 
 		// general section
 		Section sectionGeneral = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionGeneral.setText(Messages.SingleProductEditor_Main);
 		sectionGeneral.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
@@ -143,9 +133,10 @@ public class SingleProductEditor extends SingleObjectEditor {
 		sectionGeneral.setLayoutData(data);
 		// product description section
 		Section sectionDescription = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TWISTIE | Section.EXPANDED);
+				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		sectionDescription.setText(Messages.SingleProductEditor_Description);
 		sectionDescription.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}

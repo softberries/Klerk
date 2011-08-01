@@ -2,31 +2,21 @@ package com.softberries.klerk.gui.editors;
 
 import java.sql.SQLException;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.softberries.klerk.dao.PeopleDao;
-import com.softberries.klerk.dao.ProductDao;
-import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Person;
-import com.softberries.klerk.gui.editors.input.CompanyEditorInput;
 import com.softberries.klerk.gui.editors.input.PersonEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
-import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 import com.softberries.klerk.gui.helpers.table.PeopleModelProvider;
 import com.softberries.klerk.gui.helpers.table.PersonComparator;
 import com.softberries.klerk.gui.helpers.table.PersonFilter;
@@ -96,6 +86,7 @@ public class PeopleEditor extends GenericKlerkEditor{
 	
 
 
+	@Override
 	protected void createColumns(final Composite parent, final TableViewer viewer) {
 		String[] titles = { Messages.ProductsEditor_Code, Messages.ProductsEditor_Name, Messages.ProductsEditor_Description};
 		int[] bounds = { 100, 200, 100 };
@@ -127,6 +118,7 @@ public class PeopleEditor extends GenericKlerkEditor{
 		});
 	}
 
+	@Override
 	protected void onDoubleClick(IStructuredSelection selection){
 		Person p = (Person) selection.getFirstElement();
 		openSingleObjectEditor(new PersonEditorInput(p), SinglePersonEditor.ID);

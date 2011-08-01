@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 
@@ -100,6 +101,19 @@ public class DocumentItemDialog extends Dialog {
 		super.configureShell(shell);
 	      shell.setText("Find Product");
 	}
-	
+	public DocumentItem getItemFromDialog(){
+		int result = super.open();
+		if(result == Dialog.OK){
+			return getDocumentItemFromCombo();
+		}else{
+			return null;
+		}
+		
+	}
+
+	private DocumentItem getDocumentItemFromCombo() {
+		int index = productCombo.getSelectionIndex();
+		return null;
+	}
 
 }

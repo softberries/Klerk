@@ -1,8 +1,6 @@
 package com.softberries.klerk.gui.helpers.table;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-
 import com.softberries.klerk.dao.to.Person;
 
 

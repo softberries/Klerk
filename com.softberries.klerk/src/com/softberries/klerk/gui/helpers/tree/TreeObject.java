@@ -19,6 +19,7 @@ public class TreeObject {
 	public TreeParent getParent() {
 		return parent;
 	}
+	@Override
 	public String toString() {
 		return getName();
 	}

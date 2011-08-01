@@ -25,7 +25,6 @@ import org.eclipse.ui.part.ViewPart;
 
 
 import com.softberries.klerk.ICommandIds;
-import com.softberries.klerk.commands.OpenInvoicesCommand;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.tree.*;

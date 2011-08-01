@@ -10,9 +10,11 @@ import com.softberries.klerk.Activator;
 
 public class TreeViewLabelProvider extends LabelProvider {
 
+	@Override
 	public String getText(Object obj) {
 		return obj.toString();
 	}
+	@Override
 	public Image getImage(Object obj) {
 		String imageKey = ((TreeObject)obj).getIconID();
 		AbstractUIPlugin plugin = Activator.getDefault();
