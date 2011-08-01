@@ -1,6 +1,8 @@
 package com.softberries.klerk.gui.editors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
@@ -21,7 +23,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -32,6 +36,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -39,10 +44,9 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wb.swt.ResourceManager;
 
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Document;
@@ -203,6 +207,7 @@ public class SingleDocumentEditor extends EditorPart {
 			}
 		});
 		toolkit.createCompositeSeparator(sectionItems);
+		createItemsSectionToolbar(sectionItems, toolkit);
 		Composite sectionItemsClient = toolkit.createComposite(sectionItems);
 		TableWrapLayout twLayoutSectionItems = new TableWrapLayout();
 		twLayoutSectionItems.numColumns = 2;
@@ -295,21 +300,52 @@ public class SingleDocumentEditor extends EditorPart {
 		});
 
 		// save
-		CommandContributionItemParameter saveContributionParameter = new CommandContributionItemParameter(
-				this.getSite(), null, Messages.SingleDocumentEditor_Preferences,
-				CommandContributionItem.STYLE_PUSH);
-		String imageKey = IImageKeys.ALL_CATEGORIES;
-		AbstractUIPlugin plugin = Activator.getDefault();
-		ImageRegistry imageRegistry = plugin.getImageRegistry();
-		saveContributionParameter.icon = imageRegistry.getDescriptor(imageKey);
-
-		CommandContributionItem saveMenu = new CommandContributionItem(
-				saveContributionParameter);
-
-		toolBarManager.add(saveMenu);
-
+		ActionContributionItem saveMenuAction = new ActionContributionItem(ActionFactory.SAVE.create(getEditorSite().getWorkbenchWindow()));
+		toolBarManager.add(saveMenuAction);
 		toolBarManager.update(true);
 
+		section.setTextClient(toolbar);
+	}
+	private void createItemsSectionToolbar(Section section, FormToolkit toolkit) {
+		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+		ToolBar toolbar = toolBarManager.createControl(section);
+		final Cursor handCursor = new Cursor(Display.getCurrent(),
+				SWT.CURSOR_HAND);
+		toolbar.setCursor(handCursor);
+		// Cursor needs to be explicitly disposed
+		toolbar.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
+					handCursor.dispose();
+				}
+			}
+		});
+
+		// add item
+//		CommandContributionItemParameter addContributionParameter = new CommandContributionItemParameter(
+//				this.getSite(), null, "add_command_id",
+//				CommandContributionItem.STYLE_PUSH);
+//		String imageKey = IImageKeys.ADD_ITEM;
+//		AbstractUIPlugin plugin = Activator.getDefault();
+//		ImageRegistry imageRegistry = plugin.getImageRegistry();
+//		addContributionParameter.icon = imageRegistry.getDescriptor(imageKey);
+//		CommandContributionItem addMenu = new CommandContributionItem(
+//				addContributionParameter);
+//		toolBarManager.add(addMenu);
+//		
+//		CommandContributionItemParameter deleteContributionParameter = new CommandContributionItemParameter(
+//				this.getSite(), null, "delete_command_id",
+//				CommandContributionItem.STYLE_PUSH);
+//		imageKey = IImageKeys.DELETE_DOC_ITEM;
+//		plugin = Activator.getDefault();
+//		imageRegistry = plugin.getImageRegistry();
+//		deleteContributionParameter.icon = imageRegistry.getDescriptor(imageKey);
+//		CommandContributionItem delMenu = new CommandContributionItem(
+//				deleteContributionParameter);
+//		toolBarManager.add(delMenu);
+		toolBarManager.add(new AddItemControlContribution());
+		toolBarManager.add(new DeleteItemControlContribution());
+		toolBarManager.update(true);
 		section.setTextClient(toolbar);
 	}
 
@@ -474,5 +510,47 @@ public class SingleDocumentEditor extends EditorPart {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+	}
+	private class AddItemControlContribution extends ControlContribution{
+
+		protected AddItemControlContribution() {
+			super("Add");
+		}
+
+		@Override
+		protected Control createControl(Composite parent) {
+			Button button = new Button(parent, SWT.PUSH);
+			button.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/add.png"));
+			
+	        button.addSelectionListener(new SelectionAdapter() {
+	        @Override
+	    	public void widgetSelected(SelectionEvent e) {
+	                System.out.println("add item");
+	            }
+	        });
+			return button;
+		}
+		
+	}
+	private class DeleteItemControlContribution extends ControlContribution{
+
+		protected DeleteItemControlContribution() {
+			super("Delete");
+		}
+
+		@Override
+		protected Control createControl(Composite parent) {
+			Button button = new Button(parent, SWT.PUSH);
+			button.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/remove.png"));
+			
+	        button.addSelectionListener(new SelectionAdapter() {
+	        @Override
+	    	public void widgetSelected(SelectionEvent e) {
+	                System.out.println("delete item");
+	            }
+	        });
+			return button;
+		}
+		
 	}
 }
