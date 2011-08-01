@@ -6,6 +6,7 @@ import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -13,6 +14,8 @@ import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -34,6 +37,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -60,7 +65,7 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuanti
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelectedES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
 
-public class SingleDocumentEditor extends EditorPart {
+public class SingleDocumentEditor extends EditorPart implements ISelectionListener{
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument"; //$NON-NLS-1$
 	
@@ -524,8 +529,14 @@ public class SingleDocumentEditor extends EditorPart {
 	        button.addSelectionListener(new SelectionAdapter() {
 	        @Override
 	    	public void widgetSelected(SelectionEvent e) {
-	                new DocumentItemDialog(PlatformUI.getWorkbench().
-	                        getActiveWorkbenchWindow().getShell()).open();
+	                DocumentItemDialog dialog = new DocumentItemDialog(PlatformUI.getWorkbench().
+	                        getActiveWorkbenchWindow().getShell());
+	                int status = dialog.open();
+	                
+	                if(status == Dialog.OK){
+	                	int index = dialog.getProductCombo().getSelectionIndex();
+	                	System.out.println("index: " + index);
+	                }
 	            }
 	        });
 			return button;
@@ -552,5 +563,14 @@ public class SingleDocumentEditor extends EditorPart {
 			return button;
 		}
 		
+	}
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
+		System.out.println("SELECTION SingleDoc: " + sel + "PART: " + part);
+		Object selection = ((IStructuredSelection) sel).getFirstElement();
+		if(selection != null && selection instanceof DocumentItem){
+			DocumentItem p = (DocumentItem)selection;
+			System.out.println("DocumentItem: " + p);
+		}
 	}
 }
