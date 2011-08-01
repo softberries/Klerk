@@ -1,5 +1,8 @@
 #exported files for the end user
 exported/**/*
+#java specific
+*.class
+com.softberries.klerk/bin/**/*
 
 
 
