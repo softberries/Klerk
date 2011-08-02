@@ -1,6 +1,8 @@
 package com.softberries.klerk.gui.dialogs;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sf.swtaddons.autocomplete.combo.AutocompleteComboInput;
 
@@ -70,7 +72,19 @@ public class DocumentItemDialog extends Dialog {
 			
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-				System.out.println("disposed: " + productCombo.getText());
+				String selected = productCombo.getText();
+				Pattern REGEX = Pattern.compile("\\([A-Z0-9]*\\)$");
+				Matcher m = REGEX.matcher(selected);
+				String result = "";
+				if(m.find()) {
+				    result = m.group();
+				    //remove the brackets
+				    result = result.replace("(", "");
+				    result = result.replace(")", "");
+				}
+				//regex to find product code within braces at the end of line
+				// \([A-Z0-9]*\)$
+				System.out.println("disposed: " + result);
 			}
 		});
 		new AutocompleteComboInput(productCombo);
