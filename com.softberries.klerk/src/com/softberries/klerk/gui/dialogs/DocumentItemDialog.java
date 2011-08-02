@@ -7,6 +7,8 @@ import net.sf.swtaddons.autocomplete.combo.AutocompleteComboInput;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,9 +22,9 @@ import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 
-public class DocumentItemDialog extends Dialog {
+public class DocumentItemDialog extends Dialog implements SelectionListener {
 	private Combo productCombo;
-
+	private String selectedStr;
 	/**
 	 * Create the dialog.
 	 * @param parentShell
@@ -60,6 +62,7 @@ public class DocumentItemDialog extends Dialog {
 		productCombo = new Combo(container, SWT.BORDER);
 		productCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		productCombo.setItems(createProductDescriptions(ProductsModelProvider.INSTANCE.getProducts()));
+		productCombo.addSelectionListener(this);
 		new AutocompleteComboInput(productCombo);
 		// Make the selection available to other views
 //		getSite().setSelectionProvider(productCombo);
@@ -112,8 +115,20 @@ public class DocumentItemDialog extends Dialog {
 	}
 
 	private DocumentItem getDocumentItemFromCombo() {
-		int index = productCombo.getSelectionIndex();
-		return null;
+		//int index = productCombo.getSelectionIndex();
+		System.out.println("returning document item");
+		return new DocumentItem();
+		
+	}
+
+	@Override
+	public void widgetSelected(SelectionEvent e) {
+		
+	}
+
+	@Override
+	public void widgetDefaultSelected(SelectionEvent e) {
+		
 	}
 
 }
