@@ -50,6 +50,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
+import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.dialogs.DocumentItemDialog;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
@@ -533,8 +534,11 @@ public class SingleDocumentEditor extends EditorPart{
 	    	public void widgetSelected(SelectionEvent e) {
 	                DocumentItemDialog dialog = new DocumentItemDialog(PlatformUI.getWorkbench().
 	                        getActiveWorkbenchWindow().getShell());
-	                DocumentItem it = dialog.getItemFromDialog();
-	                System.out.println(it);
+	                Product p = dialog.getItemFromDialog();
+	                DocumentItem it = new DocumentItem();
+	                it.setProduct(p);
+	                
+	                document.getItems().add(it);
 	            }
 	        });
 			return button;

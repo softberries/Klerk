@@ -82,6 +82,7 @@ public class DocumentItemDialog extends Dialog {
 				    result = result.replace("(", "");
 				    result = result.replace(")", "");
 				}
+				selectedStr = result;
 				//regex to find product code within braces at the end of line
 				// \([A-Z0-9]*\)$
 				System.out.println("disposed: " + result);
@@ -125,20 +126,23 @@ public class DocumentItemDialog extends Dialog {
 		super.configureShell(shell);
 	      shell.setText("Find Product");
 	}
-	public DocumentItem getItemFromDialog(){
+	public Product getItemFromDialog(){
 		int result = super.open();
 		if(result == Dialog.OK){
-			return getDocumentItemFromCombo();
+			return getProductFromCombo();
 		}else{
 			return null;
 		}
 		
 	}
 
-	private DocumentItem getDocumentItemFromCombo() {
-		//int index = productCombo.getSelectionIndex();
-		System.out.println("returning document item: " + selectedStr);
-		return new DocumentItem();
+	private Product getProductFromCombo() {
+		for(Product p : ProductsModelProvider.INSTANCE.getProducts()){
+			if(p.getCode().equals(selectedStr)){
+				return p;
+			}
+		}
+		return null;
 		
 	}
 
