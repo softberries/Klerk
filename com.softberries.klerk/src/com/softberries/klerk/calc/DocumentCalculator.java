@@ -91,6 +91,7 @@ public class DocumentCalculator {
 		di.setPriceGrossAll(priceGrossAll.getAmount().setScale(2).toPlainString());
 		di.setPriceTaxAll(taxValueAll.getAmount().setScale(2).toPlainString());
 		di.setPriceNetSingle(priceNetSingle.getAmount().setScale(2).toPlainString());
+		di.setPriceNetAll(priceNetAllCalc.getAmount().setScale(2).toPlainString());
 		return di;
 	}
 	public DocumentItem calculateByTaxPercent(DocumentItem di, Object value) {

@@ -1,11 +1,15 @@
 package com.softberries.klerk.gui.editors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -28,12 +32,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -72,21 +78,20 @@ public class SingleDocumentEditor extends EditorPart{
 	private ScrolledForm form;
 	private TableViewer itemsTableViewer;	
 	private DocumentItemComparator comparator;
+	private boolean dirty = false;
 
 	public SingleDocumentEditor() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-
+		this.dirty = false;
+		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -100,13 +105,11 @@ public class SingleDocumentEditor extends EditorPart{
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return false;
+		return dirty;
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -360,7 +363,7 @@ public class SingleDocumentEditor extends EditorPart{
 	private void createColumns(final Composite parent, final TableViewer viewer) {
 		String[] titles = { Messages.SingleDocumentEditor_Selected, Messages.SingleDocumentEditor_Code, Messages.SingleDocumentEditor_Name, Messages.SingleDocumentEditor_Base_Price, Messages.SingleDocumentEditor_Quantity, Messages.SingleDocumentEditor_Price_Net,
 				Messages.SingleDocumentEditor_Tax_Percent, Messages.SingleDocumentEditor_Tax, Messages.SingleDocumentEditor_Price_Gross};
-		int[] bounds = {24, 50, 200, 100, 100, 100, 100, 100, 100};
+		int[] bounds = {24, 150, 200, 100, 100, 100, 100, 100, 100};
 		
 		//selected
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
@@ -535,10 +538,22 @@ public class SingleDocumentEditor extends EditorPart{
 	                DocumentItemDialog dialog = new DocumentItemDialog(PlatformUI.getWorkbench().
 	                        getActiveWorkbenchWindow().getShell());
 	                Product p = dialog.getItemFromDialog();
+	                //TODO - this just fills the values with 0.0
 	                DocumentItem it = new DocumentItem();
 	                it.setProduct(p);
-	                
+	                it.setDocumentId(document.getId());
+	                it.setPriceGrossAll("0.00");
+	                it.setPriceGrossSingle("0.0");
+	                it.setPriceNetAll("0.00");
+	                it.setPriceNetSingle("0.00");
+	                it.setPriceTaxAll("0.00");
+	                it.setPriceTaxSingle("0.00");
+	                it.setQuantity("0.00");
+	                it.setTaxValue("0.00");
 	                document.getItems().add(it);
+	                itemsTableViewer.refresh();
+        			dirty = true;
+	                firePropertyChange(ISaveablePart.PROP_DIRTY);
 	            }
 	        });
 			return button;
@@ -559,7 +574,20 @@ public class SingleDocumentEditor extends EditorPart{
 	        button.addSelectionListener(new SelectionAdapter() {
 	        @Override
 	    	public void widgetSelected(SelectionEvent e) {
-	                System.out.println("delete item");
+		        	List<DocumentItem> toDel = new ArrayList<DocumentItem>();
+		        	for(DocumentItem it : document.getItems()){
+		        		if(it.isSelected()){
+		        			toDel.add(it);
+		        		}
+	                }
+		        	Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		        	boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete these items?");
+            		if(confirmed){
+            			document.getItems().removeAll(toDel);
+            			itemsTableViewer.refresh();
+            			dirty = true;
+            			firePropertyChange(ISaveablePart.PROP_DIRTY);
+            		}
 	            }
 	        });
 			return button;

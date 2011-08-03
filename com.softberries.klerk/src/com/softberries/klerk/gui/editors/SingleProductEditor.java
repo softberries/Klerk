@@ -56,6 +56,12 @@ public class SingleProductEditor extends SingleObjectEditor {
 		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
 
+	private String prepareProductCode(String code) {
+		code = code.toUpperCase();
+		code = code.replaceAll("[^a-zA-Z0-9]", "");
+		return code;
+	}
+
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
@@ -100,7 +106,7 @@ public class SingleProductEditor extends SingleObjectEditor {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				product.setCode(codeTxt.getText());
+				product.setCode(prepareProductCode(codeTxt.getText()));
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			}
