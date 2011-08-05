@@ -1,11 +1,20 @@
 package com.softberries.klerk.calc;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.softberries.klerk.dao.to.DocumentItem;
+import com.softberries.klerk.dao.to.SummaryTableItem;
 import com.softberries.klerk.money.Money;
 
 public class DocumentCalculator {
+
+	private static final String TAX_LEVEL = "Tax Level: ";
+	private static final String PRICE_ALL_NET = "NET";
+	private static final String PRICE_ALL_GROSS = "GROSS";
 
 	public DocumentItem calculateByQuantity(DocumentItem di, Object value){
 		try{
@@ -113,4 +122,50 @@ public class DocumentCalculator {
 		di.setPriceTaxAll(taxValueAll.getAmount().setScale(2).toPlainString());
 		return di;
 	}
+	
+	public List<SummaryTableItem> getSummaryItems(List<DocumentItem> items) {
+		List<SummaryTableItem> result = new ArrayList<SummaryTableItem>();
+		Map<String, Money> summaryItems = new HashMap<String, Money>();
+		if(items == null || items.size() == 0){
+			SummaryTableItem priceNetSTI = new SummaryTableItem();
+			priceNetSTI.setName(PRICE_ALL_NET);
+			priceNetSTI.setValue("0.00");
+			result.add(priceNetSTI);
+			
+			SummaryTableItem priceGrossSTI = new SummaryTableItem();
+			priceGrossSTI.setName(PRICE_ALL_GROSS);
+			priceGrossSTI.setValue("0.00");
+			result.add(priceGrossSTI);
+			
+			SummaryTableItem priceTaxSTI = new SummaryTableItem();
+			priceTaxSTI.setName(TAX_LEVEL + "0%");
+			priceTaxSTI.setValue("0.00");
+			result.add(priceTaxSTI);
+			return result;
+		}
+		for(DocumentItem di : items){
+			Money priceNet = new Money(new BigDecimal(di.getPriceNetAll()).setScale(2));
+			Money priceGross = new Money(new BigDecimal(di.getPriceGrossAll()).setScale(2));
+			Money taxLevel = new Money(new BigDecimal(di.getTaxValue()).setScale(2));
+			Money taxPrice = new Money(new BigDecimal(di.getPriceTaxAll()).setScale(2));
+			Money priceNetAll = summaryItems.get(PRICE_ALL_NET);
+			if(priceNetAll == null){
+				summaryItems.put(PRICE_ALL_NET, priceNet);
+				System.out.println("new price" + priceNet);
+			}else{
+				Money temp = summaryItems.get(PRICE_ALL_NET);
+				System.out.println("temp: " + temp);
+				Money res = priceNet.plus(priceNetAll);
+				System.out.println("res: " + res);
+				summaryItems.remove(PRICE_ALL_NET);
+				summaryItems.put(PRICE_ALL_NET, res);
+			}
+		}
+		SummaryTableItem priceNetSTI = new SummaryTableItem();
+		priceNetSTI.setName(PRICE_ALL_NET);
+		priceNetSTI.setValue(summaryItems.get(PRICE_ALL_NET).getAmount().setScale(2).toPlainString());
+		result.add(priceNetSTI);
+		return result;
+	}
+
 }

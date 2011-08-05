@@ -1,5 +1,6 @@
 package com.softberries.klerk.gui.editors;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,12 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -54,9 +59,11 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.dao.to.Product;
+import com.softberries.klerk.dao.to.SummaryTableItem;
 import com.softberries.klerk.gui.dialogs.DocumentItemDialog;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
@@ -68,15 +75,16 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuanti
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelectedES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
 
-public class SingleDocumentEditor extends EditorPart{
+public class SingleDocumentEditor extends EditorPart implements PropertyChangeListener{
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument"; //$NON-NLS-1$
 	
-
+	
 	private Document document;
 	private final FormToolkit toolkit = new FormToolkit(Display.getDefault());
 	private ScrolledForm form;
 	private TableViewer itemsTableViewer;	
+	private TableViewer summaryTableViewer;	
 	private DocumentItemComparator comparator;
 	private boolean dirty = false;
 
@@ -101,6 +109,9 @@ public class SingleDocumentEditor extends EditorPart{
 		setInput(input);
 		document = (Document) input.getAdapter(Document.class);
 		setPartName(document.getTitle());
+		for(DocumentItem di : this.document.getItems()){
+			di.addPropertyChangeListener("selected", this);
+		}
 	}
 
 	@Override
@@ -225,6 +236,8 @@ public class SingleDocumentEditor extends EditorPart{
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionItems.setLayoutData(data);
+		
+		
 		// section summary
 		Section sectionSummary = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
@@ -237,11 +250,20 @@ public class SingleDocumentEditor extends EditorPart{
 		});
 		toolkit.createCompositeSeparator(sectionSummary);
 		sectionSummary.setDescription(Messages.SingleDocumentEditor_Summary);
+		
+		
 		Composite sectionSummaryClient = toolkit
 				.createComposite(sectionSummary);
 		TableWrapLayout twLayoutSectionSummary = new TableWrapLayout();
-		twLayoutSectionSummary.numColumns = 2;
+		twLayoutSectionSummary.numColumns = 4;
 		sectionSummaryClient.setLayout(twLayoutSectionSummary);
+		Composite filler = toolkit.createComposite(sectionSummaryClient);
+		data = new TableWrapData(TableWrapData.FILL_GRAB);
+		data.colspan = 3;
+		filler.setLayoutData(data);
+		
+		createSummaryTableViewer(sectionSummaryClient);
+		
 		sectionSummary.setClient(sectionSummaryClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
@@ -258,6 +280,7 @@ public class SingleDocumentEditor extends EditorPart{
 			}
 		});
 		toolkit.createCompositeSeparator(sectionNotes);
+
 		Composite sectionNotesClient = toolkit.createComposite(sectionNotes);
 		TableWrapLayout twLayoutsectionNotes = new TableWrapLayout();
 		twLayoutsectionNotes.numColumns = 2;
@@ -269,7 +292,25 @@ public class SingleDocumentEditor extends EditorPart{
 		data.colspan = 2;
 		sectionNotes.setLayoutData(data);
 	}
+	private void createSummaryTableViewer(Composite parent){
+		summaryTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		createColumnsSummary(parent, summaryTableViewer);
+		final Table table = summaryTableViewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
 
+		summaryTableViewer.setContentProvider(new ArrayContentProvider());
+		// Get the content for the viewer, setInput will call getElements in the
+		// contentProvider
+		summaryTableViewer.setInput(this.document.getSummaryItems());
+		
+		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
+		twd.colspan = 1;
+		summaryTableViewer.getControl().setLayoutData(twd);
+		
+	}
+	
 	private void createTableViewer(Composite parent) {
 		itemsTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
@@ -290,6 +331,7 @@ public class SingleDocumentEditor extends EditorPart{
 		itemsTableViewer.getControl().setLayoutData(twd);
 		comparator = new DocumentItemComparator();
 		itemsTableViewer.setComparator(comparator);
+		
 	}
 
 	private void createSectionToolbar(Section section, FormToolkit toolkit) {
@@ -330,29 +372,6 @@ public class SingleDocumentEditor extends EditorPart{
 				}
 			}
 		});
-
-		// add item
-//		CommandContributionItemParameter addContributionParameter = new CommandContributionItemParameter(
-//				this.getSite(), null, "add_command_id",
-//				CommandContributionItem.STYLE_PUSH);
-//		String imageKey = IImageKeys.ADD_ITEM;
-//		AbstractUIPlugin plugin = Activator.getDefault();
-//		ImageRegistry imageRegistry = plugin.getImageRegistry();
-//		addContributionParameter.icon = imageRegistry.getDescriptor(imageKey);
-//		CommandContributionItem addMenu = new CommandContributionItem(
-//				addContributionParameter);
-//		toolBarManager.add(addMenu);
-//		
-//		CommandContributionItemParameter deleteContributionParameter = new CommandContributionItemParameter(
-//				this.getSite(), null, "delete_command_id",
-//				CommandContributionItem.STYLE_PUSH);
-//		imageKey = IImageKeys.DELETE_DOC_ITEM;
-//		plugin = Activator.getDefault();
-//		imageRegistry = plugin.getImageRegistry();
-//		deleteContributionParameter.icon = imageRegistry.getDescriptor(imageKey);
-//		CommandContributionItem delMenu = new CommandContributionItem(
-//				deleteContributionParameter);
-//		toolBarManager.add(delMenu);
 		toolBarManager.add(new AddItemControlContribution());
 		toolBarManager.add(new DeleteItemControlContribution());
 		toolBarManager.update(true);
@@ -366,7 +385,7 @@ public class SingleDocumentEditor extends EditorPart{
 		int[] bounds = {24, 150, 200, 100, 100, 100, 100, 100, 100};
 		
 		//selected
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
+		TableViewerColumn col = createTableViewerColumn(itemsTableViewer, titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -384,7 +403,7 @@ public class SingleDocumentEditor extends EditorPart{
 		});
 		col.setEditingSupport(new DocumentItemSelectedES(viewer));
 		// code
-		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col = createTableViewerColumn(itemsTableViewer,titles[1], bounds[1], 1);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -394,7 +413,7 @@ public class SingleDocumentEditor extends EditorPart{
 		});
 
 		// name
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col = createTableViewerColumn(itemsTableViewer,titles[2], bounds[2], 2);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -403,7 +422,7 @@ public class SingleDocumentEditor extends EditorPart{
 			}
 		});
 		// price for single item
-		col = createTableViewerColumn(titles[3], bounds[3], 3);
+		col = createTableViewerColumn(itemsTableViewer,titles[3], bounds[3], 3);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -413,7 +432,7 @@ public class SingleDocumentEditor extends EditorPart{
 		});
 		col.setEditingSupport(new DocumentItemBasePriceES(viewer));
 		// quantity
-		col = createTableViewerColumn(titles[4], bounds[4], 4);
+		col = createTableViewerColumn(itemsTableViewer,titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -423,7 +442,7 @@ public class SingleDocumentEditor extends EditorPart{
 		});
 		col.setEditingSupport(new DocumentItemQuantityES(viewer));
 		// price net all
-		col = createTableViewerColumn(titles[5], bounds[5], 5);
+		col = createTableViewerColumn(itemsTableViewer,titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -433,7 +452,7 @@ public class SingleDocumentEditor extends EditorPart{
 		});
 		col.setEditingSupport(new DocumentItemPriceNetAllES(viewer));
 		// tax percent
-		col = createTableViewerColumn(titles[6], bounds[6], 6);
+		col = createTableViewerColumn(itemsTableViewer,titles[6], bounds[6], 6);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -443,7 +462,7 @@ public class SingleDocumentEditor extends EditorPart{
 		});
 		col.setEditingSupport(new DocumentItemTaxPercentES(viewer));
 		// tax value
-		col = createTableViewerColumn(titles[7], bounds[7], 7);
+		col = createTableViewerColumn(itemsTableViewer,titles[7], bounds[7], 7);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -452,7 +471,7 @@ public class SingleDocumentEditor extends EditorPart{
 			}
 		});
 		// price gross
-		col = createTableViewerColumn(titles[8], bounds[8], 8);
+		col = createTableViewerColumn(itemsTableViewer,titles[8], bounds[8], 8);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -461,12 +480,38 @@ public class SingleDocumentEditor extends EditorPart{
 			}
 		});
 		col.setEditingSupport(new DocumentItemPriceGrossAllES(viewer));
+		
 	}
 
-	private TableViewerColumn createTableViewerColumn(String title, int bound,
+	private void createColumnsSummary(final Composite parent, final TableViewer viewer) {
+		String[] titles = {"Name", "Value"};
+		int[] bounds = {200, 200};
+		
+		//name
+		TableViewerColumn col = createTableViewerColumn(summaryTableViewer, titles[0], bounds[0], 0);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				SummaryTableItem p = (SummaryTableItem) element;
+				return p.getName();
+			}
+		});
+
+		// value
+		col = createTableViewerColumn(summaryTableViewer, titles[1], bounds[1], 1);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				SummaryTableItem p = (SummaryTableItem) element;
+				return p.getValue();
+			}
+		});
+		
+	}
+	private TableViewerColumn createTableViewerColumn(TableViewer viewer, String title, int bound,
 			final int colNumber) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(
-				itemsTableViewer, SWT.NONE);
+				viewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(title);
 		column.setWidth(bound);
@@ -593,6 +638,11 @@ public class SingleDocumentEditor extends EditorPart{
 			return button;
 		}
 		
+	}
+
+	@Override
+	public void propertyChange(java.beans.PropertyChangeEvent arg0) {
+		System.out.println("property changed");
 	}
 	
 }

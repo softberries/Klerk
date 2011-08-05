@@ -1,5 +1,8 @@
 package com.softberries.klerk.dao.to;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 public class DocumentItem {
 
 	private Long id;
@@ -14,6 +17,16 @@ public class DocumentItem {
 	private String taxValue;
 	private String quantity;
 	private boolean selected;
+	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+	
+	public void addPropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
 	/**
 	 * @return the id
 	 */
@@ -31,7 +44,7 @@ public class DocumentItem {
 		return selected;
 	}
 	public void setSelected(boolean selected) {
-		this.selected = selected;
+		propertyChangeSupport.firePropertyChange("selected", this.selected, this.selected = selected);
 	}
 	public String getPriceNetSingle() {
 		return priceNetSingle;

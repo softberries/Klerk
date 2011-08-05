@@ -15,6 +15,7 @@ public class Document implements Serializable{
 	private String placeCreated;
 	private Person creator;
 	private List<DocumentItem> items;
+	private List<SummaryTableItem> summaryItems;
 	
 	
 	/**
@@ -124,6 +125,12 @@ public class Document implements Serializable{
 	 */
 	public void setItems(List<DocumentItem> items) {
 		this.items = items;
+	}
+	public List<SummaryTableItem> getSummaryItems() {
+		return summaryItems;
+	}
+	public void setSummaryItems(List<SummaryTableItem> summaryItems) {
+		this.summaryItems = summaryItems;
 	}
 	
 	
