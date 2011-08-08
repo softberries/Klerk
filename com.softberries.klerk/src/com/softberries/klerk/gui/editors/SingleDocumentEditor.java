@@ -1,6 +1,7 @@
 package com.softberries.klerk.gui.editors;
 
 import java.beans.PropertyChangeListener;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -174,11 +175,12 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		sectionGeneralClient.setLayout(twLayoutSectionGeneral);
 		// invoice title
 		Label titleLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Title);
-		Text titleTxt = toolkit.createText(sectionGeneralClient,
+		final Text titleTxt = toolkit.createText(sectionGeneralClient,
 				this.document.getTitle(), SWT.BORDER);
 		titleTxt.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
+				document.setTitle(titleTxt.getText());
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			}
@@ -189,13 +191,15 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		// invoice created date
 		Label createdDateLbl = toolkit.createLabel(sectionGeneralClient,
 				Messages.SingleDocumentEditor_Created_Date);
-		DateTime createDate = new DateTime(sectionGeneralClient, SWT.DATE
+		final DateTime createDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
 		createDate.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				document.setCreatedDate(new Date(createDate.getYear(), createDate.getMonth(), createDate.getDay()));
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -206,7 +210,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_sellerLbl.indent = 55;
 		sellerLbl.setLayoutData(twd_sellerLbl);
-		Text sellerTxt = toolkit.createText(sectionGeneralClient, "seller", SWT.BORDER); //$NON-NLS-1$
+		Text sellerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
 		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_sellerTxt.indent = 5;
 		twd_sellerTxt.align = TableWrapData.FILL;
@@ -221,14 +225,25 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		// invoice transaction date
 		Label transactionDateLbl = toolkit.createLabel(sectionGeneralClient,
 				Messages.SingleDocumentEditor_Transaction_Date);
-		DateTime transactionDate = new DateTime(sectionGeneralClient, SWT.DATE
+		final DateTime transactionDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
+		transactionDate.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				document.setTransactionDate(new Date(transactionDate.getYear(), transactionDate.getMonth(), transactionDate.getDay()));
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		// invoice buyer
 		Label buyerLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Buyer);
 		TableWrapData twd_buyerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerLbl.indent = 55;
 		buyerLbl.setLayoutData(twd_buyerLbl);
-		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
+		Text buyerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
 		new AutocompleteTextInput(buyerTxt, getCompanyNames(CompaniesModelProvider.INSTANCE.getCompanies()));
 		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerTxt.indent = 5;
@@ -237,19 +252,21 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		buyerTxt.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
+				//TO-DO set buyer on document
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			}
 		});
 		buyerTxt.setLayoutData(twd_buyerTxt);
-		// invoice transaction date
+		// invoice due date
 		Label dueDateLbl = toolkit.createLabel(sectionGeneralClient,
 				Messages.SingleDocumentEditor_due_date);
-		DateTime dueDate = new DateTime(sectionGeneralClient, SWT.DATE
+		final DateTime dueDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
 		dueDate.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				document.setDueDate(new Date(dueDate.getYear(), dueDate.getMonth(), dueDate.getDay()));
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			}
@@ -257,14 +274,31 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		toolkit.adapt(createDate);
 		//invoice created by
 		Label createdByLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_created_by);
 		TableWrapData twd_createdByLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_createdByLbl.indent = 55;
 		createdByLbl.setLayoutData(twd_createdByLbl);
-		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
+		final Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
 		new AutocompleteTextInput(createdByTxt, getPeopleNames(PeopleModelProvider.INSTANCE.getPeople()));
+		createdByTxt.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				document.setCreator(findSelectedCreator(createdByTxt.getText()));
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+			private Person findSelectedCreator(String selected) {
+				for(Person p : PeopleModelProvider.INSTANCE.getPeople()){
+					String fullName = p.getFirstName() + " " + p.getLastName();
+					if(fullName.equals(selected)){
+						return p;
+					}
+				}
+				return null;
+			}
+		});
 		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_createdByTxt.indent = 5;
 		
@@ -348,8 +382,23 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		TableWrapLayout twLayoutsectionNotes = new TableWrapLayout();
 		twLayoutsectionNotes.numColumns = 2;
 		sectionNotesClient.setLayout(twLayoutsectionNotes);
-		Label notesLbl = toolkit.createLabel(sectionNotesClient,
-				this.document.getNotes());
+		final Text notesTxt = toolkit.createText(sectionNotesClient,
+				this.document.getNotes(), SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		TableWrapData twd_notesTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_notesTxt.grabVertical = true;
+		twd_notesTxt.grabHorizontal = true;
+		twd_notesTxt.heightHint = 180;
+		twd_notesTxt.colspan = 1;
+		notesTxt.setLayoutData(twd_notesTxt);
+		notesTxt.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				document.setNotes(notesTxt.getText());
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+		});
 		sectionNotes.setClient(sectionNotesClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
@@ -708,6 +757,8 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		summaryTableViewer.setInput(list);
 		summaryTableViewer.refresh();
 		form.reflow(true);
+		dirty = true;
+		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
 	
 }
