@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Help
+Bundle-SymbolicName: com.softberries.klerk.help; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.softberries.klerk.help.Activator
+Bundle-Vendor: SOFTBERRIES
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.help.ui;bundle-version="3.5.100",
+ org.eclipse.help.webapp;bundle-version="3.6.0",
+ org.eclipse.equinox.http.jetty;bundle-version="2.0.100"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
