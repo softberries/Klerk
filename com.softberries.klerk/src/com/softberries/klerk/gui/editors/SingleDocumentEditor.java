@@ -4,6 +4,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.swtaddons.autocomplete.text.AutocompleteTextInput;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ControlContribution;
@@ -16,19 +18,18 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
@@ -60,14 +61,18 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
 
 import com.softberries.klerk.calc.DocumentCalculator;
+import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
+import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.dao.to.SummaryTableItem;
 import com.softberries.klerk.gui.dialogs.DocumentItemDialog;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
+import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 import com.softberries.klerk.gui.helpers.table.DocumentItemComparator;
+import com.softberries.klerk.gui.helpers.table.PeopleModelProvider;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemBasePriceES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceGrossAllES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceNetAllES;
@@ -87,6 +92,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	private TableViewer summaryTableViewer;	
 	private DocumentItemComparator comparator;
 	private boolean dirty = false;
+	private TableWrapData data_1;
 
 	public SingleDocumentEditor() {
 	}
@@ -110,10 +116,24 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		document = (Document) input.getAdapter(Document.class);
 		setPartName(document.getTitle());
 		for(DocumentItem di : this.document.getItems()){
-			di.addPropertyChangeListener("selected", this);
+			addPropertyChangeListeners(di);
 		}
+		this.document.setSummaryItems(new DocumentCalculator().getSummaryItems(this.document.getItems()));
 	}
 
+	private void addPropertyChangeListeners(DocumentItem di){
+		di.addPropertyChangeListener("selected", this);
+		di.addPropertyChangeListener("priceNetSingle", this);
+		di.addPropertyChangeListener("quantity", this);
+		di.addPropertyChangeListener("priceNetAll", this);
+		di.addPropertyChangeListener("priceTaxSingle", this);
+		di.addPropertyChangeListener("priceGrossSingle", this);
+		di.addPropertyChangeListener("priceTaxAll", this);
+		di.addPropertyChangeListener("priceNetAll", this);
+		di.addPropertyChangeListener("priceGrossAll", this);
+		di.addPropertyChangeListener("selected", this);
+	}
+	
 	@Override
 	public boolean isDirty() {
 		return dirty;
@@ -156,6 +176,13 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		Label titleLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Title);
 		Text titleTxt = toolkit.createText(sectionGeneralClient,
 				this.document.getTitle(), SWT.BORDER);
+		titleTxt.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+		});
 		TableWrapData twd_titleTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_titleTxt.colspan = 3;
 		titleTxt.setLayoutData(twd_titleTxt);
@@ -164,6 +191,16 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 				Messages.SingleDocumentEditor_Created_Date);
 		DateTime createDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
+		createDate.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		// invoice seller
 		Label sellerLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Seller);
 		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
@@ -174,6 +211,13 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		twd_sellerTxt.indent = 5;
 		twd_sellerTxt.align = TableWrapData.FILL;
 		sellerTxt.setLayoutData(twd_sellerTxt);
+		sellerTxt.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+		});
 		// invoice transaction date
 		Label transactionDateLbl = toolkit.createLabel(sectionGeneralClient,
 				Messages.SingleDocumentEditor_Transaction_Date);
@@ -185,17 +229,34 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		twd_buyerLbl.indent = 55;
 		buyerLbl.setLayoutData(twd_buyerLbl);
 		Text buyerTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
+		new AutocompleteTextInput(buyerTxt, getCompanyNames(CompaniesModelProvider.INSTANCE.getCompanies()));
 		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerTxt.indent = 5;
 		twd_buyerTxt.align = TableWrapData.FILL;
-		createDeco(buyerTxt, new String[] { "ProposalOne", "ProposalTwo",
-				"ProposalThree" });
+		
+		buyerTxt.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+		});
 		buyerTxt.setLayoutData(twd_buyerTxt);
 		// invoice transaction date
 		Label dueDateLbl = toolkit.createLabel(sectionGeneralClient,
 				Messages.SingleDocumentEditor_due_date);
 		DateTime dueDate = new DateTime(sectionGeneralClient, SWT.DATE
 				| SWT.BORDER);
+		dueDate.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				dirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		toolkit.adapt(createDate);
 		//invoice created by
 		Label createdByLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_created_by);
@@ -203,10 +264,10 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		twd_createdByLbl.indent = 55;
 		createdByLbl.setLayoutData(twd_createdByLbl);
 		Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
+		new AutocompleteTextInput(createdByTxt, getPeopleNames(PeopleModelProvider.INSTANCE.getPeople()));
 		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_createdByTxt.indent = 5;
-		createDeco(createdByTxt, new String[] { "ProposalOne", "ProposalTwo",
-		"ProposalThree" });
+		
 		twd_createdByTxt.align = TableWrapData.FILL;
 		createdByTxt.setLayoutData(twd_createdByTxt);
 		sectionGeneral.setClient(sectionGeneralClient);
@@ -258,9 +319,11 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		twLayoutSectionSummary.numColumns = 4;
 		sectionSummaryClient.setLayout(twLayoutSectionSummary);
 		Composite filler = toolkit.createComposite(sectionSummaryClient);
-		data = new TableWrapData(TableWrapData.FILL_GRAB);
-		data.colspan = 3;
-		filler.setLayoutData(data);
+		data_1 = new TableWrapData(TableWrapData.FILL_GRAB);
+		data_1.grabVertical = true;
+		data_1.valign = TableWrapData.FILL;
+		data_1.colspan = 3;
+		filler.setLayoutData(data_1);
 		
 		createSummaryTableViewer(sectionSummaryClient);
 		
@@ -292,11 +355,29 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		data.colspan = 2;
 		sectionNotes.setLayoutData(data);
 	}
+	private String[] getPeopleNames(List<Person> people) {
+		String[] result = new String[people.size()];
+		for(int i = 0; i<people.size();i++){
+			Person p = people.get(i);
+			result[i] = p.getFirstName() + " " + p.getLastName();
+		}
+		return result;
+	}
+	private String[] getCompanyNames(List<Company> companies) {
+		String[] result = new String[companies.size()];
+		for(int i = 0; i<companies.size();i++){
+			Company c = companies.get(i);
+			result[i] = c.getName() + " " + "VAT ID: " + c.getVatid();
+		}
+		return result;
+	}
 	private void createSummaryTableViewer(Composite parent){
-		summaryTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		summaryTableViewer = new TableViewer(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumnsSummary(parent, summaryTableViewer);
 		final Table table = summaryTableViewer.getTable();
+		TableWrapData twd_table = new TableWrapData(TableWrapData.LEFT, TableWrapData.FILL, 1, 1);
+		twd_table.grabVertical = true;
+		table.setLayoutData(twd_table);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
@@ -305,7 +386,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		// contentProvider
 		summaryTableViewer.setInput(this.document.getSummaryItems());
 		
-		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
+		TableWrapData twd = new TableWrapData(TableWrapData.FILL);
 		twd.colspan = 1;
 		summaryTableViewer.getControl().setLayoutData(twd);
 		
@@ -316,6 +397,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, itemsTableViewer);
 		final Table table = itemsTableViewer.getTable();
+		TableWrapData twd_table = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_table.grabVertical = true;
+		table.setLayoutData(twd_table);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
@@ -543,29 +627,6 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 
 	}
 
-	private void createDeco(Text text, String[] options) {
-		ControlDecoration deco = new ControlDecoration(text, SWT.LEFT);
-		deco.setDescriptionText("Use CTRL + SPACE to see possible values");
-		deco.setImage(FieldDecorationRegistry.getDefault()
-				.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION)
-				.getImage());
-		deco.setShowOnlyOnFocus(false);
-		// Help the user with the possible inputs
-		// "." and "#" will also activate the content proposals
-		char[] autoActivationCharacters = new char[] { '.', '#' };
-		KeyStroke keyStroke;
-		try {
-			//
-			keyStroke = KeyStroke.getInstance("Ctrl+Space");
-			// assume that myTextControl has already been created in some way
-			ContentProposalAdapter adapter = new ContentProposalAdapter(text,
-					new TextContentAdapter(),
-					new SimpleContentProposalProvider(options), keyStroke,
-					autoActivationCharacters);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
 	private class AddItemControlContribution extends ControlContribution{
 
 		protected AddItemControlContribution() {
@@ -595,6 +656,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	                it.setPriceTaxSingle("0.00");
 	                it.setQuantity("0.00");
 	                it.setTaxValue("0.00");
+	                addPropertyChangeListeners(it);
 	                document.getItems().add(it);
 	                itemsTableViewer.refresh();
         			dirty = true;
@@ -645,6 +707,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		List<SummaryTableItem> list = new DocumentCalculator().getSummaryItems(this.document.getItems());
 		summaryTableViewer.setInput(list);
 		summaryTableViewer.refresh();
+		form.reflow(true);
 	}
 	
 }

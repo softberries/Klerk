@@ -31,6 +31,8 @@ import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 
 public class SingleProductEditor extends SingleObjectEditor {
+	public SingleProductEditor() {
+	}
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleProduct"; //$NON-NLS-1$
 	private Product product;

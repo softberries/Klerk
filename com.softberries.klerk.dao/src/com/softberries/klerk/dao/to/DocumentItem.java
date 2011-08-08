@@ -50,37 +50,37 @@ public class DocumentItem {
 		return priceNetSingle;
 	}
 	public void setPriceNetSingle(String priceNetSingle) {
-		this.priceNetSingle = priceNetSingle;
+		propertyChangeSupport.firePropertyChange("priceNetSingle", this.priceNetSingle, this.priceNetSingle = priceNetSingle);
 	}
 	public String getPriceGrossSingle() {
 		return priceGrossSingle;
 	}
 	public void setPriceGrossSingle(String priceGrossSingle) {
-		this.priceGrossSingle = priceGrossSingle;
+		propertyChangeSupport.firePropertyChange("priceGrossSingle", this.priceGrossSingle, this.priceGrossSingle = priceGrossSingle);
 	}
 	public String getPriceTaxSingle() {
 		return priceTaxSingle;
 	}
 	public void setPriceTaxSingle(String priceTaxSingle) {
-		this.priceTaxSingle = priceTaxSingle;
+		propertyChangeSupport.firePropertyChange("priceTaxSingle", this.priceTaxSingle, this.priceTaxSingle = priceTaxSingle);
 	}
 	public String getPriceNetAll() {
 		return priceNetAll;
 	}
 	public void setPriceNetAll(String priceNetAll) {
-		this.priceNetAll = priceNetAll;
+		propertyChangeSupport.firePropertyChange("priceNetAll", this.priceNetAll, this.priceNetAll = priceNetAll);
 	}
 	public String getPriceGrossAll() {
 		return priceGrossAll;
 	}
 	public void setPriceGrossAll(String priceGrossAll) {
-		this.priceGrossAll = priceGrossAll;
+		propertyChangeSupport.firePropertyChange("priceGrossAll", this.priceGrossAll, this.priceGrossAll = priceGrossAll);
 	}
 	public String getPriceTaxAll() {
 		return priceTaxAll;
 	}
 	public void setPriceTaxAll(String priceTaxAll) {
-		this.priceTaxAll = priceTaxAll;
+		propertyChangeSupport.firePropertyChange("priceTaxAll", this.priceTaxAll, this.priceTaxAll = priceTaxAll);
 	}
 	/**
 	 * @return the documentId
@@ -92,7 +92,7 @@ public class DocumentItem {
 	 * @param documentId the documentId to set
 	 */
 	public void setDocumentId(Long documentId) {
-		this.documentId = documentId;
+		propertyChangeSupport.firePropertyChange("documentId", this.documentId, this.documentId = documentId);
 	}
 	/**
 	 * @return the product
@@ -104,7 +104,7 @@ public class DocumentItem {
 	 * @param product the product to set
 	 */
 	public void setProduct(Product product) {
-		this.product = product;
+		propertyChangeSupport.firePropertyChange("product", this.product, this.product = product);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class DocumentItem {
 	 * @param taxValue the taxValue to set
 	 */
 	public void setTaxValue(String taxValue) {
-		this.taxValue = taxValue;
+		propertyChangeSupport.firePropertyChange("taxValue", this.taxValue, this.taxValue = taxValue);
 	}
 	/**
 	 * @return the quantity
@@ -129,7 +129,7 @@ public class DocumentItem {
 	 * @param quantity the quantity to set
 	 */
 	public void setQuantity(String quantity) {
-		this.quantity = quantity;
+		propertyChangeSupport.firePropertyChange("quantity", this.quantity, this.quantity = quantity);
 	}
 	
 	
