@@ -75,17 +75,17 @@
             locationURI="menu:org.eclipse.ui.main.menu">
          <menu
                id="fileMenu"
-               label="%menu.label">
+               label="%menu.label.file">
             <command
                   commandId="com.softberries.klerk.commands.exit"
-                  label="%command.label"
+                  label="%command.label.exit"
                   style="push"
-                  tooltip="%command.tooltip">
+                  tooltip="%command.tooltip.exit">
             </command>
             <command
                   commandId="org.eclipse.ui.window.preferences"
                   id="settings"
-                  label="%command.label.0"
+                  label="%command.label.preferences"
                   style="push"
                   tooltip="%command.tooltip.0">
             </command>
@@ -97,7 +97,7 @@
       <page
             class="com.softberries.klerk.preferences.DatabasePreferencePage"
             id="com.softberries.klerk.preferences.database"
-            name="%page.name">
+            name="%page.name.general">
       </page>
    </extension>
    <extension
