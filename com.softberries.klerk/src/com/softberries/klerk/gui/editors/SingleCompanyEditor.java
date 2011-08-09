@@ -5,31 +5,50 @@ import java.sql.SQLException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.wb.swt.ResourceManager;
 
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.CompanyDao;
+import com.softberries.klerk.dao.to.Address;
 import com.softberries.klerk.dao.to.Company;
+import com.softberries.klerk.gui.dialogs.AddressDialog;
 import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 
 public class SingleCompanyEditor extends SingleObjectEditor {
+	
+	public SingleCompanyEditor() {
+	}
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleCompanyEditor";
 	private Company company;
@@ -189,22 +208,24 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 		data.colspan = 2;
 		sectionGeneral.setLayoutData(data);
 		// person addresses section
-		Section sectionDescription = toolkit.createSection(form.getBody(),
+		Section sectionAddresses = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
-		sectionDescription.setText("Addreses:");
-		sectionDescription.addExpansionListener(new ExpansionAdapter() {
+		sectionAddresses.setText("Addreses:");
+		sectionAddresses.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				form.reflow(true);
 			}
 		});
-		toolkit.createCompositeSeparator(sectionDescription);
-		sectionDescription.setDescription("Addreses List:");
-		Composite sectionDescClient = toolkit.createComposite(sectionDescription);
+		toolkit.createCompositeSeparator(sectionAddresses);
+		createSectionAddressToolbar(sectionAddresses, toolkit);
+		
+		sectionAddresses.setDescription("Addreses List:");
+		Composite sectionAddressClient = toolkit.createComposite(sectionAddresses);
 		TableWrapLayout twLayoutSectionDesc = new TableWrapLayout();
 		twLayoutSectionDesc.numColumns = 1;
-		sectionDescClient.setLayout(twLayoutSectionDesc);
-		final Text mainAddressTxt = toolkit.createText(sectionDescClient,
+		sectionAddressClient.setLayout(twLayoutSectionDesc);
+		final Text mainAddressTxt = toolkit.createText(sectionAddressClient,
 				"some main address", SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		mainAddressTxt.addModifyListener(new ModifyListener() {
 			
@@ -220,12 +241,32 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 		twd_descTxt.grabVertical = true;
 		twd_descTxt.colspan = 1;
 		mainAddressTxt.setLayoutData(twd_descTxt);
-		sectionDescription.setClient(sectionDescClient);
+		
+		sectionAddresses.setClient(sectionAddressClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
-		sectionDescription.setLayoutData(data);
+		sectionAddresses.setLayoutData(data);
 	}
-
+	protected void createSectionAddressToolbar(Section section, FormToolkit toolkit) {
+		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+		ToolBar toolbar = toolBarManager.createControl(section);
+		final Cursor handCursor = new Cursor(Display.getCurrent(),
+				SWT.CURSOR_HAND);
+		toolbar.setCursor(handCursor);
+		// Cursor needs to be explicitly disposed
+		toolbar.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
+					handCursor.dispose();
+				}
+			}
+		});
+		toolBarManager.add(new AddItemControlContribution());
+		toolBarManager.add(new DeleteItemControlContribution());
+		toolBarManager.update(true);
+		section.setTextClient(toolbar);
+	}
 	/**
 	 * @return the company
 	 */
@@ -238,6 +279,54 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 	 */
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+	private class AddItemControlContribution extends ControlContribution{
+
+		protected AddItemControlContribution() {
+			super("Add");
+		}
+
+		@Override
+		protected Control createControl(Composite parent) {
+			Button button = new Button(parent, SWT.PUSH);
+			button.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/add.png"));
+			
+	        button.addSelectionListener(new SelectionAdapter() {
+	        @Override
+	    	public void widgetSelected(SelectionEvent e) {
+	                AddressDialog dialog = new AddressDialog(PlatformUI.getWorkbench().
+	                        getActiveWorkbenchWindow().getShell(), new Address());
+	                Address adr = dialog.getAddressFromDialog();
+	                //TODO - this just fills the values with 0.0
+	                System.out.println(adr);
+        			dirty = true;
+	                firePropertyChange(ISaveablePart.PROP_DIRTY);
+	            }
+	        });
+			return button;
+		}
+		
+	}
+	private class DeleteItemControlContribution extends ControlContribution{
+
+		protected DeleteItemControlContribution() {
+			super("Delete");
+		}
+
+		@Override
+		protected Control createControl(Composite parent) {
+			Button button = new Button(parent, SWT.PUSH);
+			button.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/remove.png"));
+			
+	        button.addSelectionListener(new SelectionAdapter() {
+	        @Override
+	    	public void widgetSelected(SelectionEvent e) {
+		        	
+	            }
+	        });
+			return button;
+		}
+		
 	}
 
 }

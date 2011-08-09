@@ -10,7 +10,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms;bundle-version="3.5.100",
  com.softberries.klerk.dao;bundle-version="1.0.0",
  com.softberries.klerk.money;bundle-version="1.0.0",
- com.softberries.klerk.help;bundle-version="1.0.0"
+ com.softberries.klerk.help;bundle-version="1.0.0",
+ org.eclipse.core.databinding,
+ org.eclipse.core.databinding.beans,
+ org.eclipse.core.databinding.observable,
+ org.eclipse.core.databinding.property,
+ org.eclipse.jface.databinding,
+ com.ibm.icu
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: src/com/softberries/klerk/gui/helpers/messages

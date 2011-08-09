@@ -130,6 +130,11 @@ public class Address {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+	@Override
+	public String toString() {
+		return this.getStreet() + ", " + this.getHouseNumber() + "/" + this.getFlatNumber() + " " + this.getPostCode() + " " + this.getCity();
+	}
+	
 	
 	
 	

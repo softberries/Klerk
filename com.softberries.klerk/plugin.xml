@@ -105,7 +105,7 @@
       <view
             class="com.softberries.klerk.gui.views.CategoriesView"
             id="com.softberries.klerk.gui.views.CategoriesView"
-            name="%categories.name">
+            name="Categories">
       </view>
       <view
             class="com.softberries.klerk.gui.views.DocumentDetailsView"
