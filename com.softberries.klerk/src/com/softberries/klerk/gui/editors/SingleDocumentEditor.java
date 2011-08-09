@@ -1,6 +1,7 @@
 package com.softberries.klerk.gui.editors;
 
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.bindings.keys.KeyStroke;
-import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -80,6 +74,7 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceN
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuantityES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelectedES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
+import com.softberries.klerk.reports.ReportManager;
 
 public class SingleDocumentEditor extends EditorPart implements PropertyChangeListener{
 
@@ -485,6 +480,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 
 		// save
 		ActionContributionItem saveMenuAction = new ActionContributionItem(ActionFactory.SAVE.create(getEditorSite().getWorkbenchWindow()));
+		toolBarManager.add(new OpenPDFControlContribution());
 		toolBarManager.add(saveMenuAction);
 		toolBarManager.update(true);
 
@@ -750,7 +746,28 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		}
 		
 	}
-	
+	private class OpenPDFControlContribution extends ControlContribution{
+
+		protected OpenPDFControlContribution() {
+			super("Print PDF");
+		}
+
+		@Override
+		protected Control createControl(Composite parent) {
+			Button button = new Button(parent, SWT.PUSH);
+			button.setImage(ResourceManager.getPluginImage("com.softberries.klerk", "icons/png/edit.png"));
+			
+	        button.addSelectionListener(new SelectionAdapter() {
+	        @Override
+	    	public void widgetSelected(SelectionEvent e) {
+	        	//TO-DO this should go into progress monitor and separate thread
+		        new ReportManager().generateDocumentReport(document, new File("/home/kris/.klerk"), "faktura.pdf", null, true);
+	            }
+	        });
+			return button;
+		}
+		
+	}
 	@Override
 	public void propertyChange(java.beans.PropertyChangeEvent arg0) {
 		List<SummaryTableItem> list = new DocumentCalculator().getSummaryItems(this.document.getItems());

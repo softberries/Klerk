@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="ant-1.7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="antlr-2.7.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="barbecue-1.5-beta1.jar"/>
+	<classpathentry exported="true" kind="lib" path="barcode4j-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-anim.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-awt-util.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-bridge.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-css.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-ext.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-gvt.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-parser.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-script.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-svg-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-svggen.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-util.jar"/>
+	<classpathentry exported="true" kind="lib" path="batik-xml.jar"/>
+	<classpathentry exported="true" kind="lib" path="bcel-5.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="bsh-2.0b4.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-beanutils-1.8.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-collections-2.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-digester-1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-javaflow-20060411.jar"/>
+	<classpathentry exported="true" kind="lib" path="commons-logging-1.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-all-1.7.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="hibernate3.jar"/>
+	<classpathentry exported="true" kind="lib" path="hsqldb-1.8.0-10.jar"/>
+	<classpathentry exported="true" kind="lib" path="iText-2.1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="jaxen-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jcommon-1.0.15.jar"/>
+	<classpathentry exported="true" kind="lib" path="jdt-compiler-3.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jfreechart-1.0.12.jar"/>
+	<classpathentry exported="true" kind="lib" path="jpa.jar"/>
+	<classpathentry exported="true" kind="lib" path="jxl-2.6.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="log4j-1.2.15.jar"/>
+	<classpathentry exported="true" kind="lib" path="mondrian-3.1.1.12687.jar"/>
+	<classpathentry exported="true" kind="lib" path="png-encoder-1.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="poi-3.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="rhino-1.7R1.jar"/>
+	<classpathentry exported="true" kind="lib" path="saaj-api-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="serializer.jar"/>
+	<classpathentry exported="true" kind="lib" path="servlet.jar"/>
+	<classpathentry exported="true" kind="lib" path="spring-beans-2.5.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="spring-core-2.5.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="xalan-2.7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="xercesImpl-2.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="xml-apis.jar"/>
+	<classpathentry exported="true" kind="lib" path="xml-apis-ext.jar"/>
+	<classpathentry exported="true" kind="lib" path="jasperreports-4.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="jasperreports-fonts-4.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="jasperreports-javaflow-4.0.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
