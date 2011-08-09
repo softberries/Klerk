@@ -1,12 +1,19 @@
 package com.softberries.klerk.gui.editors;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -15,16 +22,22 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISaveablePart;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -42,16 +55,20 @@ import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.CompanyDao;
 import com.softberries.klerk.dao.to.Address;
 import com.softberries.klerk.dao.to.Company;
+import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.gui.dialogs.AddressDialog;
+import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
+import com.softberries.klerk.gui.helpers.table.editingsupport.CompanyAddressSelectedES;
 
-public class SingleCompanyEditor extends SingleObjectEditor {
+public class SingleCompanyEditor extends SingleObjectEditor implements ISelectionListener {
 	
 	public SingleCompanyEditor() {
 	}
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleCompanyEditor";
 	private Company company;
+	private TableViewer addressTableViewer;	
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -79,7 +96,12 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 		setSite(site);
 		setInput(input);
 		company = (Company) input.getAdapter(Company.class);
+		if(company.getAddresses() == null){
+			company.setAddresses(new ArrayList<Address>());
+		}
 		setPartName(company.getName());
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.getActiveWorkbenchWindow().getActivePage().addSelectionListener(this);
 	}
 
 	@Override
@@ -222,30 +244,129 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 		
 		sectionAddresses.setDescription("Addreses List:");
 		Composite sectionAddressClient = toolkit.createComposite(sectionAddresses);
-		TableWrapLayout twLayoutSectionDesc = new TableWrapLayout();
-		twLayoutSectionDesc.numColumns = 1;
-		sectionAddressClient.setLayout(twLayoutSectionDesc);
-		final Text mainAddressTxt = toolkit.createText(sectionAddressClient,
-				"some main address", SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		mainAddressTxt.addModifyListener(new ModifyListener() {
-			
-			@Override
-			public void modifyText(ModifyEvent e) {
-				//TO-DO fix addresses section
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
-			}
-		});
-		TableWrapData twd_descTxt = new TableWrapData(TableWrapData.FILL_GRAB);
-		twd_descTxt.heightHint = 180;
-		twd_descTxt.grabVertical = true;
-		twd_descTxt.colspan = 1;
-		mainAddressTxt.setLayoutData(twd_descTxt);
 		
+		TableWrapLayout twLayoutSectionItems = new TableWrapLayout();
+		twLayoutSectionItems.numColumns = 2;
+		sectionAddressClient.setLayout(twLayoutSectionItems);
+
+		createTableViewer(sectionAddressClient);
+
 		sectionAddresses.setClient(sectionAddressClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionAddresses.setLayoutData(data);
+	}
+	private void createTableViewer(Composite parent) {
+		addressTableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		createColumns(parent, addressTableViewer);
+		final Table table = addressTableViewer.getTable();
+		TableWrapData twd_table = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
+		twd_table.grabVertical = true;
+		table.setLayoutData(twd_table);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+
+		addressTableViewer.setContentProvider(new ArrayContentProvider());
+		// Get the content for the viewer, setInput will call getElements in the
+		// contentProvider
+		addressTableViewer.setInput(this.company.getAddresses());
+		// Make the selection available to other views
+		getSite().setSelectionProvider(addressTableViewer);
+
+		TableWrapData twd = new TableWrapData(TableWrapData.FILL_GRAB);
+		twd.colspan = 2;
+		twd.heightHint = 200;
+		addressTableViewer.getControl().setLayoutData(twd);
+		
+	}
+	private void createColumns(final Composite parent, final TableViewer viewer) {
+		String[] titles = { "Main","Street","House/Flat Number","City","Post Code","Country","Notes"};
+		int[] bounds = {100, 250, 150, 100, 100, 100, 100};
+		
+		//selected
+		TableViewerColumn col = createTableViewerColumn(addressTableViewer, titles[0], bounds[0], 0);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return null;
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (((Address) element).isMain()) {
+					return IImageKeys.CHECKED;
+				} else {
+					return IImageKeys.UNCHECKED;
+				}
+			}
+		});
+		col.setEditingSupport(new CompanyAddressSelectedES(viewer));
+		// street
+		col = createTableViewerColumn(addressTableViewer,titles[1], bounds[1], 1);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Address a = (Address) element;
+				return a.getStreet();
+			}
+		});
+
+		// house number / flat number
+		col = createTableViewerColumn(addressTableViewer,titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Address a = (Address) element;
+				return a.getHouseNumber() + "/" + a.getFlatNumber();
+			}
+		});
+		// city
+		col = createTableViewerColumn(addressTableViewer,titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Address a = (Address) element;
+				return a.getCity();
+			}
+		});
+		// post code
+		col = createTableViewerColumn(addressTableViewer,titles[4], bounds[4], 4);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Address a = (Address) element;
+				return a.getPostCode();
+			}
+		});
+		// country
+		col = createTableViewerColumn(addressTableViewer,titles[5], bounds[5], 5);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Address a = (Address) element;
+				return a.getCountry();
+			}
+		});
+		// notes
+		col = createTableViewerColumn(addressTableViewer,titles[6], bounds[6], 6);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Address a = (Address) element;
+				return a.getNotes();
+			}
+		});
+	}
+	private TableViewerColumn createTableViewerColumn(TableViewer viewer, String title, int bound,
+			final int colNumber) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(
+				viewer, SWT.NONE);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(title);
+		column.setWidth(bound);
+		column.setResizable(true);
+		column.setMoveable(true);
+		return viewerColumn;
 	}
 	protected void createSectionAddressToolbar(Section section, FormToolkit toolkit) {
 		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
@@ -280,8 +401,8 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
-	private class AddItemControlContribution extends ControlContribution{
 
+	private class AddItemControlContribution extends ControlContribution{
 		protected AddItemControlContribution() {
 			super("Add");
 		}
@@ -297,10 +418,15 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 	                AddressDialog dialog = new AddressDialog(PlatformUI.getWorkbench().
 	                        getActiveWorkbenchWindow().getShell(), new Address());
 	                Address adr = dialog.getAddressFromDialog();
-	                //TODO - this just fills the values with 0.0
-	                System.out.println(adr);
-        			dirty = true;
-	                firePropertyChange(ISaveablePart.PROP_DIRTY);
+	                adr.setMain(true);//set as main address by default
+	                if(company.getAddresses() == null){
+	                	company.setAddresses(new ArrayList<Address>());
+	                }
+	                for(Address adrs : company.getAddresses()){
+	                	adrs.setMain(false);
+	                }
+	                company.getAddresses().add(adr);
+	                addressTableViewer.setInput(company.getAddresses());
 	            }
 	        });
 			return button;
@@ -328,5 +454,22 @@ public class SingleCompanyEditor extends SingleObjectEditor {
 		}
 		
 	}
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
+		System.out.println("SELECTION SCE: " + sel + "PART: " + part);
+		Object selection = ((IStructuredSelection) sel).getFirstElement();
+		if(selection != null && selection instanceof Address){
+			Address adr = (Address)selection;
+			if(adr.isMain()){
+				for(Address a : company.getAddresses()){
+					if(!a.equals(adr)){
+						a.setMain(false);
+						addressTableViewer.refresh();
+					}
+				}
+			}
+		}
+	}
+	
 
 }

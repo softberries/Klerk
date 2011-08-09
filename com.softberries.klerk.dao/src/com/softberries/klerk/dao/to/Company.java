@@ -1,5 +1,7 @@
 package com.softberries.klerk.dao.to;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 public class Company {
@@ -12,7 +14,6 @@ public class Company {
 	private String email;
 	private String www;
 	private List<Address> addresses;
-	
 	
 	public Long getId() {
 		return id;
