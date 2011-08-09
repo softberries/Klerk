@@ -750,7 +750,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		}
 		
 	}
-
+	
 	@Override
 	public void propertyChange(java.beans.PropertyChangeEvent arg0) {
 		List<SummaryTableItem> list = new DocumentCalculator().getSummaryItems(this.document.getItems());
