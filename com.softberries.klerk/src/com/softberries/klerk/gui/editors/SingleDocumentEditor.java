@@ -59,9 +59,10 @@ import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
+import com.softberries.klerk.dao.to.DocumentWrapper;
 import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
-import com.softberries.klerk.dao.to.SummaryTableItem;
+import com.softberries.klerk.dao.to.VatLevelItem;
 import com.softberries.klerk.gui.dialogs.DocumentItemDialog;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
@@ -114,7 +115,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		for(DocumentItem di : this.document.getItems()){
 			addPropertyChangeListeners(di);
 		}
-		this.document.setSummaryItems(new DocumentCalculator().getSummaryItems(this.document.getItems()));
+		this.document.setVatLevelItems(new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems()));
 	}
 
 	private void addPropertyChangeListeners(DocumentItem di){
@@ -428,7 +429,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		summaryTableViewer.setContentProvider(new ArrayContentProvider());
 		// Get the content for the viewer, setInput will call getElements in the
 		// contentProvider
-		summaryTableViewer.setInput(this.document.getSummaryItems());
+		summaryTableViewer.setInput(this.document.getVatLevelItems());
 		
 		TableWrapData twd = new TableWrapData(TableWrapData.FILL);
 		twd.colspan = 1;
@@ -613,26 +614,44 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	}
 
 	private void createColumnsSummary(final Composite parent, final TableViewer viewer) {
-		String[] titles = {"Name", "Value"};
-		int[] bounds = {200, 200};
+		String[] titles = {"VAT Level", "Net", "VAT", "Gross"};
+		int[] bounds = {100, 100, 100, 100};
 		
-		//name
+		//vat level
 		TableViewerColumn col = createTableViewerColumn(summaryTableViewer, titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				SummaryTableItem p = (SummaryTableItem) element;
-				return p.getName();
+				VatLevelItem p = (VatLevelItem) element;
+				return p.getVatLevel();
 			}
 		});
 
-		// value
+		// net
 		col = createTableViewerColumn(summaryTableViewer, titles[1], bounds[1], 1);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				SummaryTableItem p = (SummaryTableItem) element;
-				return p.getValue();
+				VatLevelItem p = (VatLevelItem) element;
+				return p.getNetValue();
+			}
+		});
+		// vat
+		col = createTableViewerColumn(summaryTableViewer, titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				VatLevelItem p = (VatLevelItem) element;
+				return p.getVatValue();
+			}
+		});
+		// gross
+		col = createTableViewerColumn(summaryTableViewer, titles[3], bounds[3], 3);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				VatLevelItem p = (VatLevelItem) element;
+				return p.getGrossValue();
 			}
 		});
 		
@@ -760,8 +779,36 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	        button.addSelectionListener(new SelectionAdapter() {
 	        @Override
 	    	public void widgetSelected(SelectionEvent e) {
-	        	//TO-DO this should go into progress monitor and separate thread
-		        new ReportManager().generateDocumentReport(document, new File("/home/kris/.klerk"), "faktura.pdf", null, true);
+	        	DocumentWrapper docWrp = new DocumentWrapper();
+	        	docWrp.setBuyerLbl("Kupujący");
+	        	docWrp.setCopy("Kopia");
+	        	docWrp.setCreatedDate("10/09/2011");
+	        	docWrp.setCreatedDateLbl("Data Wystawienia:");
+	        	docWrp.setCreatorLbl("Osoba upoważniona do wystawienia");
+	        	Company seller = CompaniesModelProvider.INSTANCE.getCompanies().get(0);
+	        	Company buyer = CompaniesModelProvider.INSTANCE.getCompanies().get(0);
+	        	document.setSeller(seller);
+	        	document.setBuyer(buyer);
+	        	docWrp.setDocument(document);
+	        	docWrp.setDueDate("10/10/2011");
+	        	docWrp.setDueDateLbl("Termin Płatności:");
+	        	docWrp.setFooterLbl("Faktura wygenerowana w systemie Klerk");
+	        	docWrp.setNotesLbl("Notes:");
+	        	docWrp.setPaymentMethodLbl("Metoda Płatności:");
+	        	docWrp.setPlaceCreatedLbl("Miejsce wystawienia:");
+	        	docWrp.setReceiver("");
+	        	docWrp.setReceiverLbl("Osoba upoważniona do odbioru");
+	        	docWrp.setSellerLbl("Sprzedawca");
+	        	docWrp.setToPayAmount("1000.00");
+	        	docWrp.setToPayCurrency("PLN");
+	        	docWrp.setToPayInWords("x.x.x");
+	        	docWrp.setToPayLbl("Do Zapłaty:");
+	        	docWrp.setTransactionDate("10/09/2011");
+	        	docWrp.setTransactionDateLbl("Data Sprzedaży:");
+	        	docWrp.setVatIdLbl("NIP:");
+	        	List<DocumentWrapper> docWrpList = new ArrayList<DocumentWrapper>();
+	        	docWrpList.add(docWrp);
+		        new ReportManager().generateDocumentReport(docWrpList, new File("/home/kris/.klerk"), "faktura.pdf", null, true);
 	            }
 	        });
 			return button;
@@ -770,7 +817,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	}
 	@Override
 	public void propertyChange(java.beans.PropertyChangeEvent arg0) {
-		List<SummaryTableItem> list = new DocumentCalculator().getSummaryItems(this.document.getItems());
+		List<VatLevelItem> list = new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems());
 		summaryTableViewer.setInput(list);
 		summaryTableViewer.refresh();
 		form.reflow(true);

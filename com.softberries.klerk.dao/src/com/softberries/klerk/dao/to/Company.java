@@ -2,9 +2,10 @@ package com.softberries.klerk.dao.to;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.util.List;
 
-public class Company {
+public class Company  implements Serializable{
 
 	private Long id;
 	private String name;
@@ -14,6 +15,7 @@ public class Company {
 	private String email;
 	private String www;
 	private List<Address> addresses;
+	private Address address; //main address;
 	
 	public Long getId() {
 		return id;
@@ -104,6 +106,24 @@ public class Company {
 	 */
 	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
+	}
+	/**
+	 * Gets the main address of the company
+	 * @return
+	 */
+	public Address getAddress() {
+		if(this.addresses == null || this.addresses.size() < 1){
+			return null;
+		}
+		for(Address a : this.addresses){
+			if(a.isMain()){
+				return a;
+			}
+		}
+		return this.addresses.get(0);
+	}
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
 	

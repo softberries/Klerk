@@ -4,43 +4,45 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
-import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.dao.to.DocumentWrapper;
 
 public class ReportManager {
 
 	Desktop desktop = null;
 	
-	public void generateDocumentReport(Document doc, File tempDir, String fileName, String language, boolean execute){
+	public void generateDocumentReport(List<DocumentWrapper> docList, File tempDir, String fileName, String language, boolean execute){
 		//test jasper reports
 		JasperPrint jPrint = null;
 		String fullFileName = null;
+		DocumentWrapper dw = docList.get(0);
+		System.out.println("DOC title: " + dw.getDocument().getTitle());
 		try {
-			JasperReport jasperReport = null;
-			jasperReport = (JasperReport) net.sf.jasperreports.engine.util.JRLoader.loadObject(Activator.class.getClassLoader()
-			.getResourceAsStream("reports/Invoice.jasper"));
 			Map parameters = new HashMap();
-			parameters.put("document", doc);
-			jPrint = JasperFillManager.fillReport(jasperReport,parameters);
-			System.out.println("JPrint: " + jPrint);
+			parameters.put("SUBREPORT_DIR", tempDir.getAbsolutePath() + System.getProperty("file.separator") + "reports/");
 			fullFileName = tempDir.getAbsolutePath() + System.getProperty("file.separator") + fileName;
-			JasperExportManager.exportReportToPdfFile(jPrint, fullFileName);
+
+			JasperPrint print = JasperFillManager.fillReport(tempDir.getAbsolutePath() + System.getProperty("file.separator") +"reports/invoice.jasper", parameters, 
+					new JRBeanCollectionDataSource(docList));
+			JasperExportManager.exportReportToPdfFile(print, fullFileName + ".pdf");
 			System.out.println("success");
 			if (Desktop.isDesktopSupported() && execute) {
 		        desktop = Desktop.getDesktop();
-		        desktop.open(new File(fullFileName));
+		        desktop.open(new File(fullFileName + ".pdf"));
 			}
 		} catch (JRException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 }

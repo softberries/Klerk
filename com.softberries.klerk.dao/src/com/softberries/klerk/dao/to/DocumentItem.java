@@ -17,6 +17,8 @@ public class DocumentItem {
 	private String taxValue;
 	private String quantity;
 	private boolean selected;
+	
+	
 	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	
 	public void addPropertyChangeListener(String propertyName,
@@ -131,6 +133,5 @@ public class DocumentItem {
 	public void setQuantity(String quantity) {
 		propertyChangeSupport.firePropertyChange("quantity", this.quantity, this.quantity = quantity);
 	}
-	
-	
+
 }

@@ -14,8 +14,11 @@ public class Document implements Serializable{
 	private Date dueDate;
 	private String placeCreated;
 	private Person creator;
+	private Company buyer;
+	private Company seller;
+	private String paymentMethod;
 	private List<DocumentItem> items;
-	private List<SummaryTableItem> summaryItems;
+	private List<VatLevelItem> vatLevelItems;
 	
 	
 	/**
@@ -126,12 +129,31 @@ public class Document implements Serializable{
 	public void setItems(List<DocumentItem> items) {
 		this.items = items;
 	}
-	public List<SummaryTableItem> getSummaryItems() {
-		return summaryItems;
+	public Company getBuyer() {
+		return buyer;
 	}
-	public void setSummaryItems(List<SummaryTableItem> summaryItems) {
-		this.summaryItems = summaryItems;
+	public void setBuyer(Company buyer) {
+		this.buyer = buyer;
 	}
+	public Company getSeller() {
+		return seller;
+	}
+	public void setSeller(Company seller) {
+		this.seller = seller;
+	}
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+	public List<VatLevelItem> getVatLevelItems() {
+		return vatLevelItems;
+	}
+	public void setVatLevelItems(List<VatLevelItem> vatLevelItems) {
+		this.vatLevelItems = vatLevelItems;
+	}
+	
 	
 	
 }

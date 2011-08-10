@@ -823,3 +823,4 @@ Export-Package: antlr,
  org.xml.sax.ext,
  org.xml.sax.helpers
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: com.softberries.klerk.dao;bundle-version="1.0.0"

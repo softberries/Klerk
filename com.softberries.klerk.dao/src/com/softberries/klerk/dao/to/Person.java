@@ -13,6 +13,7 @@ public class Person implements Serializable{
 	private String mobile;
 	private String email;
 	private String www;
+	private String fullName;
 	
 	
 	public Long getId() {

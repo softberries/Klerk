@@ -10,5 +10,5 @@ Require-Bundle: org.eclipse.ui,
  com.softberries.klerk.libraries.dbutils;bundle-version="1.0.0",
  org.junit;resolution:=optional;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.softberries.klerk.dao,
+Export-Package: com.softberries.klerk.dao;uses:="org.apache.commons.dbutils,com.softberries.klerk.dao.to",
  com.softberries.klerk.dao.to

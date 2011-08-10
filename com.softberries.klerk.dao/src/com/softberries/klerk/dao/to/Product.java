@@ -8,6 +8,7 @@ public class Product implements Serializable{
 	private String name;
 	private String code;
 	private String description;
+	private String measurement;
 	
 	public Long getId() {
 		return id;
@@ -33,6 +34,15 @@ public class Product implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getMeasurement() {
+		return measurement;
+	}
+
+	public void setMeasurement(String measurement) {
+		this.measurement = measurement;
+	}
+	
 	
 	
 }

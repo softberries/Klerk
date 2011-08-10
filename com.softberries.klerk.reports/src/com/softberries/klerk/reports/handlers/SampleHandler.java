@@ -1,6 +1,7 @@
 package com.softberries.klerk.reports.handlers;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.dao.to.DocumentWrapper;
 import com.softberries.klerk.reports.Activator;
 import com.softberries.klerk.reports.ReportManager;
 
@@ -44,7 +46,7 @@ public class SampleHandler extends AbstractHandler {
 				"Reports",
 				"Hello, Eclipse world");
 		File tempDir = new File("/home/kris/.klerk");
-		new ReportManager().generateDocumentReport(new Document(), tempDir, "invoice.pdf", null, true);
+		new ReportManager().generateDocumentReport(new ArrayList<DocumentWrapper>(), tempDir, "invoice.pdf", null, true);
 		return null;
 	}
 }
