@@ -3,6 +3,7 @@ package com.softberries.klerk.dao.to;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Company  implements Serializable{
@@ -17,6 +18,14 @@ public class Company  implements Serializable{
 	private List<Address> addresses;
 	private Address address; //main address;
 	
+	/**
+	 * Default constructor
+	 * init basic structures
+	 */
+	public Company(){
+		//this prevents many NullPointerExceptions in the future
+		this.addresses = new ArrayList<Address>();
+	}
 	public Long getId() {
 		return id;
 	}

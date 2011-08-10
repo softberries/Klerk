@@ -9,6 +9,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
+import com.softberries.klerk.dao.to.Address;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Product;
 
@@ -32,6 +33,11 @@ public class CompanyDao extends GenericDao<Company>{
 		}finally{
 			close(conn, st, generatedKeys);
 		}
+		//find addresses
+		AddressDao adrDao = new AddressDao();
+		for(Company c : companies){
+			c.setAddresses(adrDao.findAllByCompanyId(c.getId()));
+		}
 		return companies;
 	}
 
@@ -47,6 +53,9 @@ public class CompanyDao extends GenericDao<Company>{
 		}finally{
 			close(conn, st, generatedKeys);
 		}
+		//find addresses
+		AddressDao adrDao = new AddressDao();
+		p.setAddresses(adrDao.findAllByCompanyId(p.getId()));
 		return p;
 	}
 
@@ -71,13 +80,23 @@ public class CompanyDao extends GenericDao<Company>{
 	        if (generatedKeys.next()) {
 	            c.setId(generatedKeys.getLong(1));
 	        } else {
-	            throw new SQLException("Creating user failed, no generated key obtained.");
+	            throw new SQLException("Creating company failed, no generated key obtained.");
 	        }
+	        
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}finally{
 			close(conn, st, generatedKeys);
 		}
+		//if the company creation was successfull, add addresses
+        AddressDao adrDao = new AddressDao();
+        for(Address adr : c.getAddresses()){
+        	adr.setCompany_id(c.getId());
+        	adrDao.create(adr);
+        	if(adr.isMain()){
+        		c.setAddress(adr);
+        	}
+        }
 	}
 
 	@Override
@@ -103,10 +122,27 @@ public class CompanyDao extends GenericDao<Company>{
 		}finally{
 			close(conn, st, generatedKeys);
 		}
+		//update addresses
+		AddressDao adrDao = new AddressDao();
+		for(Address adr : c.getAddresses()){
+			if(adr.getId() != null && adr.getId() > 0){
+				//update
+				adrDao.update(adr);
+			}else{//create
+				adr.setCompany_id(c.getId());
+				adrDao.create(adr);
+			}
+		}
 	}
 
 	@Override
 	public void delete(Long id) throws SQLException {
+		//delete addresses
+		Company toDel = find(id);
+		AddressDao adrDao = new AddressDao();
+		for(Address adr : toDel.getAddresses()){
+			adrDao.delete(adr.getId());
+		}
 		try {
 			init();
 			st = conn.prepareStatement(SQL_DELETE_COMPANY); 

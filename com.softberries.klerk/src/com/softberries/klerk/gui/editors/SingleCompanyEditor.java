@@ -55,6 +55,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.LogUtil;
+import com.softberries.klerk.dao.AddressDao;
 import com.softberries.klerk.dao.CompanyDao;
 import com.softberries.klerk.dao.to.Address;
 import com.softberries.klerk.dao.to.Company;
@@ -498,6 +499,14 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 								.openConfirm(shell, "Confirm",
 										"Are you sure you want to delete this address?");
 						if (confirmed) {
+							try {
+								if (currentAddress.getId() != null) {
+									AddressDao adrDao = new AddressDao();
+									adrDao.delete(currentAddress.getId());
+								}
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
 							company.getAddresses().remove(currentAddress);
 							currentAddress = null;
 							addressTableViewer.refresh();
@@ -532,7 +541,14 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 								.getWorkbench().getActiveWorkbenchWindow()
 								.getShell(), currentAddress);
 						Address adr = dialog.getAddressFromDialog();
-						//TO-DO save address
+						try {
+							if (currentAddress.getId() != null) {
+								AddressDao adrDao = new AddressDao();
+								adrDao.update(currentAddress);
+							}
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
 						addressTableViewer.setInput(company.getAddresses());
 						addressTableViewer.refresh();
 					}
@@ -554,7 +570,12 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 				for (Address a : company.getAddresses()) {
 					if (!a.equals(adr)) {
 						a.setMain(false);
-						addressTableViewer.refresh();
+						if (addressTableViewer != null
+								&& !addressTableViewer.getControl()
+										.isDisposed()) {
+							addressTableViewer.refresh();
+						}
+
 					}
 				}
 			}

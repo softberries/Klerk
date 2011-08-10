@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import com.softberries.klerk.dao.CompanyDao;
 import com.softberries.klerk.dao.ProductDao;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.gui.editors.input.CompanyEditorInput;
@@ -114,7 +115,7 @@ public class CompaniesEditor extends GenericKlerkEditor {
 		}
 		boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete this company?");
 		if(confirmed){
-			ProductDao dao = new ProductDao();
+			CompanyDao dao = new CompanyDao();
 			try {
 				dao.delete(this.getSelectedCompany().getId());
 				closeOpenedEditorForThisItem(new CompanyEditorInput(this.getSelectedCompany()));
@@ -123,7 +124,7 @@ public class CompaniesEditor extends GenericKlerkEditor {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			viewer.setInput(ProductsModelProvider.INSTANCE.getProducts());
+			viewer.setInput(CompaniesModelProvider.INSTANCE.getCompanies());
 			viewer.refresh();
 		}
 	}

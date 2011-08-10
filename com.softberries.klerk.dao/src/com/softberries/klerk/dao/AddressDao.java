@@ -16,6 +16,7 @@ public class AddressDao extends GenericDao<Address>{
 	private static final String SQL_FIND_ADDRESS_BY_ID = "SELECT * FROM ADDRESS WHERE id = ?";
 	private static final String SQL_DELETE_ALL_ADDRESSES = "DELETE FROM ADDRESS WHERE id > 0";
 	private static final String SQL_FIND_ADDRESS_ALL = "SELECT * FROM ADDRESS";
+	private static final String SQL_FIND_ADDRESS_ALL_BY_COMPANY_ID = "SELECT * FROM ADDRESS WHERE COMPANY_ID = ?";
 	private static final String SQL_UPDATE_ADDRESS = "UPDATE ADDRESS SET country = ?, city = ?, street = ?, postCode = ?, houseNumber = ?, flatNumber = ?, notes = ?, main = ?, person_id = ?, company_id = ? WHERE id = ?";
 	
 	@Override
@@ -25,6 +26,19 @@ public class AddressDao extends GenericDao<Address>{
 			init();
 			ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
 			companies = run.query(conn, SQL_FIND_ADDRESS_ALL, h); 
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally{
+			close(conn, st, generatedKeys);
+		}
+		return companies;
+	}
+	public List<Address> findAllByCompanyId(Long companyId) throws SQLException {
+		List<Address> companies = new ArrayList<Address>();
+		try{
+			init();
+			ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
+			companies = run.query(conn, SQL_FIND_ADDRESS_ALL_BY_COMPANY_ID, h, companyId); 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}finally{
@@ -62,7 +76,7 @@ public class AddressDao extends GenericDao<Address>{
 	        st.setString(7, c.getNotes());
 	        st.setBoolean(8, c.isMain());
 	        if(c.getPerson_id() == null && c.getCompany_id() == null){
-	        	throw new SQLException("Either Person or Company needs to be specified");
+	        	throw new SQLException("For Address either Person or Company needs to be specified");
 	        }
 	        if(c.getPerson_id() != null){
 	        	st.setLong(9, c.getPerson_id());
