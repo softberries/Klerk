@@ -27,11 +27,23 @@
             name="Klerk">
          <property
                name="windowImages"
-               value="icons/alt_window_16.gif,icons/alt_window_32.gif">
+               value="icons/png_64/klerk_16.png,icons/png_64/klerk_32.png,icons/png_64/klerk_48.png,icons/png_64/klerk_64.png">
          </property>
          <property
                name="appName"
                value="Klerk">
+         </property>
+         <property
+               name="aboutText"
+               value="About klerk application...">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,275,445,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
          </property>
       </product>
    </extension>
@@ -195,6 +207,22 @@
             name="Document Properties"
             objectClass="com.softberries.klerk.dao.to.Product">
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            content="introContent.xml"
+            id="com.softberries.klerk.introConfigId"
+            introId="com.softberries.klerk.intro">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx"
+                  style="content/shared.css">
+            </implementation>
+         </presentation>
+      </config>
    </extension>
 
 </plugin>

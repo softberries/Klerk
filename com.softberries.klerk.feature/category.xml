@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.softberries.klerk.feature_1.0.0.1.jar" id="com.softberries.klerk.feature" version="1.0.0.1">
+      <category name="klerk"/>
+   </feature>
+   <category-def name="klerk" label="Klerk Core">
+      <description>
+         Basic klerk application
+      </description>
+   </category-def>
+</site>

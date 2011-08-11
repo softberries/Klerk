@@ -3,6 +3,12 @@
 
 <product name="Klerk" uid="KlerkProduct" id="com.softberries.klerk.product" application="com.softberries.klerk.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
+   <aboutInfo>
+      <text>
+         About klerk application...
+      </text>
+   </aboutInfo>
+
    <configIni use="default">
    </configIni>
 
@@ -10,8 +16,11 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="icons/alt_window_16.gif" i32="icons/alt_window_32.gif"/>
+   <windowImages i16="/com.softberries.klerk/icons/png_64/klerk_16.png" i32="/com.softberries.klerk/icons/png_64/klerk_32.png" i48="/com.softberries.klerk/icons/png_64/klerk_48.png" i64="/com.softberries.klerk/icons/png_64/klerk_64.png"/>
 
+   <splash
+      location="com.softberries.klerk"
+      startupProgressRect="5,275,445,15" />
    <launcher name="klerk">
       <solaris/>
       <win useIco="false">
@@ -19,8 +28,11 @@
       </win>
    </launcher>
 
+   <intro introId="com.softberries.klerk.intro"/>
+
    <vm>
    </vm>
+
 
    <plugins>
       <plugin id="com.ibm.icu"/>
@@ -52,6 +64,7 @@
       <feature id="com.softberries.klerk.feature" version="1.0.0.1"/>
       <feature id="org.eclipse.rcp" version="3.7.0.v20110216-9DB5Fm1FpBGy_AaVz-mFamgY"/>
       <feature id="org.eclipse.help" version="1.3.0.v20110327-7i7uFFiFFt6ZqnbOrMXLd1"/>
+      <feature id="org.eclipse.equinox.p2.user.ui" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>
    </features>
 
 

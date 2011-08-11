@@ -18,8 +18,8 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="compatible"/>
+      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.forms" version="3.5.100" match="greaterOrEqual"/>
       <import plugin="com.softberries.klerk.dao" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="com.softberries.klerk.money" version="1.0.0" match="greaterOrEqual"/>
@@ -31,6 +31,7 @@
       <import plugin="com.ibm.icu"/>
       <import plugin="com.softberries.klerk.reports" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="com.softberries.klerk.help" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.p2.ui" version="2.1.0" match="greaterOrEqual"/>
       <import plugin="com.softberries.klerk.libraries.h2" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="com.softberries.klerk.libraries.dbutils" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface" version="3.6.0" match="compatible"/>
@@ -38,8 +39,9 @@
       <import plugin="org.eclipse.help.ui" version="3.5.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.help.webapp" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.http.jetty" version="2.0.100" match="greaterOrEqual"/>
-      <import feature="org.eclipse.help" version="1.3.0.v20110327-7i7uFFiFFt6ZqnbOrMXLd1"/>
       <import plugin="com.softberries.klerk.libraries.jasperreports" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.help" version="1.3.0.v20110327-7i7uFFiFFt6ZqnbOrMXLd1"/>
+      <import feature="org.eclipse.equinox.p2.user.ui" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>
    </requires>
 
    <plugin
