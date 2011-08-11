@@ -3,6 +3,8 @@ exported/**/*
 #java specific
 *.class
 com.softberries.klerk/bin/**/*
-
+#remove folder created for headless build
+com.softberries.klerk.build.script/buildDirectory/**/*
+*.zip
 
 

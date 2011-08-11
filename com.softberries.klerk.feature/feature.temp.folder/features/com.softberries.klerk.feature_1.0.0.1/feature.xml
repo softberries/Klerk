@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.softberries.klerk.feature"
+      label="Feature"
+      version="1.0.0.1"
+      provider-name="SOFTBERRIES">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime" version="3.6.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.forms" version="3.5.100" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.dao" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.money" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.databinding"/>
+      <import plugin="org.eclipse.core.databinding.beans"/>
+      <import plugin="org.eclipse.core.databinding.observable"/>
+      <import plugin="org.eclipse.core.databinding.property"/>
+      <import plugin="org.eclipse.jface.databinding"/>
+      <import plugin="com.ibm.icu"/>
+      <import plugin="com.softberries.klerk.reports" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.help" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.libraries.h2" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.softberries.klerk.libraries.dbutils" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jface" version="3.6.0" match="compatible"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.help.ui" version="3.5.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.help.webapp" version="3.6.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.http.jetty" version="2.0.100" match="greaterOrEqual"/>
+      <import feature="org.eclipse.help" version="1.3.0.v20110327-7i7uFFiFFt6ZqnbOrMXLd1"/>
+      <import plugin="com.softberries.klerk.libraries.jasperreports" version="1.0.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="com.softberries.klerk"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.libraries.mysql"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="com.softberries.klerk.dao"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.201108111228"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.forms"
+         download-size="0"
+         install-size="0"
+         version="3.5.100.v20110425"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.money"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.201108111228"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.libraries.h2"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.libraries.dbutils"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.help"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.201108111228"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.reports"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.201108111228"
+         unpack="false"/>
+
+   <plugin
+         id="com.softberries.klerk.libraries.jasperreports"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+</feature>
