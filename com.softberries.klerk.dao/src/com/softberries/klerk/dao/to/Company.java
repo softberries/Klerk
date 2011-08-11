@@ -1,7 +1,5 @@
 package com.softberries.klerk.dao.to;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +131,14 @@ public class Company  implements Serializable{
 	}
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getName());
+		builder.append(" Vat Id: ");
+		builder.append(this.getVatid());
+		return builder.toString();
 	}
 	
 	

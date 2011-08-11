@@ -64,6 +64,7 @@ import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.dao.to.VatLevelItem;
 import com.softberries.klerk.gui.dialogs.DocumentItemDialog;
+import com.softberries.klerk.gui.helpers.CompanyFactory;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
@@ -76,8 +77,13 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuanti
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelectedES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
 import com.softberries.klerk.reports.ReportManager;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.PojoObservables;
 
 public class SingleDocumentEditor extends EditorPart implements PropertyChangeListener{
+	private DataBindingContext m_bindingContext;
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument"; //$NON-NLS-1$
 	
@@ -90,8 +96,12 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	private DocumentItemComparator comparator;
 	private boolean dirty = false;
 	private TableWrapData data_1;
+	private Text sellerTxt;
+	private CompanyFactory companyFactory;
+	private Text buyerTxt;
 
 	public SingleDocumentEditor() {
+		companyFactory = new CompanyFactory();
 	}
 
 	@Override
@@ -116,6 +126,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 			addPropertyChangeListeners(di);
 		}
 		this.document.setVatLevelItems(new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems()));
+		this.document.setSeller(companyFactory.getCompanyFromPreferences());
 	}
 
 	private void addPropertyChangeListeners(DocumentItem di){
@@ -206,7 +217,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		TableWrapData twd_sellerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_sellerLbl.indent = 55;
 		sellerLbl.setLayoutData(twd_sellerLbl);
-		Text sellerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
+		sellerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
+		sellerTxt.setEnabled(false);
+		sellerTxt.setEditable(false);
 		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_sellerTxt.indent = 5;
 		twd_sellerTxt.align = TableWrapData.FILL;
@@ -239,7 +252,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		TableWrapData twd_buyerLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerLbl.indent = 55;
 		buyerLbl.setLayoutData(twd_buyerLbl);
-		Text buyerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
+		buyerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
 		new AutocompleteTextInput(buyerTxt, getCompanyNames(CompaniesModelProvider.INSTANCE.getCompanies()));
 		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerTxt.indent = 5;
@@ -399,6 +412,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionNotes.setLayoutData(data);
+		m_bindingContext = initDataBindings();
 	}
 	private String[] getPeopleNames(List<Person> people) {
 		String[] result = new String[people.size()];
@@ -412,7 +426,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		String[] result = new String[companies.size()];
 		for(int i = 0; i<companies.size();i++){
 			Company c = companies.get(i);
-			result[i] = c.getName() + " " + "VAT ID: " + c.getVatid();
+			result[i] = c.toString();
 		}
 		return result;
 	}
@@ -785,10 +799,8 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	        	docWrp.setCreatedDate("10/09/2011");
 	        	docWrp.setCreatedDateLbl("Data Wystawienia:");
 	        	docWrp.setCreatorLbl("Osoba upoważniona do wystawienia");
-	        	Company seller = CompaniesModelProvider.INSTANCE.getCompanies().get(0);
-	        	Company buyer = CompaniesModelProvider.INSTANCE.getCompanies().get(0);
-	        	document.setSeller(seller);
-	        	document.setBuyer(buyer);
+	        	document.setSeller(companyFactory.getCompanyFromPreferences());
+	        	document.setBuyer(companyFactory.getCompanyByName(buyerTxt.getText()));
 	        	docWrp.setDocument(document);
 	        	docWrp.setDueDate("10/10/2011");
 	        	docWrp.setDueDateLbl("Termin Płatności:");
@@ -825,4 +837,13 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		firePropertyChange(ISaveablePart.PROP_DIRTY);
 	}
 	
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		IObservableValue sellerTxtObserveTextObserveWidget = SWTObservables.observeText(sellerTxt, SWT.Modify);
+		IObservableValue documentSellerObserveValue = PojoObservables.observeValue(document, "seller");
+		bindingContext.bindValue(sellerTxtObserveTextObserveWidget, documentSellerObserveValue, null, null);
+		//
+		return bindingContext;
+	}
 }

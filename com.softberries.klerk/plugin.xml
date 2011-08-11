@@ -97,7 +97,12 @@
       <page
             class="com.softberries.klerk.preferences.DatabasePreferencePage"
             id="com.softberries.klerk.preferences.database"
-            name="%page.name.general">
+            name="Database">
+      </page>
+      <page
+            class="com.softberries.klerk.preferences.CompanyDetailsPreferencePage"
+            id="com.softberries.klerk.preferences.company"
+            name="Company">
       </page>
    </extension>
    <extension
