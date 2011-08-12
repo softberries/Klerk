@@ -144,7 +144,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		sectionGeneralClient.setLayout(twLayoutSectionGeneral);
 		// Company name
 		final Label nameLbl = toolkit.createLabel(sectionGeneralClient,
-				"First Name:");
+				"Name:");
 		final Text nameTxt = toolkit.createText(sectionGeneralClient,
 				this.company.getName(), SWT.BORDER);
 		nameTxt.addModifyListener(new ModifyListener() {

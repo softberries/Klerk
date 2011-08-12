@@ -170,4 +170,21 @@ public class DocumentCalculator {
 		return new ArrayList<VatLevelItem>(summaryItems.values());
 	}
 
+	public Money getNetPrice(List<DocumentItem> items) {
+		Money result = new Money(new BigDecimal("0.00"));
+		for(DocumentItem di : items){
+			Money priceNetAll = new Money(new BigDecimal(di.getPriceNetAll()).setScale(2));
+			result = result.plus(priceNetAll);
+		}
+		return result;
+	}
+
+	public Money getGrossPrice(List<DocumentItem> items) {
+		Money result = new Money(new BigDecimal("0.00"));
+		for(DocumentItem di : items){
+			Money priceGrossAll = new Money(new BigDecimal(di.getPriceGrossAll()).setScale(2));
+			result = result.plus(priceGrossAll);
+		}
+		return result;
+	}
 }

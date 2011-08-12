@@ -81,6 +81,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class SingleDocumentEditor extends EditorPart implements PropertyChangeListener{
 	private DataBindingContext m_bindingContext;
@@ -99,6 +100,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	private Text sellerTxt;
 	private CompanyFactory companyFactory;
 	private Text buyerTxt;
+	private Label toPayTxt;
 
 	public SingleDocumentEditor() {
 		companyFactory = new CompanyFactory();
@@ -361,12 +363,31 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		TableWrapLayout twLayoutSectionSummary = new TableWrapLayout();
 		twLayoutSectionSummary.numColumns = 4;
 		sectionSummaryClient.setLayout(twLayoutSectionSummary);
-		Composite filler = toolkit.createComposite(sectionSummaryClient);
+//		Composite filler = toolkit.createComposite(sectionSummaryClient);
+//		filler.setForeground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+		
+		
+		Label lblToPay = new Label(sectionSummaryClient, SWT.NONE);
+		lblToPay.setFont(SWTResourceManager.getFont("Ubuntu", 22, SWT.NORMAL));
+//		lblToPay.setBounds(10, 10, 137, 33);
+//		toolkit.adapt(lblToPay, true, true);
+		lblToPay.setText(Messages.SingleDocumentEditor_lblToPay_text);
 		data_1 = new TableWrapData(TableWrapData.FILL_GRAB);
 		data_1.grabVertical = true;
 		data_1.valign = TableWrapData.FILL;
-		data_1.colspan = 3;
-		filler.setLayoutData(data_1);
+		data_1.colspan = 1;
+		lblToPay.setLayoutData(data_1);
+		
+		toPayTxt = new Label(sectionSummaryClient, SWT.NONE);
+		toPayTxt.setFont(SWTResourceManager.getFont("Ubuntu", 22, SWT.NORMAL));
+//		toPayTxt.setBounds(153, 10, 365, 34);
+//		toolkit.adapt(toPayTxt, true, true);
+		toPayTxt.setText(getToPayText());
+		data_1 = new TableWrapData(TableWrapData.FILL_GRAB);
+		data_1.grabVertical = true;
+		data_1.valign = TableWrapData.FILL;
+		data_1.colspan = 1;
+		toPayTxt.setLayoutData(data_1);
 		
 		createSummaryTableViewer(sectionSummaryClient);
 		
@@ -414,6 +435,19 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		sectionNotes.setLayoutData(data);
 		m_bindingContext = initDataBindings();
 	}
+	private String getToPayText() {
+		StringBuilder builder = new StringBuilder();
+		DocumentCalculator calc = new DocumentCalculator();
+		builder.append(calc.getNetPrice(this.document.getItems()));
+		builder.append(" ");
+		builder.append("Net");
+		builder.append(" ");
+		builder.append(calc.getGrossPrice(this.document.getItems()));
+		builder.append(" ");
+		builder.append("Gross");
+		return builder.toString();
+	}
+
 	private String[] getPeopleNames(List<Person> people) {
 		String[] result = new String[people.size()];
 		for(int i = 0; i<people.size();i++){
@@ -832,6 +866,8 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		List<VatLevelItem> list = new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems());
 		summaryTableViewer.setInput(list);
 		summaryTableViewer.refresh();
+		toPayTxt.setText(getToPayText());
+		toPayTxt.redraw();
 		form.reflow(true);
 		dirty = true;
 		firePropertyChange(ISaveablePart.PROP_DIRTY);

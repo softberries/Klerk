@@ -74,6 +74,8 @@ public class Messages extends NLS {
 	public static String SingleProductEditor_PRODUCT;
 	public static String SingleProductEditor_Product_Description;
 	public static String SingleProductEditor_Product_main_properties;
+	public static String SingleDocumentEditor_lblToPay_text;
+	public static String SingleDocumentEditor_lblPln_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
