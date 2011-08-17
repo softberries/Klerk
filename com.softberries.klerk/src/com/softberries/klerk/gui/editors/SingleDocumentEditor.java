@@ -469,6 +469,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		createColumnsSummary(parent, summaryTableViewer);
 		final Table table = summaryTableViewer.getTable();
 		TableWrapData twd_table = new TableWrapData(TableWrapData.LEFT, TableWrapData.FILL, 1, 1);
+		twd_table.heightHint = 79;
 		twd_table.grabVertical = true;
 		table.setLayoutData(twd_table);
 		table.setHeaderVisible(true);
@@ -490,9 +491,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, itemsTableViewer);
 		final Table table = itemsTableViewer.getTable();
-		TableWrapData twd_table = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
-		twd_table.grabVertical = true;
-		table.setLayoutData(twd_table);
+		table.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.FILL_GRAB, 1, 1));
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
@@ -756,6 +755,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	                DocumentItemDialog dialog = new DocumentItemDialog(PlatformUI.getWorkbench().
 	                        getActiveWorkbenchWindow().getShell());
 	                Product p = dialog.getItemFromDialog();
+	                if(p == null){
+	                	return;
+	                }
 	                //TODO - this just fills the values with 0.0
 	                DocumentItem it = new DocumentItem();
 	                it.setProduct(p);

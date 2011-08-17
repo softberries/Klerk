@@ -138,6 +138,7 @@ public class DocumentItemDialog extends Dialog {
 
 	private Product getProductFromCombo() {
 		for(Product p : ProductsModelProvider.INSTANCE.getProducts()){
+			System.out.println(selectedStr);
 			if(p.getCode().equals(selectedStr)){
 				return p;
 			}
