@@ -1,10 +1,16 @@
 package com.softberries.klerk.gui.views;
 
+import java.io.IOException;
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -14,7 +20,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.osgi.framework.Bundle;
 
+import com.softberries.klerk.Activator;
 import com.softberries.klerk.dao.to.Document;
 
 public class DocumentDetailsView extends ViewPart implements ISelectionListener {
@@ -32,18 +40,22 @@ public class DocumentDetailsView extends ViewPart implements ISelectionListener 
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout(2, false));
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		{
-			lblTest = new Label(container, SWT.NONE);
-			GridData gd_lblTest = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-			gd_lblTest.widthHint = 563;
-			lblTest.setLayoutData(gd_lblTest);
-			lblTest.setText("test");
+		Composite composite;
+		container.setLayout(new GridLayout(1, false));
+		Browser browser = new Browser(container, SWT.SCROLL_LOCK);
+		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		Activator instance = Activator.getDefault();
+		Bundle bundle = instance.getBundle();
+		URL url = FileLocator.find(bundle, new Path("xhtml/product_chart.html"),null);
+		System.out.println(url.getPath());
+		try {
+			URL fileUrl = FileLocator.toFileURL(url);
+			System.out.println(fileUrl.getPath());
+			browser.setUrl(fileUrl.getPath());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
+		
 		createActions();
 		initializeToolBar();
 		initializeMenu();
