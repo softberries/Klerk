@@ -1,5 +1,9 @@
 package com.softberries.klerk.gui.editors;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -7,6 +11,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
+
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
@@ -29,9 +34,9 @@ public class DocumentsEditor extends GenericKlerkEditor{
 	
 	@Override
 	protected void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { Messages.DocumentsEditor_title, Messages.DocumentsEditor_notes, Messages.DocumentsEditor_date_created, Messages.DocumentsEditor_transaction_date, Messages.DocumentsEditor_due_date, Messages.DocumentsEditor_place_created,
-				Messages.DocumentsEditor_creator };
-		int[] bounds = { 100, 100, 100, 100, 100, 100, 100 };
+		String[] titles = { Messages.DocumentsEditor_title, Messages.DocumentsEditor_date_created, Messages.DocumentsEditor_transaction_date, Messages.DocumentsEditor_due_date, Messages.DocumentsEditor_place_created,
+				Messages.DocumentsEditor_creator, Messages.DocumentsEditor_notes };
+		int[] bounds = { 200, 100, 100, 100, 100, 100, 100 };
 
 		// First column is for the title
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
@@ -42,43 +47,36 @@ public class DocumentsEditor extends GenericKlerkEditor{
 			}
 		});
 
-		// Second column is for the notes
+		
+		// Now the date (created)
 		col = createTableViewerColumn(titles[1], bounds[1], 1);
-		col.setLabelProvider(new CellLabelProvider() {
+		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getNotes());
+				Date date = ((Document) cell.getElement()).getCreatedDate();
+				cell.setText(getDateFormatted(date));
 			}
 		});
-		// Now the date (created)
+		// Now the date (transaction)
 		col = createTableViewerColumn(titles[2], bounds[2], 2);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getCreatedDate()
-						.toLocaleString());
+				Date date = ((Document) cell.getElement()).getTransactionDate();
+				cell.setText(getDateFormatted(date));
 			}
 		});
-		// Now the date (transaction)
+		// Now the date (due)
 		col = createTableViewerColumn(titles[3], bounds[3], 3);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement())
-						.getTransactionDate().toLocaleString());
-			}
-		});
-		// Now the date (due)
-		col = createTableViewerColumn(titles[4], bounds[4], 4);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public void update(ViewerCell cell) {
-				cell.setText(((Document) cell.getElement()).getDueDate()
-						.toLocaleString());
+				Date date = ((Document) cell.getElement()).getDueDate();
+				cell.setText(getDateFormatted(date));
 			}
 		});
 		// place
-		col = createTableViewerColumn(titles[5], bounds[5], 5);
+		col = createTableViewerColumn(titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
@@ -86,7 +84,7 @@ public class DocumentsEditor extends GenericKlerkEditor{
 			}
 		});
 		// creator
-		col = createTableViewerColumn(titles[6], bounds[6], 6);
+		col = createTableViewerColumn(titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
@@ -95,9 +93,23 @@ public class DocumentsEditor extends GenericKlerkEditor{
 						+ doc.getCreator().getLastName());
 			}
 		});
-
+		// Second column is for the notes
+		col = createTableViewerColumn(titles[6], bounds[6], 6);
+		col.setLabelProvider(new CellLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				String notes = ((Document) cell.getElement()).getNotes();
+				notes = notes.replaceAll("\\r\\n|\\r|\\n", " ");
+				cell.setText(notes);
+			}
+		});
 	}
 
+	private String getDateFormatted(Date date){
+		DateFormat dtf = DateFormat.getDateInstance(DateFormat.DEFAULT,
+				   Locale.getDefault());
+		return dtf.format(date);
+	}
 	@Override
 	protected void addButtonClicked() {
 		
