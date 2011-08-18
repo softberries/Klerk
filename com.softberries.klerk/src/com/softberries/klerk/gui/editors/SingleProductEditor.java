@@ -1,10 +1,21 @@
 package com.softberries.klerk.gui.editors;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -26,6 +37,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.ProductDao;
+import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
@@ -36,11 +48,13 @@ public class SingleProductEditor extends SingleObjectEditor {
 
 	public static final String ID = "com.softberries.klerk.gui.editors.SingleProduct"; //$NON-NLS-1$
 	private Product product;
+	private String oldProductCode;
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		System.out.println("do save"); //$NON-NLS-1$
 		ProductDao dao = new ProductDao();
+		product.setCode(product.getCode().toUpperCase());
 		try {
 			if(product.getId() == null){
 				dao.create(product);
@@ -70,6 +84,7 @@ public class SingleProductEditor extends SingleObjectEditor {
 		setSite(site);
 		setInput(input);
 		product = (Product) input.getAdapter(Product.class);
+		this.oldProductCode = product.getCode();
 		setPartName(product.getName());
 	}
 
@@ -108,11 +123,12 @@ public class SingleProductEditor extends SingleObjectEditor {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				product.setCode(prepareProductCode(codeTxt.getText()));
+//				product.setCode(prepareProductCode(codeTxt.getText()));
 				dirty = true;
 				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			}
 		});
+		bindValues(codeTxt);
 		TableWrapData twd_codeTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_codeTxt.colspan = 3;
 		codeTxt.setLayoutData(twd_codeTxt);
@@ -175,6 +191,48 @@ public class SingleProductEditor extends SingleObjectEditor {
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionDescription.setLayoutData(data);
+	}
+	public void bindValues(Text codeTxt){
+		final List<String> productCodes = getProductCodes();
+		DataBindingContext bindingContext = new DataBindingContext();
+		IObservableValue widgetValue = WidgetProperties.text(SWT.Modify)
+				.observe(codeTxt);
+		IObservableValue modelValue = BeanProperties.value(Product.class,
+				"code").observe(product);
+		bindingContext.bindValue(widgetValue, modelValue);
+		// We want that age is a number
+		IValidator numberValidator = new IValidator() {
+
+			@Override
+			public IStatus validate(Object value) {
+				String s = String.valueOf(value);
+				for(String p : productCodes){
+					if(p.equalsIgnoreCase(s) && !p.equalsIgnoreCase(oldProductCode)){
+						dirty = false;
+						firePropertyChange(ISaveablePart.PROP_DIRTY);
+						return ValidationStatus.error("Product code: " + s + " already exists!");
+					}
+				}
+				return ValidationStatus.ok();
+				
+			}
+		};
+		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+		targetToModel.setBeforeSetValidator(numberValidator);
+
+		// Bind values using the validator
+		// Remember the bindingContext to allow control decoration
+		Binding bindValue = bindingContext.bindValue(widgetValue, modelValue,
+				targetToModel, null);
+		ControlDecorationSupport.create(bindValue, SWT.TOP | SWT.LEFT);
+	}
+
+	private List<String> getProductCodes() {
+		List<String> strs = new ArrayList<String>();
+		for(Product p : ProductsModelProvider.INSTANCE.getProducts()){
+			strs.add(p.getCode());
+		}
+		return strs;
 	}
 
 }

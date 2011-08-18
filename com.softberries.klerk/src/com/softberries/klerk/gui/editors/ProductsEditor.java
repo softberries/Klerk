@@ -66,7 +66,9 @@ public class ProductsEditor extends GenericKlerkEditor{
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public void update(ViewerCell cell) {
-				cell.setText(((Product) cell.getElement()).getDescription());
+				String desc = ((Product) cell.getElement()).getDescription();
+				desc = desc.replaceAll("\\r\\n|\\r|\\n", " ");
+				cell.setText(desc);
 			}
 		});
 	}
