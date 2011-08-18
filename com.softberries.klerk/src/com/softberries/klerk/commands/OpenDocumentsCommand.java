@@ -47,13 +47,11 @@ public class OpenDocumentsCommand implements IHandler {
 
 	@Override
 	public boolean isHandled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void removeHandlerListener(IHandlerListener handlerListener) {
-		// TODO Auto-generated method stub
 		
 	}
 }

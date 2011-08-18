@@ -26,7 +26,6 @@ public abstract class SingleObjectEditor extends EditorPart {
 	}
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
 		return dirty;
 	}
 	

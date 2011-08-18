@@ -221,7 +221,6 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 	}
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	protected void openSingleObjectEditor(final IEditorInput input,final String editorID){

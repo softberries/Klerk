@@ -100,25 +100,21 @@ public class DocumentsEditor extends GenericKlerkEditor{
 
 	@Override
 	protected void addButtonClicked() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void deleteButtonClicked() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void editButtonClicked() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void refreshButtonClicked() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -130,7 +126,6 @@ public class DocumentsEditor extends GenericKlerkEditor{
 
 	@Override
 	protected void setSelectedObject(Object selection) {
-		// TODO Auto-generated method stub
 		
 	}
 

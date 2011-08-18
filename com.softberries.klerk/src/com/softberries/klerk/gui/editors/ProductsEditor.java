@@ -52,7 +52,6 @@ public class ProductsEditor extends GenericKlerkEditor{
 				cell.setText(((Product) cell.getElement()).getCode());
 			}
 		});
-
 		// Second column is for the name
 		col = createTableViewerColumn(titles[1], bounds[1], 1);
 		col.setLabelProvider(new CellLabelProvider() {

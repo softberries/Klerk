@@ -734,8 +734,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	private class AddItemControlContribution extends ControlContribution{

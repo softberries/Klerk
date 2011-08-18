@@ -9,13 +9,11 @@ public class AddProductCommand implements IHandler {
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -27,19 +25,16 @@ public class AddProductCommand implements IHandler {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isHandled() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void removeHandlerListener(IHandlerListener handlerListener) {
-		// TODO Auto-generated method stub
 
 	}
 

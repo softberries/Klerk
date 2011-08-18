@@ -21,13 +21,11 @@ public class DocumentEditorInput implements IEditorInput {
 
 	@Override
 	public boolean exists() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -38,7 +36,6 @@ public class DocumentEditorInput implements IEditorInput {
 
 	@Override
 	public IPersistableElement getPersistable() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

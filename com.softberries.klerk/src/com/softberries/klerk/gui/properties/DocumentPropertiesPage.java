@@ -9,12 +9,10 @@ public class DocumentPropertiesPage extends PropertyPage implements
 		IWorkbenchPropertyPage {
 
 	public DocumentPropertiesPage() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

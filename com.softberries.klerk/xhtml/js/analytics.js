@@ -108,8 +108,8 @@ window.onload = function () {
                 }
                 var ppp = r.popup(x, y, label, side, 1);
                 frame.show().stop().animate({path: ppp.path}, 200 * is_label_visible);
-                label[0].attr({text: data + " hit" + (data == 1 ? "" : "s")}).show().stop().animateWith(frame, {translation: [ppp.dx, ppp.dy]}, 200 * is_label_visible);
-                label[1].attr({text: lbl + " September 2008"}).show().stop().animateWith(frame, {translation: [ppp.dx, ppp.dy]}, 200 * is_label_visible);
+                label[0].attr({text: data + " " + (data == 1 ? "" : "")}).show().stop().animateWith(frame, {translation: [ppp.dx, ppp.dy]}, 200 * is_label_visible);
+                label[1].attr({text: lbl + " "}).show().stop().animateWith(frame, {translation: [ppp.dx, ppp.dy]}, 200 * is_label_visible);
                 dot.attr("r", 6);
                 is_label_visible = true;
             }, function () {

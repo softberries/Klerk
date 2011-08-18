@@ -166,19 +166,16 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 
 	@Override
 	public void treeCollapsed(TreeExpansionEvent event) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void treeExpanded(TreeExpansionEvent event) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		// TODO Auto-generated method stub
 		
 	}
 }
