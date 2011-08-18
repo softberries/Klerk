@@ -1,15 +1,20 @@
 package com.softberries.klerk.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import com.softberries.klerk.dao.to.Address;
 
-public class AddressDao extends GenericDao<Address>{
+public class AddressDao {
 	
 	private static final String SQL_INSERT_ADDRESS = "INSERT INTO ADDRESS(country, city, street, postCode, houseNumber, flatNumber, notes, main, person_id, company_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_ADDRESS = "DELETE FROM ADDRESS WHERE id = ?";
@@ -19,54 +24,28 @@ public class AddressDao extends GenericDao<Address>{
 	private static final String SQL_FIND_ADDRESS_ALL_BY_COMPANY_ID = "SELECT * FROM ADDRESS WHERE COMPANY_ID = ?";
 	private static final String SQL_UPDATE_ADDRESS = "UPDATE ADDRESS SET country = ?, city = ?, street = ?, postCode = ?, houseNumber = ?, flatNumber = ?, notes = ?, main = ?, person_id = ?, company_id = ? WHERE id = ?";
 	
-	@Override
-	public List<Address> findAll() throws SQLException {
+	public List<Address> findAll(QueryRunner run, Connection conn) throws SQLException {
 		List<Address> companies = new ArrayList<Address>();
-		try{
-			init();
-			ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
-			companies = run.query(conn, SQL_FIND_ADDRESS_ALL, h); 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			close(conn, st, generatedKeys);
-		}
+		ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
+		companies = run.query(conn, SQL_FIND_ADDRESS_ALL, h); 
 		return companies;
 	}
-	public List<Address> findAllByCompanyId(Long companyId) throws SQLException {
-		List<Address> companies = new ArrayList<Address>();
-		try{
-			init();
-			ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
-			companies = run.query(conn, SQL_FIND_ADDRESS_ALL_BY_COMPANY_ID, h, companyId); 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			close(conn, st, generatedKeys);
-		}
-		return companies;
+	public List<Address> findAllByCompanyId(Long companyId,QueryRunner run, Connection conn) throws SQLException {
+		List<Address> addresses = new ArrayList<Address>();
+		ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
+		addresses = run.query(conn, SQL_FIND_ADDRESS_ALL_BY_COMPANY_ID, h, companyId); 
+		return addresses;
 	}
 
-	@Override
-	public Address find(Long id) throws SQLException {
+	public Address find(Long id, QueryRunner run, Connection conn) throws SQLException {
 		Address p = null;
-		try{
-			init();
-			ResultSetHandler<Address> h = new BeanHandler<Address>(Address.class);
-			p = run.query(conn, SQL_FIND_ADDRESS_BY_ID, h, id); 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			close(conn, st, generatedKeys);
-		}
+		ResultSetHandler<Address> h = new BeanHandler<Address>(Address.class);
+		p = run.query(conn, SQL_FIND_ADDRESS_BY_ID, h, id); 
 		return p;
 	}
 
-	@Override
-	public void create(Address c) throws SQLException {
-		try {
-			init();
-	        st = conn.prepareStatement(SQL_INSERT_ADDRESS, Statement.RETURN_GENERATED_KEYS); 
+	public void create(Address c, QueryRunner run, Connection conn, ResultSet generatedKeys) throws SQLException {
+			PreparedStatement st = conn.prepareStatement(SQL_INSERT_ADDRESS, Statement.RETURN_GENERATED_KEYS); 
 	        st.setString(1, c.getCountry());
 	        st.setString(2, c.getCity());
 	        st.setString(3, c.getStreet());
@@ -100,18 +79,10 @@ public class AddressDao extends GenericDao<Address>{
 	        } else {
 	            throw new SQLException("Creating user failed, no generated key obtained.");
 	        }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			close(conn, st, generatedKeys);
-		}
 	}
 
-	@Override
-	public void update(Address c) throws SQLException {
-		try {
-			init();
-			st = conn.prepareStatement(SQL_UPDATE_ADDRESS); 
+	public void update(Address c, QueryRunner run, Connection conn) throws SQLException {
+			PreparedStatement st = conn.prepareStatement(SQL_UPDATE_ADDRESS); 
 			st.setString(1, c.getCountry());
 	        st.setString(2, c.getCity());
 	        st.setString(3, c.getStreet());
@@ -140,46 +111,25 @@ public class AddressDao extends GenericDao<Address>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_UPDATE_ADDRESS);
 	        }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			close(conn, st, generatedKeys);
-		}
 	}
 
-	@Override
-	public void delete(Long id) throws SQLException {
-		try {
-			init();
-			st = conn.prepareStatement(SQL_DELETE_ADDRESS); 
-	        st.setLong(1, id);
-	        // run the query
-	        int i = st.executeUpdate();    
-	        System.out.println("i: " + i);
-	        if (i == -1) {
-	            System.out.println("db error : " + SQL_DELETE_ADDRESS);
-	        }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			close(conn, st, generatedKeys);
-		}
+	public void delete(Long id, Connection conn) throws SQLException {
+		PreparedStatement st = conn.prepareStatement(SQL_DELETE_ADDRESS); 
+        st.setLong(1, id);
+        // run the query
+        int i = st.executeUpdate();    
+        System.out.println("i: " + i);
+        if (i == -1) {
+            System.out.println("db error : " + SQL_DELETE_ADDRESS);
+        }
 	}
 
-	@Override
-	public void deleteAll() throws SQLException {
-		try{
-			init();
-			st = conn.prepareStatement(SQL_DELETE_ALL_ADDRESSES);
-			int i = st.executeUpdate();
-			System.out.println("i: " + i);
-	        if (i == -1) {
-	            System.out.println("db error : " + SQL_DELETE_ALL_ADDRESSES);
-	        }
-		}catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			close(conn, st, generatedKeys);
-		}
+	public void deleteAll(Connection conn) throws SQLException {
+		PreparedStatement st = conn.prepareStatement(SQL_DELETE_ALL_ADDRESSES);
+		int i = st.executeUpdate();
+		System.out.println("i: " + i);
+        if (i == -1) {
+            System.out.println("db error : " + SQL_DELETE_ALL_ADDRESSES);
+        }
 	}
 }

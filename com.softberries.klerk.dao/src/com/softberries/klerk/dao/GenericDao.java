@@ -47,6 +47,7 @@ public abstract class GenericDao<T> {
 		run = new QueryRunner();
 		Class.forName("org.h2.Driver");
 		conn = DriverManager.getConnection("jdbc:h2:~/.klerk/klerk", "sa", "");
+		conn.setAutoCommit(false);
 	}
 	/**
 	 * Closes all resources after execution

@@ -42,7 +42,6 @@
       <import plugin="com.softberries.klerk.libraries.jasperreports" version="1.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.help" version="1.3.0.v20110327-7i7uFFiFFt6ZqnbOrMXLd1"/>
       <import feature="org.eclipse.equinox.p2.user.ui" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>
-      <import plugin="com.softberries.klerk.libraries.jchart2d" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -109,12 +108,6 @@
 
    <plugin
          id="com.softberries.klerk.libraries.jasperreports"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.softberries.klerk.libraries.jchart2d"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

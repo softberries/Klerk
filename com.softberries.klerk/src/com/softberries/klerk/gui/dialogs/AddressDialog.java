@@ -25,10 +25,29 @@ import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.runtime.IStatus;
+
+import com.softberries.klerk.gui.validators.FieldNotEmptyValidator;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.events.TraverseEvent;
 
 public class AddressDialog extends Dialog {
 	private DataBindingContext m_bindingContext;
@@ -40,6 +59,7 @@ public class AddressDialog extends Dialog {
 	private Text postCodeTxt;
 	private Text notesTxt;
 	private Address currentAddress;
+	private Button okButton;
 	/**
 	 * Create the dialog.
 	 * @param parentShell
@@ -62,24 +82,45 @@ public class AddressDialog extends Dialog {
 		lblProduct.setText("Country:");
 		
 		countryTxt = new Text(container, SWT.BORDER);
+		countryTxt.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				okButton.setEnabled(getFormValid());
+			}
+		});
 		countryTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCity = new Label(container, SWT.NONE);
 		lblCity.setText("City:");
 		
 		cityTxt = new Text(container, SWT.BORDER);
+		cityTxt.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				okButton.setEnabled(getFormValid());
+			}
+		});
+		
 		cityTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblStreet = new Label(container, SWT.NONE);
 		lblStreet.setText("Street:");
 		
 		streetTxt = new Text(container, SWT.BORDER);
+		streetTxt.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				okButton.setEnabled(getFormValid());
+			}
+		});
 		streetTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblHouseNr = new Label(container, SWT.NONE);
 		lblHouseNr.setText("House Nr:");
 		
 		houseNrTxt = new Text(container, SWT.BORDER);
+		houseNrTxt.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				okButton.setEnabled(getFormValid());
+			}
+		});
 		houseNrTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblFlatNr = new Label(container, SWT.NONE);
@@ -92,6 +133,11 @@ public class AddressDialog extends Dialog {
 		lblPostCode.setText("Post Code:");
 		
 		postCodeTxt = new Text(container, SWT.BORDER);
+		postCodeTxt.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				okButton.setEnabled(getFormValid());
+			}
+		});
 		postCodeTxt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNotes = new Label(container, SWT.NONE);
@@ -117,11 +163,24 @@ public class AddressDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
 				true);
+		
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 		m_bindingContext = initDataBindings();
+		okButton.setEnabled(getFormValid());
+	}
+	private boolean getFormValid() {
+		if(!countryTxt.getText().isEmpty() &&
+				!cityTxt.getText().isEmpty() &&
+				!streetTxt.getText().isEmpty() &&
+				!houseNrTxt.getText().isEmpty() &&
+				!postCodeTxt.getText().isEmpty()){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	/**
 	 * Return the initial size of the dialog.
@@ -145,23 +204,30 @@ public class AddressDialog extends Dialog {
 	      shell.setText("Address Editor");
 	}
 	protected DataBindingContext initDataBindings() {
+		IValidator notEmptyValidator = new FieldNotEmptyValidator("This field cannot be empty!");
 		DataBindingContext bindingContext = new DataBindingContext();
+		UpdateValueStrategy ttm = new UpdateValueStrategy();
+		ttm.setBeforeSetValidator(notEmptyValidator);
 		//
 		IObservableValue countryTxtObserveTextObserveWidget = SWTObservables.observeText(countryTxt, SWT.Modify);
 		IObservableValue currentAddressCountryObserveValue = PojoObservables.observeValue(currentAddress, "country");
-		bindingContext.bindValue(countryTxtObserveTextObserveWidget, currentAddressCountryObserveValue, null, null);
+		Binding binding = bindingContext.bindValue(countryTxtObserveTextObserveWidget, currentAddressCountryObserveValue, ttm, null);
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
 		//
 		IObservableValue cityTxtObserveTextObserveWidget = SWTObservables.observeText(cityTxt, SWT.Modify);
 		IObservableValue currentAddressCityObserveValue = PojoObservables.observeValue(currentAddress, "city");
-		bindingContext.bindValue(cityTxtObserveTextObserveWidget, currentAddressCityObserveValue, null, null);
+		binding = bindingContext.bindValue(cityTxtObserveTextObserveWidget, currentAddressCityObserveValue, ttm, null);
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
 		//
 		IObservableValue streetTxtObserveTextObserveWidget = SWTObservables.observeText(streetTxt, SWT.Modify);
 		IObservableValue currentAddressStreetObserveValue = PojoObservables.observeValue(currentAddress, "street");
-		bindingContext.bindValue(streetTxtObserveTextObserveWidget, currentAddressStreetObserveValue, null, null);
+		binding = bindingContext.bindValue(streetTxtObserveTextObserveWidget, currentAddressStreetObserveValue, ttm, null);
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
 		//
 		IObservableValue houseNrTxtObserveTextObserveWidget = SWTObservables.observeText(houseNrTxt, SWT.Modify);
 		IObservableValue currentAddressHouseNumberObserveValue = PojoObservables.observeValue(currentAddress, "houseNumber");
-		bindingContext.bindValue(houseNrTxtObserveTextObserveWidget, currentAddressHouseNumberObserveValue, null, null);
+		binding = bindingContext.bindValue(houseNrTxtObserveTextObserveWidget, currentAddressHouseNumberObserveValue, ttm, null);
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
 		//
 		IObservableValue flatNrTxtObserveTextObserveWidget = SWTObservables.observeText(flatNrTxt, SWT.Modify);
 		IObservableValue currentAddressFlatNumberObserveValue = PojoObservables.observeValue(currentAddress, "flatNumber");
@@ -169,7 +235,8 @@ public class AddressDialog extends Dialog {
 		//
 		IObservableValue postCodeTxtObserveTextObserveWidget = SWTObservables.observeText(postCodeTxt, SWT.Modify);
 		IObservableValue currentAddressPostCodeObserveValue = PojoObservables.observeValue(currentAddress, "postCode");
-		bindingContext.bindValue(postCodeTxtObserveTextObserveWidget, currentAddressPostCodeObserveValue, null, null);
+		binding = bindingContext.bindValue(postCodeTxtObserveTextObserveWidget, currentAddressPostCodeObserveValue, ttm, null);
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
 		//
 		IObservableValue notesTxtObserveTextObserveWidget = SWTObservables.observeText(notesTxt, SWT.Modify);
 		IObservableValue currentAddressNotesObserveValue = PojoObservables.observeValue(currentAddress, "notes");

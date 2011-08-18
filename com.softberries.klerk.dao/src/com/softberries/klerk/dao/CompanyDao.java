@@ -28,15 +28,15 @@ public class CompanyDao extends GenericDao<Company>{
 			init();
 			ResultSetHandler<List<Company>> h = new BeanListHandler<Company>(Company.class);
 			companies = run.query(conn, SQL_FIND_COMPANY_ALL, h); 
+			//find addresses
+			AddressDao adrDao = new AddressDao();
+			for(Company c : companies){
+				c.setAddresses(adrDao.findAllByCompanyId(c.getId(),run, conn));
+			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}finally{
 			close(conn, st, generatedKeys);
-		}
-		//find addresses
-		AddressDao adrDao = new AddressDao();
-		for(Company c : companies){
-			c.setAddresses(adrDao.findAllByCompanyId(c.getId()));
 		}
 		return companies;
 	}
@@ -48,14 +48,14 @@ public class CompanyDao extends GenericDao<Company>{
 			init();
 			ResultSetHandler<Company> h = new BeanHandler<Company>(Company.class);
 			p = run.query(conn, SQL_FIND_COMPANY_BY_ID, h, id); 
+			//find addresses
+			AddressDao adrDao = new AddressDao();
+			p.setAddresses(adrDao.findAllByCompanyId(p.getId(),run, conn));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}finally{
 			close(conn, st, generatedKeys);
 		}
-		//find addresses
-		AddressDao adrDao = new AddressDao();
-		p.setAddresses(adrDao.findAllByCompanyId(p.getId()));
 		return p;
 	}
 
@@ -82,21 +82,20 @@ public class CompanyDao extends GenericDao<Company>{
 	        } else {
 	            throw new SQLException("Creating company failed, no generated key obtained.");
 	        }
-	        
+	      //if the company creation was successfull, add addresses
+	        AddressDao adrDao = new AddressDao();
+	        for(Address adr : c.getAddresses()){
+	        	adr.setCompany_id(c.getId());
+	        	adrDao.create(adr,run, conn, generatedKeys);
+	        	if(adr.isMain()){
+	        		c.setAddress(adr);
+	        	}
+	        }
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}finally{
 			close(conn, st, generatedKeys);
 		}
-		//if the company creation was successfull, add addresses
-        AddressDao adrDao = new AddressDao();
-        for(Address adr : c.getAddresses()){
-        	adr.setCompany_id(c.getId());
-        	adrDao.create(adr);
-        	if(adr.isMain()){
-        		c.setAddress(adr);
-        	}
-        }
 	}
 
 	@Override
@@ -117,21 +116,39 @@ public class CompanyDao extends GenericDao<Company>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_UPDATE_COMPANY);
 	        }
-		} catch (ClassNotFoundException e) {
+	        
+	        //delete unused addresses
+			AddressDao adrDao = new AddressDao();
+			List<Address> toDel = new ArrayList<Address>();
+			if(c.getId() != null){
+				List<Address> existingAddresses = adrDao.findAllByCompanyId(c.getId(), run, conn);
+				for(Address adr : existingAddresses){
+					if(!c.getAddresses().contains(adr)){
+						toDel.add(adr);
+					}
+				}
+			}
+			for(Address adr : toDel){
+				adrDao.delete(adr.getId(), conn);
+			}
+			//update addresses
+			for(Address adr : c.getAddresses()){
+				if(adr.getId() != null && adr.getId() > 0){
+					//update
+					adrDao.update(adr, run, conn);
+				}else{//create
+					adr.setCompany_id(c.getId());
+					adrDao.create(adr, run, conn, generatedKeys);
+				}
+			}
+			conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
-		}
-		//update addresses
-		AddressDao adrDao = new AddressDao();
-		for(Address adr : c.getAddresses()){
-			if(adr.getId() != null && adr.getId() > 0){
-				//update
-				adrDao.update(adr);
-			}else{//create
-				adr.setCompany_id(c.getId());
-				adrDao.create(adr);
-			}
 		}
 	}
 
@@ -141,7 +158,7 @@ public class CompanyDao extends GenericDao<Company>{
 		Company toDel = find(id);
 		AddressDao adrDao = new AddressDao();
 		for(Address adr : toDel.getAddresses()){
-			adrDao.delete(adr.getId());
+			adrDao.delete(adr.getId(), conn);
 		}
 		try {
 			init();
@@ -153,8 +170,12 @@ public class CompanyDao extends GenericDao<Company>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_DELETE_COMPANY);
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}
@@ -170,8 +191,12 @@ public class CompanyDao extends GenericDao<Company>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_DELETE_ALL_COMPANIES);
 	        }
-		}catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}

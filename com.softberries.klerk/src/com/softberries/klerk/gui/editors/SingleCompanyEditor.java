@@ -461,6 +461,9 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 							.getWorkbench().getActiveWorkbenchWindow()
 							.getShell(), new Address());
 					Address adr = dialog.getAddressFromDialog();
+					if(adr == null){
+						return;
+					}
 					adr.setMain(true);// set as main address by default
 					if (company.getAddresses() == null) {
 						company.setAddresses(new ArrayList<Address>());
@@ -470,6 +473,8 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 					}
 					company.getAddresses().add(adr);
 					addressTableViewer.setInput(company.getAddresses());
+					dirty = true;
+					firePropertyChange(ISaveablePart.PROP_DIRTY);
 				}
 			});
 			return button;
@@ -499,14 +504,6 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 								.openConfirm(shell, "Confirm",
 										"Are you sure you want to delete this address?");
 						if (confirmed) {
-							try {
-								if (currentAddress.getId() != null) {
-									AddressDao adrDao = new AddressDao();
-									adrDao.delete(currentAddress.getId());
-								}
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
 							company.getAddresses().remove(currentAddress);
 							currentAddress = null;
 							addressTableViewer.refresh();
@@ -541,14 +538,8 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 								.getWorkbench().getActiveWorkbenchWindow()
 								.getShell(), currentAddress);
 						Address adr = dialog.getAddressFromDialog();
-						try {
-							if (currentAddress.getId() != null) {
-								AddressDao adrDao = new AddressDao();
-								adrDao.update(currentAddress);
-							}
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+						dirty = true;
+						firePropertyChange(ISaveablePart.PROP_DIRTY);
 						addressTableViewer.setInput(company.getAddresses());
 						addressTableViewer.refresh();
 					}
@@ -566,9 +557,12 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		if (selection != null && selection instanceof Address) {
 			Address adr = (Address) selection;
 			this.currentAddress = adr;
+			
 			if (adr.isMain()) {
 				for (Address a : company.getAddresses()) {
 					if (!a.equals(adr)) {
+						dirty = true;
+						firePropertyChange(ISaveablePart.PROP_DIRTY);
 						a.setMain(false);
 						if (addressTableViewer != null
 								&& !addressTableViewer.getControl()

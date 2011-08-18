@@ -41,6 +41,7 @@ import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.ProductsModelProvider;
+import com.softberries.klerk.gui.validators.ProductCodeValidator;
 
 public class SingleProductEditor extends SingleObjectEditor {
 	public SingleProductEditor() {
@@ -200,23 +201,9 @@ public class SingleProductEditor extends SingleObjectEditor {
 		IObservableValue modelValue = BeanProperties.value(Product.class,
 				"code").observe(product);
 		bindingContext.bindValue(widgetValue, modelValue);
-		// We want that age is a number
-		IValidator numberValidator = new IValidator() {
 
-			@Override
-			public IStatus validate(Object value) {
-				String s = String.valueOf(value);
-				for(String p : productCodes){
-					if(p.equalsIgnoreCase(s) && !p.equalsIgnoreCase(oldProductCode)){
-						dirty = false;
-						firePropertyChange(ISaveablePart.PROP_DIRTY);
-						return ValidationStatus.error("Product code: " + s + " already exists!");
-					}
-				}
-				return ValidationStatus.ok();
-				
-			}
-		};
+		IValidator numberValidator = new ProductCodeValidator(productCodes, oldProductCode);
+		
 		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 		targetToModel.setBeforeSetValidator(numberValidator);
 

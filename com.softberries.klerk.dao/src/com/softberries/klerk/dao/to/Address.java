@@ -134,6 +134,23 @@ public class Address {
 	public String toString() {
 		return this.getStreet() + ", " + this.getHouseNumber() + "/" + this.getFlatNumber() + " " + this.getPostCode() + " " + this.getCity();
 	}
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Address){
+			Address adr = (Address)obj;
+			if(adr.getId().longValue() == 0){
+				return super.equals(obj);
+			}
+			if(adr.getId().longValue() == this.getId().longValue()){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return super.equals(obj);
+		}
+	}
+	
 	
 	
 	
