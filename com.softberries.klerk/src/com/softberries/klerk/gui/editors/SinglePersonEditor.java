@@ -443,6 +443,9 @@ ISelectionListener{
 							.getWorkbench().getActiveWorkbenchWindow()
 							.getShell(), new Address());
 					Address adr = dialog.getAddressFromDialog();
+					if(adr == null){
+						return;
+					}
 					adr.setMain(true);// set as main address by default
 					if (person.getAddresses() == null) {
 						person.setAddresses(new ArrayList<Address>());
@@ -452,6 +455,8 @@ ISelectionListener{
 					}
 					person.getAddresses().add(adr);
 					addressTableViewer.setInput(person.getAddresses());
+					dirty = true;
+					firePropertyChange(ISaveablePart.PROP_DIRTY);
 				}
 			});
 			return button;
@@ -484,8 +489,7 @@ ISelectionListener{
 							person.getAddresses().remove(currentAddress);
 							currentAddress = null;
 							addressTableViewer.refresh();
-							dirty = true;
-							firePropertyChange(ISaveablePart.PROP_DIRTY);
+							enableSave(true);
 						}
 					}
 				}
@@ -515,9 +519,11 @@ ISelectionListener{
 								.getWorkbench().getActiveWorkbenchWindow()
 								.getShell(), currentAddress);
 						Address adr = dialog.getAddressFromDialog();
-						//TO-DO save address
-						addressTableViewer.setInput(person.getAddresses());
-						addressTableViewer.refresh();
+						if(adr != null){
+							enableSave(true);
+							addressTableViewer.setInput(person.getAddresses());
+							addressTableViewer.refresh();
+						}
 					}
 				}
 			});
@@ -530,16 +536,27 @@ ISelectionListener{
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		System.out.println("SELECTION SCE: " + sel + "PART: " + part);
 		Object selection = ((IStructuredSelection) sel).getFirstElement();
-		if (selection != null && selection instanceof Address) {
+		if (selection != null && selection instanceof Address && part instanceof SinglePersonEditor) {
 			Address adr = (Address) selection;
 			this.currentAddress = adr;
+			if(person.getAddresses().size() == 1){
+				adr.setMain(true);
+				addressTableViewer.refresh();
+				return;
+			}
 			if (adr.isMain()) {
 				for (Address a : person.getAddresses()) {
 					if (!a.equals(adr)) {
+						enableSave(true);
 						a.setMain(false);
-						addressTableViewer.refresh();
+
 					}
 				}
+			}
+			if (addressTableViewer != null
+					&& !addressTableViewer.getControl()
+							.isDisposed()) {
+				addressTableViewer.refresh();
 			}
 		}
 	}

@@ -14,6 +14,22 @@ public class Address {
 	private Long person_id;
 	private Long company_id;
 	
+	/**
+	 * Initialize default values to prevent further NPE's
+	 */
+	public Address(){
+		this.id = new Long(0);
+		this.country = "";
+		this.city = "";
+		this.street = "";
+		this.postCode = "";
+		this.houseNumber = "";
+		this.flatNumber = "";
+		this.notes = "";
+		this.main = false;
+		this.person_id = new Long(0);
+		this.company_id = new Long(0);
+	}
 	
 	
 	public Long getPerson_id() {
@@ -136,12 +152,21 @@ public class Address {
 	}
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof Address){
+		if(obj != null && obj instanceof Address){
 			Address adr = (Address)obj;
-			if(adr.getId().longValue() == 0){
-				return super.equals(obj);
+			//if its a new object check all the fields
+			if(adr.getId() != null && adr.getId().longValue() == 0){
+				return adr.getCity() == this.getCity() &&
+						adr.getCompany_id().equals(this.getCompany_id()) &&
+						adr.getCountry().equals(this.getCountry()) &&
+						adr.getFlatNumber().equals(this.getFlatNumber()) &&
+						adr.getHouseNumber().equals(this.getHouseNumber()) &&
+						adr.getNotes().equals(this.getNotes()) &&
+						adr.getPerson_id().equals(this.getPerson_id()) &&
+						adr.getPostCode().equals(getPostCode()) && 
+						adr.getStreet().equals(this.getStreet());
 			}
-			if(adr.getId().longValue() == this.getId().longValue()){
+			if(adr.getId() != null && this.getId() != null && adr.getId().longValue() == this.getId().longValue()){
 				return true;
 			}else{
 				return false;

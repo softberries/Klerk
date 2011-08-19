@@ -65,6 +65,7 @@ import com.softberries.klerk.gui.dialogs.AddressDialog;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 import com.softberries.klerk.gui.helpers.table.editingsupport.CompanyAddressSelectedES;
+import com.softberries.klerk.gui.validators.FieldNotEmptyValidator;
 
 public class SingleCompanyEditor extends SingleObjectEditor implements
 		ISelectionListener {
@@ -76,6 +77,8 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 	private Company company;
 	private TableViewer addressTableViewer;
 	private Address currentAddress;
+	private String name;
+	private String vatid;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -111,6 +114,8 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getActiveWorkbenchWindow().getActivePage()
 				.addSelectionListener(this);
+		this.name = company.getName();
+		this.vatid = company.getVatid();
 	}
 
 	@Override
@@ -147,35 +152,39 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 				"Name:");
 		final Text nameTxt = toolkit.createText(sectionGeneralClient,
 				this.company.getName(), SWT.BORDER);
+		bindValidator(nameTxt, company, "name", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		
 		nameTxt.addModifyListener(new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent e) {
-				company.setName(nameTxt.getText());
-				setPartName(company.getName());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				name = nameTxt.getText();
+				setPartName(name);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_nameTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_nameTxt.colspan = 3;
+		twd_nameTxt.indent = 5;
 		nameTxt.setLayoutData(twd_nameTxt);
 		// company vat id
 		final Label vatLbl = toolkit.createLabel(sectionGeneralClient,
 				"Vat ID:");
 		final Text vatTxt = toolkit.createText(sectionGeneralClient,
 				this.company.getVatid(), SWT.BORDER);
+		bindValidator(vatTxt, company, "vatid", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		
 		vatTxt.addModifyListener(new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent e) {
-				company.setVatid(vatTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				vatid = vatTxt.getText();
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_vatTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_vatTxt.colspan = 3;
+		twd_vatTxt.indent = 5;
 		vatTxt.setLayoutData(twd_vatTxt);
 		// Company telephone
 		final Label telLbl = toolkit.createLabel(sectionGeneralClient,
@@ -193,6 +202,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		});
 		TableWrapData twd_telTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_telTxt.colspan = 3;
+		twd_telTxt.indent = 5;
 		telTxt.setLayoutData(twd_telTxt);
 		// Person mobile
 		final Label mobileLbl = toolkit.createLabel(sectionGeneralClient,
@@ -210,6 +220,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		});
 		TableWrapData twd_mobileTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_mobileTxt.colspan = 3;
+		twd_mobileTxt.indent = 5;
 		mobileTxt.setLayoutData(twd_mobileTxt);
 		// Company email
 		final Label emailLbl = toolkit.createLabel(sectionGeneralClient,
@@ -227,6 +238,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		});
 		TableWrapData twd_emailTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_emailTxt.colspan = 3;
+		twd_emailTxt.indent = 5;
 		emailTxt.setLayoutData(twd_emailTxt);
 		// Company www
 		final Label wwwLbl = toolkit.createLabel(sectionGeneralClient,
@@ -244,6 +256,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		});
 		TableWrapData twd_wwwTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_wwwTxt.colspan = 3;
+		twd_wwwTxt.indent = 5;
 		wwwTxt.setLayoutData(twd_wwwTxt);
 
 		sectionGeneral.setClient(sectionGeneralClient);
@@ -507,8 +520,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 							company.getAddresses().remove(currentAddress);
 							currentAddress = null;
 							addressTableViewer.refresh();
-							dirty = true;
-							firePropertyChange(ISaveablePart.PROP_DIRTY);
+							enableSave(true);
 						}
 					}
 				}
@@ -538,10 +550,11 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 								.getWorkbench().getActiveWorkbenchWindow()
 								.getShell(), currentAddress);
 						Address adr = dialog.getAddressFromDialog();
-						dirty = true;
-						firePropertyChange(ISaveablePart.PROP_DIRTY);
-						addressTableViewer.setInput(company.getAddresses());
-						addressTableViewer.refresh();
+						if(adr != null){
+							enableSave(true);
+							addressTableViewer.setInput(company.getAddresses());
+							addressTableViewer.refresh();
+						}
 					}
 				}
 			});
@@ -554,32 +567,41 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		System.out.println("SELECTION SCE: " + sel + "PART: " + part);
 		Object selection = ((IStructuredSelection) sel).getFirstElement();
-		if (selection != null && selection instanceof Address) {
+		if (selection != null && selection instanceof Address && part instanceof SingleCompanyEditor) {
 			Address adr = (Address) selection;
 			this.currentAddress = adr;
-			
+			if(company.getAddresses().size() == 1){
+				adr.setMain(true);
+				addressTableViewer.refresh();
+				return;
+			}
 			if (adr.isMain()) {
 				for (Address a : company.getAddresses()) {
 					if (!a.equals(adr)) {
-						dirty = true;
-						firePropertyChange(ISaveablePart.PROP_DIRTY);
+						enableSave(true);
 						a.setMain(false);
-						if (addressTableViewer != null
-								&& !addressTableViewer.getControl()
-										.isDisposed()) {
-							addressTableViewer.refresh();
-						}
 
 					}
 				}
+			}
+			if (addressTableViewer != null
+					&& !addressTableViewer.getControl()
+							.isDisposed()) {
+				addressTableViewer.refresh();
 			}
 		}
 	}
 
 	@Override
 	protected void enableSave(boolean drt) {
-		// TODO implement enableSave for company editor
-		
+		if(drt && !name.isEmpty() && !vatid.isEmpty() && company.getAddresses().size() > 0){
+			dirty = drt;
+			//notify editor that its dirty/not dirty
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
+		}else{
+			dirty = false;
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
+		}
 	}
 
 }

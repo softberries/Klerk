@@ -54,15 +54,15 @@ public class AddressDao {
 	        st.setString(6, c.getFlatNumber());
 	        st.setString(7, c.getNotes());
 	        st.setBoolean(8, c.isMain());
-	        if(c.getPerson_id() == null && c.getCompany_id() == null){
+	        if(c.getPerson_id().longValue() == 0 && c.getCompany_id().longValue() == 0){
 	        	throw new SQLException("For Address either Person or Company needs to be specified");
 	        }
-	        if(c.getPerson_id() != null){
+	        if(c.getPerson_id().longValue() != 0){
 	        	st.setLong(9, c.getPerson_id());
 	        }else{
 	        	st.setNull(9, java.sql.Types.NUMERIC);
 	        }
-	        if(c.getCompany_id() != null){
+	        if(c.getCompany_id().longValue() != 0){
 	        	st.setLong(10, c.getCompany_id());
 	        }else{
 	        	st.setNull(10, java.sql.Types.NUMERIC);
