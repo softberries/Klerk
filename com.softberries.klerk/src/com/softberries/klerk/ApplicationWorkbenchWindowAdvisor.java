@@ -25,5 +25,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowStatusLine(false);
         configurer.setShowPerspectiveBar(true);
         configurer.setShowStatusLine(true);
+        configurer.setShowProgressIndicator(true);
     }
 }

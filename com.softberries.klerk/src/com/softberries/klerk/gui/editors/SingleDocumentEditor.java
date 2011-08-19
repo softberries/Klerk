@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -55,6 +56,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import com.softberries.klerk.RunJob1;
 import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
@@ -828,6 +830,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	        button.addSelectionListener(new SelectionAdapter() {
 	        @Override
 	    	public void widgetSelected(SelectionEvent e) {
+	        	
 	        	DocumentWrapper docWrp = new DocumentWrapper();
 	        	docWrp.setBuyerLbl("Kupujący");
 	        	docWrp.setCopy("Kopia");
