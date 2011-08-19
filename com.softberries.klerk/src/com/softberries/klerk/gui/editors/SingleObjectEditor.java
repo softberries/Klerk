@@ -81,4 +81,5 @@ public abstract class SingleObjectEditor extends EditorPart {
 	public void setFocus() {
 		
 	}
+	protected abstract void enableSave(boolean drt);
 }

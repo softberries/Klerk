@@ -576,4 +576,10 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 		}
 	}
 
+	@Override
+	protected void enableSave(boolean drt) {
+		// TODO implement enableSave for company editor
+		
+	}
+
 }

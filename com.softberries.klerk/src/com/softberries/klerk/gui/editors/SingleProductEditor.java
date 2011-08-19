@@ -44,7 +44,7 @@ public class SingleProductEditor extends SingleObjectEditor {
 	public SingleProductEditor() {
 	}
 	/**
-	 * Keeps a reference to the edited {@code Product} (if in editing mode)
+	 * Keeps a reference to the edited {@link Product} (if in editing mode)
 	 */
 	private Product product;
 	/**
@@ -76,7 +76,8 @@ public class SingleProductEditor extends SingleObjectEditor {
 	 * 
 	 * @param drt - stands for 'dirty' like in standard Eclipse RCP editor
 	 */
-	private void enableSave(boolean drt) {
+	@Override
+	protected void enableSave(boolean drt) {
 		//check if code and product name is filled with value and check if the code is valid
 		if(drt && !codeTxt.getText().isEmpty() && !currentProductName.isEmpty() && !codeInvalid){
 			dirty = drt;

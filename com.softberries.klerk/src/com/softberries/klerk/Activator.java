@@ -75,6 +75,9 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
+	/**
+	 * Add some images to the {@link ImageRegistry}
+	 */
 	@Override
     protected void initializeImageRegistry(ImageRegistry registry) {
         super.initializeImageRegistry(registry);

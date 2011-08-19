@@ -62,6 +62,7 @@ import com.softberries.klerk.gui.dialogs.AddressDialog;
 import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.table.PeopleModelProvider;
 import com.softberries.klerk.gui.helpers.table.editingsupport.CompanyAddressSelectedES;
+import com.softberries.klerk.gui.validators.FieldNotEmptyValidator;
 
 public class SinglePersonEditor extends SingleObjectEditor implements
 ISelectionListener{
@@ -71,9 +72,16 @@ ISelectionListener{
 	private Address currentAddress;
 	private TableViewer addressTableViewer;
 	
+	private String firstName = "";
+	private String lastName = "";
+	private String email = "";
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		PeopleDao dao = new PeopleDao();
+		person.setFirstName(firstName);
+		person.setLastName(lastName);
+		person.setEmail(email);
 		try {
 			if(person.getId() == null){
 				dao.create(person);
@@ -87,8 +95,7 @@ ISelectionListener{
 			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Sorry, couldn't update companies database.", e);
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
-		dirty = false;
-		firePropertyChange(ISaveablePart.PROP_DIRTY);
+		enableSave(false);
 	}
 
 	@Override
@@ -104,6 +111,9 @@ ISelectionListener{
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getActiveWorkbenchWindow().getActivePage()
 				.addSelectionListener(this);
+		this.firstName = person.getFirstName();
+		this.lastName = person.getLastName();
+		this.email = person.getEmail();
 	}
 
 	@Override
@@ -137,36 +147,39 @@ ISelectionListener{
 		// Person first name
 		final Label fnLbl = toolkit.createLabel(sectionGeneralClient, "First Name:");
 		final Text fnTxt = toolkit.createText(sectionGeneralClient, this.person.getFirstName(), SWT.BORDER);
+		bindValidator(fnTxt, person, "firstName", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		
 		fnTxt.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				person.setFirstName(fnTxt.getText());
-				setPartName(person.getFullName());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				firstName = fnTxt.getText();
+				setPartName(firstName + " " + lastName);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_codeTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_codeTxt.colspan = 3;
+		twd_codeTxt.indent = 5;
 		fnTxt.setLayoutData(twd_codeTxt);
 		// person Last Name
 		final Label lnLbl = toolkit.createLabel(sectionGeneralClient, "Last Name:");
 		final Text lnTxt = toolkit.createText(sectionGeneralClient,
 				this.person.getLastName(), SWT.BORDER);
+		bindValidator(lnTxt, person, "lastName", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		
 		lnTxt.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				person.setLastName(lnTxt.getText());
-				form.setText(person.getFullName());
-				setPartName(person.getFullName());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				lastName = lnTxt.getText();
+				setPartName(firstName + " " + lastName);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_titleTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_titleTxt.colspan = 3;
+		twd_titleTxt.indent = 5;
 		lnTxt.setLayoutData(twd_titleTxt);
 		//Person telephone
 		final Label telLbl = toolkit.createLabel(sectionGeneralClient, "Telephone:");
@@ -176,12 +189,12 @@ ISelectionListener{
 			@Override
 			public void modifyText(ModifyEvent e) {
 				person.setTelephone(telTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_telTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_telTxt.colspan = 3;
+		twd_telTxt.indent = 5;
 		telTxt.setLayoutData(twd_telTxt);
 		//Person mobile
 		final Label mobileLbl = toolkit.createLabel(sectionGeneralClient, "Mobile:");
@@ -191,27 +204,29 @@ ISelectionListener{
 			@Override
 			public void modifyText(ModifyEvent e) {
 				person.setMobile(mobileTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_mobileTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_mobileTxt.colspan = 3;
+		twd_mobileTxt.indent = 5;
 		mobileTxt.setLayoutData(twd_mobileTxt);
 		//Person email
 		final Label emailLbl = toolkit.createLabel(sectionGeneralClient, "Email:");
 		final Text emailTxt = toolkit.createText(sectionGeneralClient, this.person.getEmail(), SWT.BORDER);
+		bindValidator(emailTxt, person, "email", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		
 		emailTxt.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				person.setEmail(fnTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				email = emailTxt.getText();
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_emailTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_emailTxt.colspan = 3;
+		twd_emailTxt.indent = 5;
 		emailTxt.setLayoutData(twd_emailTxt);
 		//Person www
 		final Label wwwLbl = toolkit.createLabel(sectionGeneralClient, "Website:");
@@ -221,12 +236,12 @@ ISelectionListener{
 			@Override
 			public void modifyText(ModifyEvent e) {
 				person.setWww(wwwTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_wwwTxt = new TableWrapData(TableWrapData.FILL_GRAB);
 		twd_wwwTxt.colspan = 3;
+		twd_wwwTxt.indent = 5;
 		wwwTxt.setLayoutData(twd_wwwTxt);
 		
 		sectionGeneral.setClient(sectionGeneralClient);
@@ -540,6 +555,23 @@ ISelectionListener{
 	 */
 	public void setPerson(Person person) {
 		this.person = person;
+	}
+
+	@Override
+	protected void enableSave(boolean drt) {
+		if(drt &&
+				!firstName.isEmpty() &&
+				!lastName.isEmpty() &&
+				!email.isEmpty() &&
+				person.getAddresses().size() > 0
+		){
+			dirty = drt;
+			//notify editor that its dirty/not dirty
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
+		}else{
+			dirty = false;
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
+		}
 	}
 
 }
