@@ -66,8 +66,12 @@ public class ProductDao extends GenericDao<Product>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_UPDATE_PRODUCT);
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}
@@ -85,8 +89,12 @@ public class ProductDao extends GenericDao<Product>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_DELETE_PRODUCT);
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}
@@ -102,8 +110,12 @@ public class ProductDao extends GenericDao<Product>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_DELETE_ALL_PRODUCTS);
 	        }
-		}catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}
@@ -128,8 +140,12 @@ public class ProductDao extends GenericDao<Product>{
 	        } else {
 	            throw new SQLException("Creating user failed, no generated key obtained.");
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}

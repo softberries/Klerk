@@ -72,8 +72,12 @@ public class PeopleDao extends GenericDao<Person>{
 	        } else {
 	            throw new SQLException("Creating user failed, no generated key obtained.");
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}
@@ -97,8 +101,12 @@ public class PeopleDao extends GenericDao<Person>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_UPDATE_PERSON);
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}
@@ -116,8 +124,12 @@ public class PeopleDao extends GenericDao<Person>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_DELETE_PERSON);
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}
@@ -133,8 +145,12 @@ public class PeopleDao extends GenericDao<Person>{
 	        if (i == -1) {
 	            System.out.println("db error : " + SQL_DELETE_ALL_PEOPLE);
 	        }
-		}catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}

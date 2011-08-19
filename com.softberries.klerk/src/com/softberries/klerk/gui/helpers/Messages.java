@@ -68,12 +68,17 @@ public class Messages extends NLS {
 	public static String SingleDocumentEditor_Tax_Percent;
 	public static String SingleDocumentEditor_Title;
 	public static String SingleDocumentEditor_Transaction_Date;
+	public static String SingleProductEditor_alreadyExists;
+	public static String SingleProductEditor_cannotUpdateError;
+	public static String SingleProductEditor_code;
 	public static String SingleProductEditor_Description;
+	public static String SingleProductEditor_fieldCannotBeEmpty;
 	public static String SingleProductEditor_Main;
 	public static String SingleProductEditor_Name;
 	public static String SingleProductEditor_PRODUCT;
 	public static String SingleProductEditor_Product_Description;
 	public static String SingleProductEditor_Product_main_properties;
+	public static String SingleProductEditor_productCode;
 	public static String SingleDocumentEditor_lblToPay_text;
 	public static String SingleDocumentEditor_lblPln_text;
 	static {

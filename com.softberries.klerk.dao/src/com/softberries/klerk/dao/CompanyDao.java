@@ -91,8 +91,12 @@ public class CompanyDao extends GenericDao<Company>{
 	        		c.setAddress(adr);
 	        	}
 	        }
-		} catch (ClassNotFoundException e) {
+	        conn.commit();
+		} catch (Exception e) {
+			//rollback the transaction but rethrow the exception to the caller
+			conn.rollback();
 			e.printStackTrace();
+			throw new SQLException(e);
 		}finally{
 			close(conn, st, generatedKeys);
 		}

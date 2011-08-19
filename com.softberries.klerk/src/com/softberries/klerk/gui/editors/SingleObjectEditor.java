@@ -1,12 +1,21 @@
 package com.softberries.klerk.gui.editors;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -55,6 +64,18 @@ public abstract class SingleObjectEditor extends EditorPart {
 		toolBarManager.update(true);
 
 		section.setTextClient(toolbar);
+	}
+
+	protected void bindValidator(Text field, Object obj, String property, IValidator validator) {
+		DataBindingContext bindingContext = new DataBindingContext();
+		UpdateValueStrategy ttm = new UpdateValueStrategy();
+		ttm.setBeforeSetValidator(validator);
+		//
+		IObservableValue countryTxtObserveTextObserveWidget = SWTObservables.observeText(field, SWT.Modify);
+		IObservableValue currentAddressCountryObserveValue = PojoObservables.observeValue(obj, property);
+		Binding binding = bindingContext.bindValue(countryTxtObserveTextObserveWidget, currentAddressCountryObserveValue, ttm, null);
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
+		
 	}
 	@Override
 	public void setFocus() {
