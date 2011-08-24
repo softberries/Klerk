@@ -15,6 +15,7 @@ public class Company  implements Serializable{
 	private String www;
 	private List<Address> addresses;
 	private Address address; //main address;
+	private String fullName;
 	
 	/**
 	 * Default constructor
@@ -131,6 +132,15 @@ public class Company  implements Serializable{
 	}
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+	public String getFullName() {
+		if(this.getName() == null || this.getVatid() == null){
+			return "";
+		}
+		return this.toString();
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 	@Override
 	public String toString() {

@@ -20,6 +20,9 @@ public class Document implements Serializable{
 	private List<DocumentItem> items;
 	private List<VatLevelItem> vatLevelItems;
 	
+	public Document(){
+		buyer = new Company();
+	}
 	
 	/**
 	 * @return the id

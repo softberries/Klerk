@@ -78,9 +78,15 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceN
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemQuantityES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelectedES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
+import com.softberries.klerk.gui.validators.FieldNotEmptyValidator;
 import com.softberries.klerk.reports.ReportManager;
+
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -103,6 +109,12 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	private CompanyFactory companyFactory;
 	private Text buyerTxt;
 	private Label toPayTxt;
+	
+	//for validation
+	private String docTitle = "";
+	private Person docCreatedBy;
+	private Company docBuyer;
+
 
 	public SingleDocumentEditor() {
 		companyFactory = new CompanyFactory();
@@ -110,8 +122,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		this.dirty = false;
-		firePropertyChange(ISaveablePart.PROP_DIRTY);
+		enableSave(false);
 	}
 
 	@Override
@@ -131,6 +142,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		}
 		this.document.setVatLevelItems(new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems()));
 		this.document.setSeller(companyFactory.getCompanyFromPreferences());
+		docTitle = this.document.getTitle();
+		docBuyer = this.document.getBuyer();
+		docCreatedBy = this.document.getCreator();
 	}
 
 	private void addPropertyChangeListeners(DocumentItem di){
@@ -188,12 +202,15 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		Label titleLbl = toolkit.createLabel(sectionGeneralClient, Messages.SingleDocumentEditor_Title);
 		final Text titleTxt = toolkit.createText(sectionGeneralClient,
 				this.document.getTitle(), SWT.BORDER);
+		bindValidator(titleTxt, document, "title", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		
 		titleTxt.addModifyListener(new ModifyListener() {
+			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				document.setTitle(titleTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				docTitle = titleTxt.getText();
+				document.setTitle(docTitle);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_titleTxt = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -208,9 +225,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				document.setCreatedDate(new Date(createDate.getYear(), createDate.getMonth(), createDate.getDay()));
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
-				
+				enableSave(true);
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -231,8 +246,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		sellerTxt.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		// invoice transaction date
@@ -244,8 +258,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				document.setTransactionDate(new Date(transactionDate.getYear(), transactionDate.getMonth(), transactionDate.getDay()));
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -257,6 +270,8 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		twd_buyerLbl.indent = 55;
 		buyerLbl.setLayoutData(twd_buyerLbl);
 		buyerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
+		bindValidator(buyerTxt, document.getBuyer(), "fullName", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		
 		new AutocompleteTextInput(buyerTxt, getCompanyNames(CompaniesModelProvider.INSTANCE.getCompanies()));
 		TableWrapData twd_buyerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_buyerTxt.indent = 5;
@@ -265,9 +280,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		buyerTxt.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				//TO-DO set buyer on document
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				docBuyer = getCurrentBuyer(buyerTxt.getText());
+				document.setBuyer(docBuyer);
+				enableSave(true);
 			}
 		});
 		buyerTxt.setLayoutData(twd_buyerTxt);
@@ -280,8 +295,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				document.setDueDate(new Date(dueDate.getYear(), dueDate.getMonth(), dueDate.getDay()));
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -292,15 +306,16 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		TableWrapData twd_createdByLbl = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_createdByLbl.indent = 55;
 		createdByLbl.setLayoutData(twd_createdByLbl);
-		final Text createdByTxt = toolkit.createText(sectionGeneralClient, "buyer", SWT.BORDER); //$NON-NLS-1$
+		final Text createdByTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
+		
 		new AutocompleteTextInput(createdByTxt, getPeopleNames(PeopleModelProvider.INSTANCE.getPeople()));
 		createdByTxt.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				document.setCreator(findSelectedCreator(createdByTxt.getText()));
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				docCreatedBy = findSelectedCreator(createdByTxt.getText());
+				document.setCreator(docCreatedBy);
+				enableSave(true);
 			}
 			private Person findSelectedCreator(String selected) {
 				for(Person p : PeopleModelProvider.INSTANCE.getPeople()){
@@ -312,6 +327,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 				return null;
 			}
 		});
+		bindValidator(createdByTxt, document.getCreator(), "fullName", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
 		TableWrapData twd_createdByTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_createdByTxt.indent = 5;
 		
@@ -427,8 +443,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 			@Override
 			public void modifyText(ModifyEvent e) {
 				document.setNotes(notesTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		sectionNotes.setClient(sectionNotesClient);
@@ -774,8 +789,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	                addPropertyChangeListeners(it);
 	                document.getItems().add(it);
 	                itemsTableViewer.refresh();
-        			dirty = true;
-	                firePropertyChange(ISaveablePart.PROP_DIRTY);
+        			refreshSummaryToPayLbl();
 	            }
 	        });
 			return button;
@@ -807,8 +821,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
             		if(confirmed){
             			document.getItems().removeAll(toDel);
             			itemsTableViewer.refresh();
-            			dirty = true;
-            			firePropertyChange(ISaveablePart.PROP_DIRTY);
+            			refreshSummaryToPayLbl();
             		}
 	            }
 	        });
@@ -867,16 +880,19 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	}
 	@Override
 	public void propertyChange(java.beans.PropertyChangeEvent arg0) {
+		refreshSummaryToPayLbl();
+	}
+	
+	private void refreshSummaryToPayLbl() {
 		List<VatLevelItem> list = new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems());
 		summaryTableViewer.setInput(list);
 		summaryTableViewer.refresh();
 		toPayTxt.setText(getToPayText());
 		toPayTxt.redraw();
 		form.reflow(true);
-		dirty = true;
-		firePropertyChange(ISaveablePart.PROP_DIRTY);
+		enableSave(true);
 	}
-	
+
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
@@ -885,5 +901,40 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		bindingContext.bindValue(sellerTxtObserveTextObserveWidget, documentSellerObserveValue, null, null);
 		//
 		return bindingContext;
+	}
+	protected void bindValidator(Text field, Object obj, String property, IValidator validator) {
+		DataBindingContext bindingContext = new DataBindingContext();
+		UpdateValueStrategy ttm = new UpdateValueStrategy();
+		ttm.setBeforeSetValidator(validator);
+		//
+		IObservableValue countryTxtObserveTextObserveWidget = SWTObservables.observeText(field, SWT.Modify);
+		IObservableValue currentAddressCountryObserveValue = PojoObservables.observeValue(obj, property);
+		Binding binding = bindingContext.bindValue(countryTxtObserveTextObserveWidget, currentAddressCountryObserveValue, ttm, null);
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
+	}
+	protected void enableSave(boolean drt) {
+		if(drt &&
+				docBuyer != null &&
+				!docBuyer.getFullName().isEmpty() &&
+				!docTitle.isEmpty() &&
+				docCreatedBy != null &&
+				!docCreatedBy.getFullName().isEmpty()
+		){
+			dirty = drt;
+			//notify editor that its dirty/not dirty
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
+		}else{
+			dirty = false;
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
+		}
+	}
+	private Company getCurrentBuyer(String fullName) {
+		List<Company> comps = CompaniesModelProvider.INSTANCE.getCompanies();
+		for(Company c : comps){
+			if(c.getFullName().equals(fullName)){
+				return c;
+			}
+		}
+		return null;
 	}
 }

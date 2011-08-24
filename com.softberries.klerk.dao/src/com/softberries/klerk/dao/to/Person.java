@@ -28,6 +28,7 @@ public class Person implements Serializable{
 	public List<Address> getAddresses() {
 		return addresses;
 	}
+	
 	/**
 	 * @param addresses the addresses to set
 	 */
@@ -113,5 +114,7 @@ public class Person implements Serializable{
 	public String getFullName() {
 		return this.getFirstName() + " " + this.getLastName();
 	}
-	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 }
