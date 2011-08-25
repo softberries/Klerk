@@ -7,6 +7,9 @@ import java.util.List;
 public class Document implements Serializable{
 
 	private Long id;
+	private Long creator_id;
+	private Long buyer_id;
+	private Long seller_id;
 	private String title;
 	private String notes;
 	private Date createdDate;
@@ -24,6 +27,37 @@ public class Document implements Serializable{
 		buyer = new Company();
 	}
 	
+	
+	public Long getCreator_id() {
+		return creator_id;
+	}
+
+
+	public void setCreator_id(Long creator_id) {
+		this.creator_id = creator_id;
+	}
+
+
+	public Long getBuyer_id() {
+		return buyer_id;
+	}
+
+
+	public void setBuyer_id(Long buyer_id) {
+		this.buyer_id = buyer_id;
+	}
+
+
+	public Long getSeller_id() {
+		return seller_id;
+	}
+
+
+	public void setSeller_id(Long seller_id) {
+		this.seller_id = seller_id;
+	}
+
+
 	/**
 	 * @return the id
 	 */

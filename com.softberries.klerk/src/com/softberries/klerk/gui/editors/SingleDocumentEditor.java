@@ -58,6 +58,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import com.softberries.klerk.RunJob1;
 import com.softberries.klerk.calc.DocumentCalculator;
+import com.softberries.klerk.dao.DocumentDao;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
@@ -122,6 +123,8 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
+		DocumentDao dao = new DocumentDao();
+		
 		enableSave(false);
 	}
 

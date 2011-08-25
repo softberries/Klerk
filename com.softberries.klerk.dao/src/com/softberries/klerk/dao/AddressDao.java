@@ -22,6 +22,7 @@ public class AddressDao {
 	private static final String SQL_DELETE_ALL_ADDRESSES = "DELETE FROM ADDRESS WHERE id > 0";
 	private static final String SQL_FIND_ADDRESS_ALL = "SELECT * FROM ADDRESS";
 	private static final String SQL_FIND_ADDRESS_ALL_BY_COMPANY_ID = "SELECT * FROM ADDRESS WHERE COMPANY_ID = ?";
+	private static final String SQL_FIND_ADDRESS_ALL_BY_PERSON_ID = "SELECT * FROM ADDRESS WHERE PERSON_ID = ?";
 	private static final String SQL_UPDATE_ADDRESS = "UPDATE ADDRESS SET country = ?, city = ?, street = ?, postCode = ?, houseNumber = ?, flatNumber = ?, notes = ?, main = ?, person_id = ?, company_id = ? WHERE id = ?";
 	
 	public List<Address> findAll(QueryRunner run, Connection conn) throws SQLException {
@@ -34,6 +35,12 @@ public class AddressDao {
 		List<Address> addresses = new ArrayList<Address>();
 		ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
 		addresses = run.query(conn, SQL_FIND_ADDRESS_ALL_BY_COMPANY_ID, h, companyId); 
+		return addresses;
+	}
+	public List<Address> findAllByPersonId(Long companyId,QueryRunner run, Connection conn) throws SQLException {
+		List<Address> addresses = new ArrayList<Address>();
+		ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
+		addresses = run.query(conn, SQL_FIND_ADDRESS_ALL_BY_PERSON_ID, h, companyId); 
 		return addresses;
 	}
 

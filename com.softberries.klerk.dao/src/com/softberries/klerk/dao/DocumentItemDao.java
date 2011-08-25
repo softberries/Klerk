@@ -30,10 +30,10 @@ public class DocumentItemDao {
 		companies = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL, h); 
 		return companies;
 	}
-	public List<DocumentItem> findAllByCompanyId(Long companyId,QueryRunner run, Connection conn) throws SQLException {
+	public List<DocumentItem> findAllByDocumentId(Long docId,QueryRunner run, Connection conn) throws SQLException {
 		List<DocumentItem> addresses = new ArrayList<DocumentItem>();
 		ResultSetHandler<List<DocumentItem>> h = new BeanListHandler<DocumentItem>(DocumentItem.class);
-		addresses = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL_BY_DOCUMENT_ID, h, companyId); 
+		addresses = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL_BY_DOCUMENT_ID, h, docId); 
 		return addresses;
 	}
 
