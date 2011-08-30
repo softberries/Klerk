@@ -8,6 +8,8 @@ public class DocumentItem {
 	private Long id;
 	private Long documentId;
 	private Product product;
+	private Long product_id;
+	private String product_name;
 	private String priceNetSingle;
 	private String priceGrossSingle;
 	private String priceTaxSingle;
@@ -134,4 +136,21 @@ public class DocumentItem {
 		propertyChangeSupport.firePropertyChange("quantity", this.quantity, this.quantity = quantity);
 	}
 
+	public Long getProduct_id() {
+		return product_id;
+	}
+
+	public void setProduct_id(Long product_id) {
+		this.product_id = product_id;
+	}
+
+	public String getProduct_name() {
+		return product_name;
+	}
+
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
+	}
+
+	
 }

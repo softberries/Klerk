@@ -9,11 +9,11 @@ public class Person implements Serializable{
 	private String firstName;
 	private String lastName;
 	private List<Address> addresses;
-	private String telephone;
-	private String mobile;
-	private String email;
-	private String www;
-	private String fullName;
+	private String telephone = "";
+	private String mobile = "";
+	private String email = "";
+	private String www = "";
+	private String fullName = "";
 	
 	
 	public Long getId() {

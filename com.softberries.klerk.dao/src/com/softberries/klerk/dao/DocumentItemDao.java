@@ -16,13 +16,13 @@ import com.softberries.klerk.dao.to.DocumentItem;
 
 public class DocumentItemDao {
 	
-	private static final String SQL_INSERT_DOCUMENTITEM = "INSERT INTO DOCUMENTITEM(priceNetSingle, priceGrossSingle, priceTaxSingle, priceNetAll, priceGrossAll, priceTaxAll, taxValue, quantity, product_id, document_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_INSERT_DOCUMENTITEM = "INSERT INTO DOCUMENTITEM(priceNetSingle, priceGrossSingle, priceTaxSingle, priceNetAll, priceGrossAll, priceTaxAll, taxValue, quantity, product_id, document_id, product_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_DOCUMENTITEM = "DELETE FROM DOCUMENTITEM WHERE id = ?";
 	private static final String SQL_FIND_DOCUMENTITEM_BY_ID = "SELECT * FROM DOCUMENTITEM WHERE id = ?";
 	private static final String SQL_DELETE_ALL_DOCUMENTITEMS = "DELETE FROM DOCUMENTITEM WHERE id > 0";
 	private static final String SQL_FIND_DOCUMENTITEM_ALL = "SELECT * FROM DOCUMENTITEM";
 	private static final String SQL_FIND_DOCUMENTITEM_ALL_BY_DOCUMENT_ID = "SELECT * FROM DOCUMENTITEM WHERE DOCUMENT_ID = ?";
-	private static final String SQL_UPDATE_DOCUMENTITEM = "UPDATE DOCUMENTITEM SET priceNetSingle = ?, priceGrossSingle = ?, priceTaxSingle = ?, priceNetAll = ?, priceGrossAll = ?, priceTaxAll = ?, taxValue = ?, quantity = ?, product_id = ?, document_id = ? WHERE id = ?";
+	private static final String SQL_UPDATE_DOCUMENTITEM = "UPDATE DOCUMENTITEM SET priceNetSingle = ?, priceGrossSingle = ?, priceTaxSingle = ?, priceNetAll = ?, priceGrossAll = ?, priceTaxAll = ?, taxValue = ?, quantity = ?, product_id = ?, document_id = ?, product_name = ? WHERE id = ?";
 	
 	public List<DocumentItem> findAll(QueryRunner run, Connection conn) throws SQLException {
 		List<DocumentItem> companies = new ArrayList<DocumentItem>();
@@ -31,10 +31,10 @@ public class DocumentItemDao {
 		return companies;
 	}
 	public List<DocumentItem> findAllByDocumentId(Long docId,QueryRunner run, Connection conn) throws SQLException {
-		List<DocumentItem> addresses = new ArrayList<DocumentItem>();
+		List<DocumentItem> items = new ArrayList<DocumentItem>();
 		ResultSetHandler<List<DocumentItem>> h = new BeanListHandler<DocumentItem>(DocumentItem.class);
-		addresses = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL_BY_DOCUMENT_ID, h, docId); 
-		return addresses;
+		items = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL_BY_DOCUMENT_ID, h, docId); 
+		return items;
 	}
 
 	public DocumentItem find(Long id, QueryRunner run, Connection conn) throws SQLException {
@@ -68,6 +68,7 @@ public class DocumentItemDao {
 	        }else{
 	        	st.setNull(10, java.sql.Types.NUMERIC);
 	        }
+	        st.setString(11, c.getProduct().getName());
 	        // run the query
 	        int i = st.executeUpdate();    
 	        System.out.println("i: " + i);
@@ -105,7 +106,8 @@ public class DocumentItemDao {
 	        }else{
 	        	st.setNull(10, java.sql.Types.NUMERIC);
 	        }
-	        st.setLong(11, c.getId());
+	        st.setString(11, c.getProduct().getName());
+	        st.setLong(12, c.getId());
 	        // run the query
 	        int i = st.executeUpdate();    
 	        System.out.println("i: " + i);

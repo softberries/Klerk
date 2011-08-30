@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS `product` ;
 
 CREATE  TABLE IF NOT EXISTS `product` (
   `id` BIGINT  NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(200) NOT NULL ,
+  `name` VARCHAR(400) NOT NULL ,
   `code` VARCHAR(45) NOT NULL ,
   `description` TEXT NULL ,
   PRIMARY KEY (`id`) ,
@@ -111,6 +111,7 @@ CREATE  TABLE IF NOT EXISTS `documentitem` (
   `taxValue` VARCHAR(45) NULL ,
   `quantity` VARCHAR(45) NULL ,
   `product_id` BIGINT  NOT NULL ,
+  `product_name` VARCHAR(400)  NOT NULL ,
   `document_id` BIGINT  NOT NULL ,
   FOREIGN KEY (`product_id`) REFERENCES `product`(`id`),
   FOREIGN KEY (`document_id`) REFERENCES `document`(`id`),

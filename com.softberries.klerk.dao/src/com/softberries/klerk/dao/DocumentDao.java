@@ -19,7 +19,7 @@ import com.softberries.klerk.dao.to.Product;
 
 public class DocumentDao extends GenericDao<Document>{
 
-	private static final String SQL_INSERT_DOCUMENT = "INSERT INTO DOCUMENT(title, notes, createdDate, transactionDate, dueDate, placeCreated, creator_id, buyer_id, seller_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_INSERT_DOCUMENT = "INSERT INTO DOCUMENT(title, notes, createdDate, transactionDate, dueDate, placeCreated, creator_id, buyer_id, seller_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_DOCUMENT = "DELETE FROM DOCUMENT WHERE id = ?";
 	private static final String SQL_FIND_DOCUMENT_BY_ID = "SELECT * FROM DOCUMENT WHERE id = ?";
 	private static final String SQL_DELETE_ALL_DOCUMENTS = "DELETE FROM DOCUMENT WHERE id > 0";
@@ -221,7 +221,7 @@ public class DocumentDao extends GenericDao<Document>{
 	public void delete(Long id) throws SQLException {
 		//delete items
 		Document toDel = find(id);
-		AddressDao iDao = new AddressDao();
+		DocumentItemDao iDao = new DocumentItemDao();
 		for(DocumentItem di : toDel.getItems()){
 			iDao.delete(di.getId(), conn);
 		}
@@ -249,6 +249,7 @@ public class DocumentDao extends GenericDao<Document>{
 	@Override
 	public void deleteAll() throws SQLException {
 		try{
+			
 			init();
 			st = conn.prepareStatement(SQL_DELETE_ALL_DOCUMENTS);
 			int i = st.executeUpdate();
