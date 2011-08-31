@@ -97,8 +97,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 					"Sorry, couldn't update companies database.", e);
 			StatusManager.getManager().handle(status, StatusManager.SHOW);
 		}
-		dirty = false;
-		firePropertyChange(ISaveablePart.PROP_DIRTY);
+		enableSave(false);
 	}
 
 	@Override
@@ -196,8 +195,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 			@Override
 			public void modifyText(ModifyEvent e) {
 				company.setTelephone(telTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_telTxt = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -214,8 +212,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 			@Override
 			public void modifyText(ModifyEvent e) {
 				company.setMobile(mobileTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_mobileTxt = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -232,8 +229,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 			@Override
 			public void modifyText(ModifyEvent e) {
 				company.setEmail(nameTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_emailTxt = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -250,8 +246,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 			@Override
 			public void modifyText(ModifyEvent e) {
 				company.setWww(wwwTxt.getText());
-				dirty = true;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
+				enableSave(true);
 			}
 		});
 		TableWrapData twd_wwwTxt = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -401,7 +396,9 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 			@Override
 			public String getText(Object element) {
 				Address a = (Address) element;
-				return a.getNotes();
+				String notes = a.getNotes();
+				notes = notes.replaceAll("\\r\\n|\\r|\\n", " ");
+				return notes;
 			}
 		});
 	}
@@ -486,8 +483,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 					}
 					company.getAddresses().add(adr);
 					addressTableViewer.setInput(company.getAddresses());
-					dirty = true;
-					firePropertyChange(ISaveablePart.PROP_DIRTY);
+					enableSave(true);
 				}
 			});
 			return button;

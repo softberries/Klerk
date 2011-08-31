@@ -64,7 +64,7 @@ public class CompaniesEditor extends GenericKlerkEditor {
 				cell.setText(((Company) cell.getElement()).getVatid());
 			}
 		});
-		// Now the description
+		// email
 		col = createTableViewerColumn(titles[2], bounds[2], 2);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -72,7 +72,7 @@ public class CompaniesEditor extends GenericKlerkEditor {
 				cell.setText(((Company) cell.getElement()).getEmail());
 			}
 		});
-		// Now the description
+		// www
 		col = createTableViewerColumn(titles[3], bounds[3], 3);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -80,7 +80,7 @@ public class CompaniesEditor extends GenericKlerkEditor {
 				cell.setText(((Company) cell.getElement()).getWww());
 			}
 		});
-		// Now the description
+		// telephone
 		col = createTableViewerColumn(titles[4], bounds[4], 4);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -88,7 +88,7 @@ public class CompaniesEditor extends GenericKlerkEditor {
 				cell.setText(((Company) cell.getElement()).getTelephone());
 			}
 		});
-		// Now the description
+		// mobile
 		col = createTableViewerColumn(titles[5], bounds[5], 5);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override

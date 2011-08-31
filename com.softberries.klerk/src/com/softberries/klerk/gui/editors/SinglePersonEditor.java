@@ -56,6 +56,7 @@ import com.softberries.klerk.Activator;
 import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.PeopleDao;
 import com.softberries.klerk.dao.to.Address;
+import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.gui.dialogs.AddressDialog;
@@ -385,7 +386,9 @@ ISelectionListener{
 			@Override
 			public String getText(Object element) {
 				Address a = (Address) element;
-				return a.getNotes();
+				String notes = a.getNotes();
+				notes = notes.replaceAll("\\r\\n|\\r|\\n", " ");
+				return notes;
 			}
 		});
 	}
