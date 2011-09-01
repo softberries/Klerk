@@ -780,7 +780,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	                //TODO - this just fills the values with 0.0
 	                DocumentItem it = new DocumentItem();
 	                it.setProduct(p);
-	                it.setDocumentId(document.getId());
+	                it.setDocument_id(document.getId());
 	                it.setPriceGrossAll("0.00");
 	                it.setPriceGrossSingle("0.0");
 	                it.setPriceNetAll("0.00");

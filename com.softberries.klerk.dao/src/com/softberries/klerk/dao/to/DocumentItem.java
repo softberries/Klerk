@@ -6,7 +6,7 @@ import java.beans.PropertyChangeSupport;
 public class DocumentItem {
 
 	private Long id;
-	private Long documentId;
+	private Long document_id;
 	private Product product;
 	private Long product_id;
 	private String product_name;
@@ -89,14 +89,14 @@ public class DocumentItem {
 	/**
 	 * @return the documentId
 	 */
-	public Long getDocumentId() {
-		return documentId;
+	public Long getDocument_id() {
+		return document_id;
 	}
 	/**
 	 * @param documentId the documentId to set
 	 */
-	public void setDocumentId(Long documentId) {
-		propertyChangeSupport.firePropertyChange("documentId", this.documentId, this.documentId = documentId);
+	public void setDocument_id(Long documentId) {
+		propertyChangeSupport.firePropertyChange("documentId", this.document_id, this.document_id = documentId);
 	}
 	/**
 	 * @return the product
@@ -109,6 +109,7 @@ public class DocumentItem {
 	 */
 	public void setProduct(Product product) {
 		propertyChangeSupport.firePropertyChange("product", this.product, this.product = product);
+		setProduct_id(product.getId());
 	}
 	
 	/**
@@ -150,6 +151,67 @@ public class DocumentItem {
 
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((document_id == null) ? 0 : document_id.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((priceGrossAll == null) ? 0 : priceGrossAll.hashCode());
+		result = prime
+				* result
+				+ ((priceGrossSingle == null) ? 0 : priceGrossSingle.hashCode());
+		result = prime * result
+				+ ((priceNetAll == null) ? 0 : priceNetAll.hashCode());
+		result = prime * result
+				+ ((priceNetSingle == null) ? 0 : priceNetSingle.hashCode());
+		result = prime * result
+				+ ((priceTaxAll == null) ? 0 : priceTaxAll.hashCode());
+		result = prime * result
+				+ ((priceTaxSingle == null) ? 0 : priceTaxSingle.hashCode());
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
+		result = prime * result
+				+ ((product_id == null) ? 0 : product_id.hashCode());
+		result = prime * result
+				+ ((product_name == null) ? 0 : product_name.hashCode());
+		result = prime * result
+				+ ((quantity == null) ? 0 : quantity.hashCode());
+		result = prime * result
+				+ ((taxValue == null) ? 0 : taxValue.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DocumentItem other = (DocumentItem) obj;
+		//if two objects have the same id and the same documentId then they
+		//are considered to be equal
+		if(other.getId() != null && this.getId() != null){
+			if(other.getId().longValue() == this.getId().longValue()){
+				if(other.getDocument_id() != null && this.getDocument_id() != null){
+					if(other.getDocument_id().longValue() == this.getDocument_id().longValue()){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	

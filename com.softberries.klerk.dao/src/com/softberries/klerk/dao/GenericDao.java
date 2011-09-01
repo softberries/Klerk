@@ -1,5 +1,6 @@
 package com.softberries.klerk.dao;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,6 +19,28 @@ import org.apache.commons.dbutils.QueryRunner;
  */
 public abstract class GenericDao<T> {
 	
+	/**
+	 * Default constructor, initializes database {@link filePath}
+	 * with default value
+	 */
+	public GenericDao(){
+		this.filePath = "~/.klerk/klerk";
+	}
+	/**
+	 * Pass specific {@link filePath} to the dao
+	 * @param filePath
+	 */
+	public GenericDao(String filePath){
+		this.filePath = filePath;
+	}
+	/**
+	 * Pass specific {@link filePath} to the dao using
+	 * a File object
+	 * @param dbFile
+	 */
+	public GenericDao(File dbFile){
+		this.filePath = dbFile.getAbsolutePath();
+	}
 	/**
 	 * Database connection object
 	 */
@@ -38,6 +61,11 @@ public abstract class GenericDao<T> {
 	protected QueryRunner run = null;
 	
 	/**
+	 * Database file location when using file based datastore
+	 */
+	protected String filePath = null;
+	
+	/**
 	 * Initializes connection to the database
 	 * 
 	 * @throws ClassNotFoundException
@@ -46,7 +74,7 @@ public abstract class GenericDao<T> {
 	public void init() throws ClassNotFoundException, SQLException{
 		run = new QueryRunner();
 		Class.forName("org.h2.Driver");
-		conn = DriverManager.getConnection("jdbc:h2:~/.klerk/klerk", "sa", "");
+		conn = DriverManager.getConnection("jdbc:h2:"+this.filePath, "sa", "");
 		conn.setAutoCommit(false);
 	}
 	/**

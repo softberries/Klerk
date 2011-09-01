@@ -26,17 +26,29 @@ import com.softberries.klerk.dao.to.Product;
  */
 public class ProductDaoTest {
 
+	private static final String databaseFilePath = "~/.klerk/klerk_test";
+	
 	@BeforeClass
 	public static void beforeClass() throws Exception{
 		System.out.println("beforeClass()");
-		ProductDao dao = new ProductDao();
+		
 		for(int i = 1; i< 11;i++){
-			Product p1 = new Product();
-			p1.setCode("ABC" + i);
-			p1.setName("Product Testowy " + i);
-			p1.setDescription("Opis produktu testowego numer " + i);
-			dao.create(p1);
+			createProduct(i);
 		}
+	}
+
+	/**
+	 * @param i
+	 * @throws SQLException
+	 */
+	public static Product createProduct(int i) throws SQLException {
+		ProductDao dao = new ProductDao(databaseFilePath);
+		Product p1 = new Product();
+		p1.setCode("ABC" + i);
+		p1.setName("Product Testowy " + i);
+		p1.setDescription("Opis produktu testowego numer " + i);
+		dao.create(p1);
+		return p1;
 	}
 	
 	/**
@@ -45,7 +57,7 @@ public class ProductDaoTest {
 	@AfterClass
 	public static void afterClass() throws Exception {
 		System.out.println("afterClass()");
-		ProductDao dao = new ProductDao();
+		ProductDao dao = new ProductDao(databaseFilePath);
 		dao.deleteAll();
 	}
 
@@ -56,7 +68,7 @@ public class ProductDaoTest {
 	@Test
 	public void testFindAllProducts() throws SQLException {
 		System.out.println("testFindAllProducts");
-		ProductDao dao = new ProductDao();
+		ProductDao dao = new ProductDao(databaseFilePath);
 		List<Product> products = dao.findAll();
 		assertTrue(products.size() >= 10);
 	}
@@ -68,7 +80,7 @@ public class ProductDaoTest {
 	@Test
 	public void testCreateProduct() throws SQLException {
 		System.out.println("testCreateProduct");
-		ProductDao dao = new ProductDao();
+		ProductDao dao = new ProductDao(databaseFilePath);
 		Product p = new Product();
 		p.setCode("ABC");
 		p.setName("NAME");
@@ -80,7 +92,7 @@ public class ProductDaoTest {
 	@Test
 	public void testFindProductById() throws SQLException{
 		System.out.println("findProductById");
-		ProductDao dao = new ProductDao();
+		ProductDao dao = new ProductDao(databaseFilePath);
 		//create product
 		Product p = new Product();
 		p.setName("TO_DEL");
@@ -96,7 +108,7 @@ public class ProductDaoTest {
 	@Test
 	public void testUpdateProduct() throws SQLException{
 		System.out.println("updateProduct");
-		ProductDao dao = new ProductDao();
+		ProductDao dao = new ProductDao(databaseFilePath);
 		//crate product
 		Product p = new Product();
 		p.setName("TO_DEL");

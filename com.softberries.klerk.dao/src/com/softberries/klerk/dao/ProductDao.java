@@ -20,6 +20,13 @@ public class ProductDao extends GenericDao<Product>{
 	private static final String SQL_FIND_PRODUCT_ALL = "SELECT * FROM PRODUCT";
 	private static final String SQL_UPDATE_PRODUCT = "UPDATE PRODUCT SET code = ?, name = ?, description = ? WHERE id = ?";
 	
+	public ProductDao(String databasefilepath) {
+		super(databasefilepath);
+	}
+	//TODO - this constructor should be removed later
+	public ProductDao(){
+		super();
+	}
 	
 	@Override
 	public List<Product> findAll() throws SQLException {

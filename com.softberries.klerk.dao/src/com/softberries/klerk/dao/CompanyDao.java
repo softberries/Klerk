@@ -25,6 +25,13 @@ public class CompanyDao extends GenericDao<Company> {
 	private static final String SQL_FIND_COMPANY_ALL = "SELECT * FROM COMPANY";
 	private static final String SQL_UPDATE_COMPANY = "UPDATE COMPANY SET name = ?, vatid = ?, telephone = ?, mobile = ?, email = ?, www = ? WHERE id = ?";
 
+	public CompanyDao(String databasefilepath) {
+		super(databasefilepath);
+	}
+	//TODO - this constructor should be removed later
+	public CompanyDao(){
+		super();
+	}
 	@Override
 	public List<Company> findAll() throws SQLException {
 		List<Company> companies = new ArrayList<Company>();
@@ -187,11 +194,11 @@ public class CompanyDao extends GenericDao<Company> {
 		// delete addresses
 		Company toDel = find(id);
 		AddressDao adrDao = new AddressDao();
-		for (Address adr : toDel.getAddresses()) {
-			adrDao.delete(adr.getId(), conn);
-		}
 		try {
 			init();
+			for (Address adr : toDel.getAddresses()) {
+				adrDao.delete(adr.getId(), conn);
+			}
 			st = conn.prepareStatement(SQL_DELETE_COMPANY);
 			st.setLong(1, id);
 			// run the query
@@ -214,17 +221,12 @@ public class CompanyDao extends GenericDao<Company> {
 	@Override
 	public void deleteAll() throws SQLException {
 		try {
-			init();
-			st = conn.prepareStatement(SQL_DELETE_ALL_COMPANIES);
-			int i = st.executeUpdate();
-			System.out.println("i: " + i);
-			if (i == -1) {
-				System.out.println("db error : " + SQL_DELETE_ALL_COMPANIES);
+			List<Company> companies = findAll();
+			for(Company c : companies){
+				delete(c.getId());
 			}
-			conn.commit();
 		} catch (Exception e) {
-			// rollback the transaction but rethrow the exception to the caller
-			conn.rollback();
+			// rollback the transaction but rethrow the exception to the calle
 			e.printStackTrace();
 			throw new SQLException(e);
 		} finally {

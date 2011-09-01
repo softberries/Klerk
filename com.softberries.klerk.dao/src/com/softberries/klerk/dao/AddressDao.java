@@ -25,6 +25,7 @@ public class AddressDao {
 	private static final String SQL_FIND_ADDRESS_ALL_BY_PERSON_ID = "SELECT * FROM ADDRESS WHERE PERSON_ID = ?";
 	private static final String SQL_UPDATE_ADDRESS = "UPDATE ADDRESS SET country = ?, city = ?, street = ?, postCode = ?, houseNumber = ?, flatNumber = ?, notes = ?, main = ?, person_id = ?, company_id = ? WHERE id = ?";
 	
+	
 	public List<Address> findAll(QueryRunner run, Connection conn) throws SQLException {
 		List<Address> companies = new ArrayList<Address>();
 		ResultSetHandler<List<Address>> h = new BeanListHandler<Address>(Address.class);
@@ -84,7 +85,7 @@ public class AddressDao {
 	        if (generatedKeys.next()) {
 	            c.setId(generatedKeys.getLong(1));
 	        } else {
-	            throw new SQLException("Creating user failed, no generated key obtained.");
+	            throw new SQLException("Creating address failed, no generated key obtained.");
 	        }
 	}
 
@@ -101,12 +102,12 @@ public class AddressDao {
 	        if(c.getPerson_id() == null && c.getCompany_id() == null){
 	        	throw new SQLException("Either Person or Company needs to be specified");
 	        }
-	        if(c.getPerson_id() != null){
+	        if(c.getPerson_id().longValue() != 0){
 	        	st.setLong(9, c.getPerson_id());
 	        }else{
 	        	st.setNull(9, java.sql.Types.NUMERIC);
 	        }
-	        if(c.getCompany_id() != null){
+	        if(c.getCompany_id().longValue() != 0){
 	        	st.setLong(10, c.getCompany_id());
 	        }else{
 	        	st.setNull(10, java.sql.Types.NUMERIC);

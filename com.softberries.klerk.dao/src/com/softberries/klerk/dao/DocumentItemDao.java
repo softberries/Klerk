@@ -16,7 +16,7 @@ import com.softberries.klerk.dao.to.DocumentItem;
 
 public class DocumentItemDao {
 	
-	private static final String SQL_INSERT_DOCUMENTITEM = "INSERT INTO DOCUMENTITEM(priceNetSingle, priceGrossSingle, priceTaxSingle, priceNetAll, priceGrossAll, priceTaxAll, taxValue, quantity, product_id, document_id, product_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_INSERT_DOCUMENTITEM = "INSERT INTO DOCUMENTITEM(priceNetSingle, priceGrossSingle, priceTaxSingle, priceNetAll, priceGrossAll, priceTaxAll, taxValue, quantity, product_id, document_id, product_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_DOCUMENTITEM = "DELETE FROM DOCUMENTITEM WHERE id = ?";
 	private static final String SQL_FIND_DOCUMENTITEM_BY_ID = "SELECT * FROM DOCUMENTITEM WHERE id = ?";
 	private static final String SQL_DELETE_ALL_DOCUMENTITEMS = "DELETE FROM DOCUMENTITEM WHERE id > 0";
@@ -55,7 +55,7 @@ public class DocumentItemDao {
 	        st.setString(6, c.getPriceTaxAll());
 	        st.setString(7, c.getTaxValue());
 	        st.setString(8, c.getQuantity());
-	        if(c.getProduct().getId().longValue() == 0 && c.getDocumentId().longValue() == 0){
+	        if(c.getProduct().getId().longValue() == 0 && c.getDocument_id().longValue() == 0){
 	        	throw new SQLException("For DocumentItem corresponding product and document it belongs to need to be specified");
 	        }
 	        if(c.getProduct().getId() != 0){
@@ -63,8 +63,8 @@ public class DocumentItemDao {
 	        }else{
 	        	st.setNull(9, java.sql.Types.NUMERIC);
 	        }
-	        if(c.getDocumentId().longValue() != 0){
-	        	st.setLong(10, c.getDocumentId());
+	        if(c.getDocument_id().longValue() != 0){
+	        	st.setLong(10, c.getDocument_id());
 	        }else{
 	        	st.setNull(10, java.sql.Types.NUMERIC);
 	        }
@@ -93,7 +93,7 @@ public class DocumentItemDao {
 	        st.setString(6, c.getPriceTaxAll());
 	        st.setString(7, c.getTaxValue());
 	        st.setString(8, c.getQuantity());
-	        if(c.getProduct().getId().longValue() == 0 && c.getDocumentId().longValue() == 0){
+	        if(c.getProduct().getId().longValue() == 0 && c.getDocument_id().longValue() == 0){
 	        	throw new SQLException("For DocumentItem corresponding product and document it belongs to need to be specified");
 	        }
 	        if(c.getProduct().getId() != 0){
@@ -101,8 +101,8 @@ public class DocumentItemDao {
 	        }else{
 	        	st.setNull(9, java.sql.Types.NUMERIC);
 	        }
-	        if(c.getDocumentId().longValue() != 0){
-	        	st.setLong(10, c.getDocumentId());
+	        if(c.getDocument_id().longValue() != 0){
+	        	st.setLong(10, c.getDocument_id());
 	        }else{
 	        	st.setNull(10, java.sql.Types.NUMERIC);
 	        }

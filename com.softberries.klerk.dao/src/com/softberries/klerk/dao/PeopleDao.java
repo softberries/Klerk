@@ -15,6 +15,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import com.softberries.klerk.dao.to.Address;
 import com.softberries.klerk.dao.to.Company;
+import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.Person;
 
 public class PeopleDao extends GenericDao<Person> {
@@ -26,6 +27,14 @@ public class PeopleDao extends GenericDao<Person> {
 	private static final String SQL_FIND_PERSON_ALL = "SELECT * FROM PERSON";
 	private static final String SQL_UPDATE_PERSON = "UPDATE PERSON SET firstname = ?, lastname = ?, telephone = ?, mobile = ?, email = ?, www = ? WHERE id = ?";
 
+	
+	public PeopleDao(String databasefilepath) {
+		super(databasefilepath);
+	}
+	//TODO - this constructor should be removed later
+	public PeopleDao(){
+		super();
+	}
 	@Override
 	public List<Person> findAll() throws SQLException {
 		List<Person> people = new ArrayList<Person>();
@@ -181,8 +190,13 @@ public class PeopleDao extends GenericDao<Person> {
 
 	@Override
 	public void delete(Long id) throws SQLException {
+		Person toDel = find(id);
+		AddressDao adrDao = new AddressDao();
 		try {
 			init();
+			for (Address adr : toDel.getAddresses()) {
+				adrDao.delete(adr.getId(), conn);
+			}
 			st = conn.prepareStatement(SQL_DELETE_PERSON);
 			st.setLong(1, id);
 			// run the query
@@ -205,17 +219,12 @@ public class PeopleDao extends GenericDao<Person> {
 	@Override
 	public void deleteAll() throws SQLException {
 		try {
-			init();
-			st = conn.prepareStatement(SQL_DELETE_ALL_PEOPLE);
-			int i = st.executeUpdate();
-			System.out.println("i: " + i);
-			if (i == -1) {
-				System.out.println("db error : " + SQL_DELETE_ALL_PEOPLE);
+			List<Person> people = findAll();
+			for(Person p : people){
+				delete(p.getId());
 			}
-			conn.commit();
 		} catch (Exception e) {
 			// rollback the transaction but rethrow the exception to the caller
-			conn.rollback();
 			e.printStackTrace();
 			throw new SQLException(e);
 		} finally {

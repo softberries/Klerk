@@ -26,6 +26,13 @@ public class DocumentDao extends GenericDao<Document>{
 	private static final String SQL_FIND_DOCUMENT_ALL = "SELECT * FROM DOCUMENT";
 	private static final String SQL_UPDATE_DOCUMENT = "UPDATE DOCUMENT SET title = ?, notes = ?, createdDate = ?, transactionDate = ?, dueDate = ?, placeCreated = ?, creator_id = ?, buyer_id = ?, seller_id = ? WHERE id = ?";
 	
+	public DocumentDao(String databasefilepath) {
+		super(databasefilepath);
+	}
+	//TODO - this constructor should be removed later
+	public DocumentDao(){
+		super();
+	}
 	public List<Document> findAllDocuments(){
 		List<Document> documents = new ArrayList<Document>();
 		for(int i = 1; i< 300;i++){
@@ -44,7 +51,7 @@ public class DocumentDao extends GenericDao<Document>{
 			List<DocumentItem> dis = new ArrayList<DocumentItem>();
 			for(int j = 0; j < 10; j++){
 				DocumentItem di = new DocumentItem();
-				di.setDocumentId(d.getId());
+				di.setDocument_id(d.getId());
 				di.setId(new Long(j));
 				di.setPriceGrossSingle("" + j + ".23");
 				di.setPriceNetSingle("" + j + ".00");
@@ -143,10 +150,10 @@ public class DocumentDao extends GenericDao<Document>{
 	        } else {
 	            throw new SQLException("Creating document failed, no generated key obtained.");
 	        }
-	      //if the document creation was successful, add addresses
+	      //if the document creation was successful, add document items
 	        DocumentItemDao idao = new DocumentItemDao();
 	        for(DocumentItem di : d.getItems()){
-	        	di.setDocumentId(d.getId());
+	        	di.setDocument_id(d.getId());
 	        	idao.create(di, run, conn, generatedKeys);
 	        }
 	        conn.commit();
@@ -187,8 +194,12 @@ public class DocumentDao extends GenericDao<Document>{
 			List<DocumentItem> toDel = new ArrayList<DocumentItem>();
 			if(d.getId() != null){
 				List<DocumentItem> existingItems = idao.findAllByDocumentId(d.getId(), run, conn);
+				System.out.println("Existing items: " + existingItems.size());
 				for(DocumentItem di : existingItems){
+					System.out.println("di id: " + di.getId().longValue() + ", di docid: " + di.getDocument_id().longValue());
+					System.out.println(printAllDIs(d.getItems()));
 					if(!d.getItems().contains(di)){
+						System.out.println("add to remove: " + di);
 						toDel.add(di);
 					}
 				}
@@ -200,10 +211,12 @@ public class DocumentDao extends GenericDao<Document>{
 			for(DocumentItem di : d.getItems()){
 				if(di.getId() != null && di.getId() > 0){
 					//update
+					System.out.println("update: " + di);
 					idao.update(di, run, conn);
 				}else{//create
-					di.setDocumentId(d.getId());
+					di.setDocument_id(d.getId());
 					idao.create(di, run, conn, generatedKeys);
+					System.out.println("insert: " + di);
 				}
 			}
 			conn.commit();
@@ -217,16 +230,25 @@ public class DocumentDao extends GenericDao<Document>{
 		}
 	}
 
+	private String printAllDIs(List<DocumentItem> items) {
+		StringBuilder builder = new StringBuilder();
+		for(DocumentItem di : items){
+			String temp = "di id: " + di.getId().longValue() + ", di docid: " + di.getDocument_id().longValue();
+			builder.append(temp);
+			builder.append("\n");
+		}
+		return builder.toString();
+	}
 	@Override
 	public void delete(Long id) throws SQLException {
 		//delete items
 		Document toDel = find(id);
 		DocumentItemDao iDao = new DocumentItemDao();
-		for(DocumentItem di : toDel.getItems()){
-			iDao.delete(di.getId(), conn);
-		}
 		try {
 			init();
+			for(DocumentItem di : toDel.getItems()){
+				iDao.delete(di.getId(), conn);
+			}
 			st = conn.prepareStatement(SQL_DELETE_DOCUMENT); 
 	        st.setLong(1, id);
 	        // run the query
@@ -249,15 +271,10 @@ public class DocumentDao extends GenericDao<Document>{
 	@Override
 	public void deleteAll() throws SQLException {
 		try{
-			
-			init();
-			st = conn.prepareStatement(SQL_DELETE_ALL_DOCUMENTS);
-			int i = st.executeUpdate();
-			System.out.println("i: " + i);
-	        if (i == -1) {
-	            System.out.println("db error : " + SQL_DELETE_ALL_DOCUMENTS);
-	        }
-	        conn.commit();
+			List<Document> docs = findAll();
+			for(Document d : docs){
+				delete(d.getId());
+			}
 		} catch (Exception e) {
 			//rollback the transaction but rethrow the exception to the caller
 			conn.rollback();

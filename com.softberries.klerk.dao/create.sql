@@ -32,6 +32,23 @@ CREATE  TABLE IF NOT EXISTS `person` (
 
 
 -- -----------------------------------------------------
+-- Table `company`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `company` ;
+
+CREATE  TABLE IF NOT EXISTS `company` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(400) NOT NULL ,
+  `vatid` VARCHAR(45) NOT NULL ,
+  `telephone` VARCHAR(45) NULL ,
+  `mobile` VARCHAR(45) NULL ,
+  `email` VARCHAR(200) NULL ,
+  `www` VARCHAR(200) NULL ,
+  PRIMARY KEY (`id`) )
+;
+
+
+-- -----------------------------------------------------
 -- Table `document`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `document` ;
@@ -51,23 +68,6 @@ CREATE  TABLE IF NOT EXISTS `document` (
   FOREIGN KEY (`creator_id`) REFERENCES `person`(`id`),
   FOREIGN KEY (`buyer_id`) REFERENCES `company`(`id`),
   FOREIGN KEY (`seller_id`) REFERENCES `company`(`id`) )
-;
-
-
--- -----------------------------------------------------
--- Table `company`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `company` ;
-
-CREATE  TABLE IF NOT EXISTS `company` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(400) NOT NULL ,
-  `vatid` VARCHAR(45) NOT NULL ,
-  `telephone` VARCHAR(45) NULL ,
-  `mobile` VARCHAR(45) NULL ,
-  `email` VARCHAR(200) NULL ,
-  `www` VARCHAR(200) NULL ,
-  PRIMARY KEY (`id`) )
 ;
 
 
