@@ -86,9 +86,11 @@ public class PeopleDao extends GenericDao<Person> {
 		Person p = null;
 		ResultSetHandler<Person> h = new BeanHandler<Person>(Person.class);
 		p = run.query(conn, SQL_FIND_PERSON_BY_ID, h, id);
-		// find addresses
-		AddressDao adrDao = new AddressDao();
-		p.setAddresses(adrDao.findAllByPersonId(p.getId(), run, conn));
+		if(p != null){
+			// find addresses
+			AddressDao adrDao = new AddressDao();
+			p.setAddresses(adrDao.findAllByPersonId(p.getId(), run, conn));
+		}
 		return p;
 	}
 

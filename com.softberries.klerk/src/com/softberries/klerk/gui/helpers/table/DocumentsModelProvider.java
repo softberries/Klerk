@@ -1,5 +1,6 @@
 package com.softberries.klerk.gui.helpers.table;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.softberries.klerk.dao.to.*;
@@ -12,7 +13,11 @@ public enum DocumentsModelProvider {
 	private List<Document> documents;
 
 	private DocumentsModelProvider() {
-		documents = new DocumentDao().findAllDocuments();
+		try {
+			documents = new DocumentDao().findAll();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<Document> getDocuments() {

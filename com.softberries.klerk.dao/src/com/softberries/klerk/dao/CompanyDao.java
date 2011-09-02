@@ -83,9 +83,11 @@ public class CompanyDao extends GenericDao<Company> {
 		Company p = null;
 		ResultSetHandler<Company> h = new BeanHandler<Company>(Company.class);
 		p = run.query(conn, SQL_FIND_COMPANY_BY_ID, h, id);
-		// find addresses
-		AddressDao adrDao = new AddressDao();
-		p.setAddresses(adrDao.findAllByCompanyId(p.getId(), run, conn));
+		if(p != null){
+			// find addresses
+			AddressDao adrDao = new AddressDao();
+			p.setAddresses(adrDao.findAllByCompanyId(p.getId(), run, conn));
+		}
 		return p;
 	}
 

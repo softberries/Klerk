@@ -1,9 +1,11 @@
 package com.softberries.klerk.gui.editors;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -11,10 +13,17 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
+import com.softberries.klerk.dao.CompanyDao;
+import com.softberries.klerk.dao.DocumentDao;
+import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.gui.editors.input.CompanyEditorInput;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
+import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 import com.softberries.klerk.gui.helpers.table.DocumentComparator;
 import com.softberries.klerk.gui.helpers.table.DocumentFilter;
 import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
@@ -24,6 +33,9 @@ import com.softberries.klerk.gui.helpers.table.SimpleKlerkFilter;
 public class DocumentsEditor extends GenericKlerkEditor{
 
 	public static final String ID = "com.softberries.klerk.gui.editors.DocumentsEditor"; //$NON-NLS-1$
+	private Document selectedDocument;
+	
+
 	public DocumentsEditor(SimpleKlerkComparator comp, SimpleKlerkFilter filter, Object input) {
 		super(comp, filter, input);
 	}
@@ -117,7 +129,25 @@ public class DocumentsEditor extends GenericKlerkEditor{
 
 	@Override
 	protected void deleteButtonClicked() {
-		
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if(this.getSelectedDocument() == null || this.getSelectedDocument().getId() == null){
+			MessageDialog.openInformation(shell, "Information", "Nothing to delete");
+			return;
+		}
+		boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete this document?");
+		if(confirmed){
+			DocumentDao dao = new DocumentDao();
+			try {
+				dao.delete(this.getSelectedDocument().getId());
+				closeOpenedEditorForThisItem(new DocumentEditorInput(this.getSelectedDocument()));
+				DocumentsModelProvider.INSTANCE.getDocuments().remove(this.getSelectedDocument());
+				this.setSelectedDocument(null);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments());
+			viewer.refresh();
+		}
 	}
 
 	@Override
@@ -138,7 +168,22 @@ public class DocumentsEditor extends GenericKlerkEditor{
 
 	@Override
 	protected void setSelectedObject(Object selection) {
-		
+		if(selection != null && selection instanceof Document){
+			this.setSelectedDocument((Document) selection);
+		}
+	}
+	/**
+	 * @return the selectedDocument
+	 */
+	public Document getSelectedDocument() {
+		return selectedDocument;
+	}
+	
+	/**
+	 * @param selectedDocument the selectedDocument to set
+	 */
+	public void setSelectedDocument(Document selectedDocument) {
+		this.selectedDocument = selectedDocument;
 	}
 
 }
