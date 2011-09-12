@@ -2,6 +2,7 @@ package com.softberries.klerk.gui.editors;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -20,6 +21,8 @@ import com.softberries.klerk.dao.CompanyDao;
 import com.softberries.klerk.dao.DocumentDao;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.dao.to.DocumentItem;
+import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.gui.editors.input.CompanyEditorInput;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
@@ -124,7 +127,14 @@ public class DocumentsEditor extends GenericKlerkEditor{
 	}
 	@Override
 	protected void addButtonClicked() {
-		
+		Document newD = new Document();
+		newD.setTitle("Faktura vat...");
+		newD.setItems(new ArrayList<DocumentItem>());
+		newD.setCreator(new Person());
+		newD.setBuyer(new Company());
+		newD.setSeller(new Company());
+		openSingleObjectEditor(new DocumentEditorInput(newD), SingleDocumentEditor.ID);
+
 	}
 
 	@Override
@@ -152,12 +162,18 @@ public class DocumentsEditor extends GenericKlerkEditor{
 
 	@Override
 	protected void editButtonClicked() {
-		
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if(this.getSelectedDocument() == null || this.getSelectedDocument().getId() == null){
+			MessageDialog.openInformation(shell, "Information", "Nothing to edit");
+			return;
+		}
+		openSingleObjectEditor(new DocumentEditorInput(this.getSelectedDocument()), SingleDocumentEditor.ID);
 	}
 
 	@Override
 	protected void refreshButtonClicked() {
-		
+		viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments());
+		viewer.refresh();
 	}
 
 	@Override

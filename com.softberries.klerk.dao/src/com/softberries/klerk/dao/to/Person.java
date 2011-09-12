@@ -6,8 +6,8 @@ import java.util.List;
 public class Person implements Serializable{
 
 	private Long id;
-	private String firstName;
-	private String lastName;
+	private String firstName = "";
+	private String lastName = "";
 	private List<Address> addresses;
 	private String telephone = "";
 	private String mobile = "";
@@ -117,4 +117,88 @@ public class Person implements Serializable{
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((addresses == null) ? 0 : addresses.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result
+				+ ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result
+				+ ((fullName == null) ? 0 : fullName.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+		result = prime * result
+				+ ((telephone == null) ? 0 : telephone.hashCode());
+		result = prime * result + ((www == null) ? 0 : www.hashCode());
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (addresses == null) {
+			if (other.addresses != null)
+				return false;
+		} else if (!addresses.equals(other.addresses))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (fullName == null) {
+			if (other.fullName != null)
+				return false;
+		} else if (!fullName.equals(other.fullName))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
+			return false;
+		if (telephone == null) {
+			if (other.telephone != null)
+				return false;
+		} else if (!telephone.equals(other.telephone))
+			return false;
+		if (www == null) {
+			if (other.www != null)
+				return false;
+		} else if (!www.equals(other.www))
+			return false;
+		return true;
+	}
+	
+	
 }
