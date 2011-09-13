@@ -137,7 +137,7 @@ public class DocumentDao extends GenericDao<Document>{
 	        st.setString(6, d.getPlaceCreated());
 	        st.setLong(7, d.getCreator().getId());
 	        st.setLong(8, d.getBuyer().getId());
-	        st.setLong(9, d.getSeller().getId());
+	        st.setLong(9, 0L);
 	        // run the query
 	        int i = st.executeUpdate();    
 	        System.out.println("i: " + i);
@@ -180,7 +180,7 @@ public class DocumentDao extends GenericDao<Document>{
 	        st.setString(6, d.getPlaceCreated());
 	        st.setLong(7, d.getCreator().getId());
 	        st.setLong(8, d.getBuyer().getId());
-	        st.setLong(9, d.getSeller().getId());
+	        st.setLong(9, 0L);
 	        st.setLong(10, d.getId());
 	        // run the query
 	        int i = st.executeUpdate();    

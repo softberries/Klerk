@@ -25,10 +25,10 @@ public class DocumentItemDao {
 	private static final String SQL_UPDATE_DOCUMENTITEM = "UPDATE DOCUMENTITEM SET priceNetSingle = ?, priceGrossSingle = ?, priceTaxSingle = ?, priceNetAll = ?, priceGrossAll = ?, priceTaxAll = ?, taxValue = ?, quantity = ?, product_id = ?, document_id = ?, product_name = ? WHERE id = ?";
 	
 	public List<DocumentItem> findAll(QueryRunner run, Connection conn) throws SQLException {
-		List<DocumentItem> companies = new ArrayList<DocumentItem>();
+		List<DocumentItem> items = new ArrayList<DocumentItem>();
 		ResultSetHandler<List<DocumentItem>> h = new BeanListHandler<DocumentItem>(DocumentItem.class);
-		companies = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL, h); 
-		return companies;
+		items = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL, h); 
+		return items;
 	}
 	public List<DocumentItem> findAllByDocumentId(Long docId,QueryRunner run, Connection conn) throws SQLException {
 		List<DocumentItem> items = new ArrayList<DocumentItem>();

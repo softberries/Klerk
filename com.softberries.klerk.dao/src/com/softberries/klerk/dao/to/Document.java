@@ -173,7 +173,7 @@ public class Document implements Serializable{
 		this.buyer = buyer;
 	}
 	public Company getSeller() {
-		return seller;
+		return this.seller;
 	}
 	public void setSeller(Company seller) {
 		this.seller = seller;

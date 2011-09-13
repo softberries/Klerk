@@ -3,12 +3,15 @@ package com.softberries.klerk.gui.editors;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.swtaddons.autocomplete.text.AutocompleteTextInput;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
@@ -54,8 +57,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.wb.swt.ResourceManager;
 
+import com.softberries.klerk.Activator;
+import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.RunJob1;
 import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.DocumentDao;
@@ -72,6 +78,7 @@ import com.softberries.klerk.gui.helpers.IImageKeys;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.CompaniesModelProvider;
 import com.softberries.klerk.gui.helpers.table.DocumentItemComparator;
+import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
 import com.softberries.klerk.gui.helpers.table.PeopleModelProvider;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemBasePriceES;
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemPriceGrossAllES;
@@ -124,7 +131,19 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		DocumentDao dao = new DocumentDao();
-		
+		try {
+			if(this.document.getId() == null){
+				dao.create(this.document);
+				DocumentsModelProvider.INSTANCE.getDocuments().add(this.document);
+			}else{
+				LogUtil.logInfo("Updating document: " + this.document.getId());
+				dao.update(this.document);
+			}
+			
+		} catch (SQLException e) {
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "Sorry, couldn't update documents database.", e);
+			StatusManager.getManager().handle(status, StatusManager.SHOW);
+		}
 		enableSave(false);
 	}
 
@@ -145,6 +164,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		}
 		this.document.setVatLevelItems(new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems()));
 		this.document.setSeller(companyFactory.getCompanyFromPreferences());
+		this.document.setCreatedDate(new java.util.Date());
+		this.document.setDueDate(new java.util.Date());
+		this.document.setTransactionDate(new java.util.Date());
 		docTitle = this.document.getTitle();
 		docBuyer = this.document.getBuyer();
 		docCreatedBy = this.document.getCreator();
