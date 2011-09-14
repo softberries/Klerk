@@ -22,6 +22,7 @@ public class Document implements Serializable{
 	private String paymentMethod;
 	private List<DocumentItem> items;
 	private List<VatLevelItem> vatLevelItems;
+	private int documentType;
 	
 	public Document(){
 		buyer = new Company();
@@ -189,6 +190,12 @@ public class Document implements Serializable{
 	}
 	public void setVatLevelItems(List<VatLevelItem> vatLevelItems) {
 		this.vatLevelItems = vatLevelItems;
+	}
+	public int getDocumentType() {
+		return documentType;
+	}
+	public void setDocumentType(int documentType) {
+		this.documentType = documentType;
 	}
 	
 	

@@ -61,13 +61,11 @@ CREATE  TABLE IF NOT EXISTS `document` (
   `transactionDate` DATETIME NOT NULL ,
   `dueDate` DATETIME NULL ,
   `placeCreated` VARCHAR(200) NULL ,
+  `documentType` BIGINT  NOT NULL ,
   `creator_id` BIGINT  NOT NULL ,
   `buyer_id` BIGINT  NOT NULL ,
-  `seller_id` BIGINT  NOT NULL ,
-  PRIMARY KEY (`id`),
   FOREIGN KEY (`creator_id`) REFERENCES `person`(`id`),
-  FOREIGN KEY (`buyer_id`) REFERENCES `company`(`id`),
-  FOREIGN KEY (`seller_id`) REFERENCES `company`(`id`) )
+  FOREIGN KEY (`buyer_id`) REFERENCES `company`(`id`) )
 ;
 
 
