@@ -28,12 +28,20 @@ public class DocumentItemDao {
 		List<DocumentItem> items = new ArrayList<DocumentItem>();
 		ResultSetHandler<List<DocumentItem>> h = new BeanListHandler<DocumentItem>(DocumentItem.class);
 		items = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL, h); 
+		ProductDao pdao = new ProductDao();
+		for(DocumentItem di : items){
+			di.setProduct(pdao.find(di.getProduct_id(), run, conn));
+		}
 		return items;
 	}
 	public List<DocumentItem> findAllByDocumentId(Long docId,QueryRunner run, Connection conn) throws SQLException {
 		List<DocumentItem> items = new ArrayList<DocumentItem>();
 		ResultSetHandler<List<DocumentItem>> h = new BeanListHandler<DocumentItem>(DocumentItem.class);
 		items = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL_BY_DOCUMENT_ID, h, docId); 
+		ProductDao pdao = new ProductDao();
+		for(DocumentItem di : items){
+			di.setProduct(pdao.find(di.getProduct_id(), run, conn));
+		}
 		return items;
 	}
 
@@ -41,6 +49,8 @@ public class DocumentItemDao {
 		DocumentItem p = null;
 		ResultSetHandler<DocumentItem> h = new BeanHandler<DocumentItem>(DocumentItem.class);
 		p = run.query(conn, SQL_FIND_DOCUMENTITEM_BY_ID, h, id); 
+		ProductDao pdao = new ProductDao();
+		p.setProduct(pdao.find(p.getProduct_id(), run, conn));
 		return p;
 	}
 

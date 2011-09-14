@@ -533,7 +533,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, itemsTableViewer);
 		final Table table = itemsTableViewer.getTable();
-		table.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.FILL_GRAB, 1, 1));
+		TableWrapData twd_table = new TableWrapData(TableWrapData.LEFT, TableWrapData.FILL_GRAB, 1, 1);
+		twd_table.heightHint = 72;
+		table.setLayoutData(twd_table);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 

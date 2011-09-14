@@ -25,4 +25,16 @@
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Invoice.jrxml</name>
+			<type>1</type>
+			<location>/home/kris/JaspersoftWorkspace/MyReports/Invoice.jrxml</location>
+		</link>
+		<link>
+			<name>NEW_REPORT.jrxml</name>
+			<type>1</type>
+			<location>/home/kris/JaspersoftWorkspace/MyReports/NEW_REPORT.jrxml</location>
+		</link>
+	</linkedResources>
 </projectDescription>

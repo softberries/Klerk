@@ -1,10 +1,12 @@
 package com.softberries.klerk.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -54,6 +56,17 @@ public class ProductDao extends GenericDao<Product>{
 			e.printStackTrace();
 		}finally{
 			close(conn, st, generatedKeys);
+		}
+		return p;
+	}
+	public Product find(Long id, QueryRunner run1, Connection conn1) throws SQLException {
+		Product p = null;
+		try{
+			init();
+			ResultSetHandler<Product> h = new BeanHandler<Product>(Product.class);
+			p = run1.query(conn1, SQL_FIND_PRODUCT_BY_ID, h, id); 
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 		return p;
 	}
