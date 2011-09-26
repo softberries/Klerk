@@ -22,6 +22,7 @@ public class DocumentDao extends GenericDao<Document>{
 	private static final String SQL_INSERT_DOCUMENT = "INSERT INTO DOCUMENT(title, notes, createdDate, transactionDate, dueDate, placeCreated, documentType, creator_id, buyer_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_DOCUMENT = "DELETE FROM DOCUMENT WHERE id = ?";
 	private static final String SQL_FIND_DOCUMENT_BY_ID = "SELECT * FROM DOCUMENT WHERE id = ?";
+	private static final String SQL_FIND_DOCUMENT_BY_TYPE = "SELECT * FROM DOCUMENT WHERE documentType = ?";
 	private static final String SQL_DELETE_ALL_DOCUMENTS = "DELETE FROM DOCUMENT WHERE id > 0";
 	private static final String SQL_FIND_DOCUMENT_ALL = "SELECT * FROM DOCUMENT";
 	private static final String SQL_UPDATE_DOCUMENT = "UPDATE DOCUMENT SET title = ?, notes = ?, createdDate = ?, transactionDate = ?, dueDate = ?, placeCreated = ?, documentType = ?, creator_id = ?, buyer_id = ? WHERE id = ?";
@@ -58,7 +59,29 @@ public class DocumentDao extends GenericDao<Document>{
 		}
 		return documents;
 	}
-
+	public List<Document> findAllByType(final int DOC_TYPE) throws SQLException{
+		List<Document> documents = new ArrayList<Document>();
+		try{
+			init();
+			ResultSetHandler<List<Document>> h = new BeanListHandler<Document>(Document.class);
+			documents = run.query(conn, SQL_FIND_DOCUMENT_BY_TYPE, h, DOC_TYPE); 
+			//find items
+			DocumentItemDao idao = new DocumentItemDao();
+			CompanyDao cdao = new CompanyDao();
+			PeopleDao pdao = new PeopleDao();
+			
+			for(Document d : documents){
+				d.setItems(idao.findAllByDocumentId(d.getId(), run, conn));
+				d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
+				d.setCreator(pdao.find(d.getCreator_id(), run, conn, st, generatedKeys));
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally{
+			close(conn, st, generatedKeys);
+		}
+		return documents;
+	}
 	@Override
 	public Document find(Long id) throws SQLException {
 		Document d = null;

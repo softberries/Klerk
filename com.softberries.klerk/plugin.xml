@@ -55,9 +55,9 @@
             name="%command.name">
       </command>
       <command
-            defaultHandler="com.softberries.klerk.commands.OpenInvoicesCommand"
-            id="com.softberries.klerk.commands.opendocuments_invoices"
-            name="Invoices">
+            defaultHandler="com.softberries.klerk.commands.OpenSalesCommand"
+            id="com.softberries.klerk.commands.opendocuments_sales"
+            name="Sales">
       </command>
       <command
             defaultHandler="com.softberries.klerk.commands.OpenProductsCommand"
@@ -78,6 +78,11 @@
             defaultHandler="com.softberries.klerk.commands.OpenCompaniesCommand"
             id="com.softberries.klerk.commands.openinventory_companies"
             name="Open Companies Command">
+      </command>
+      <command
+            defaultHandler="com.softberries.klerk.commands.OpenPurchasesCommand"
+            id="com.softberries.klerk.commands.opendocuments_purchases"
+            name="Purchases">
       </command>
    </extension>
    <extension
@@ -141,10 +146,10 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="com.softberries.klerk.gui.editors.DocumentsEditor"
+            class="com.softberries.klerk.gui.editors.SalesDocumentsEditor"
             icon="icons/png/documents.png"
-            id="com.softberries.klerk.gui.editors.DocumentsEditor"
-            name="Document Editor">
+            id="com.softberries.klerk.gui.editors.SalesDocumentsEditor"
+            name="Sales Document Editor">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.SingleDocumentEditor"
@@ -193,6 +198,13 @@
             icon="icons/png/companies.png"
             id="com.softberries.klerk.gui.editors.SingleCompanyEditor"
             name="Single Company Editor">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.PurchaseDocumentsEditor"
+            default="false"
+            icon="icons/png/documents.png"
+            id="com.softberries.klerk.gui.editors.PurchaseDocumentsEditor"
+            name="Purchases Document Editor">
       </editor>
    </extension>
    <extension

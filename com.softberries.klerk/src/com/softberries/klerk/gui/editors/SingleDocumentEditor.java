@@ -134,7 +134,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		try {
 			if(this.document.getId() == null){
 				dao.create(this.document);
-				DocumentsModelProvider.INSTANCE.getDocuments().add(this.document);
+				DocumentsModelProvider.INSTANCE.getDocuments(this.document.getDocumentType(), false).add(this.document);
 			}else{
 				LogUtil.logInfo("Updating document: " + this.document.getId());
 				dao.update(this.document);

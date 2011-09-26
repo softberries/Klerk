@@ -22,6 +22,7 @@ import com.softberries.klerk.dao.DocumentDao;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
+import com.softberries.klerk.dao.to.IDocumentType;
 import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.gui.editors.input.CompanyEditorInput;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
@@ -33,18 +34,16 @@ import com.softberries.klerk.gui.helpers.table.DocumentsModelProvider;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkComparator;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkFilter;
 
-public class DocumentsEditor extends GenericKlerkEditor{
+public abstract class DocumentsEditor extends GenericKlerkEditor{
 
-	public static final String ID = "com.softberries.klerk.gui.editors.DocumentsEditor"; //$NON-NLS-1$
 	private Document selectedDocument;
-	
 
 	public DocumentsEditor(SimpleKlerkComparator comp, SimpleKlerkFilter filter, Object input) {
 		super(comp, filter, input);
 	}
 
-	public DocumentsEditor(){
-		super(new DocumentComparator(), new DocumentFilter(), DocumentsModelProvider.INSTANCE.getDocuments());
+	public DocumentsEditor(int DOC_TYPE){
+		super(new DocumentComparator(), new DocumentFilter(), DocumentsModelProvider.INSTANCE.getDocuments(DOC_TYPE, true));//TODO
 	}
 	
 	@Override
@@ -150,12 +149,12 @@ public class DocumentsEditor extends GenericKlerkEditor{
 			try {
 				dao.delete(this.getSelectedDocument().getId());
 				closeOpenedEditorForThisItem(new DocumentEditorInput(this.getSelectedDocument()));
-				DocumentsModelProvider.INSTANCE.getDocuments().remove(this.getSelectedDocument());
+				DocumentsModelProvider.INSTANCE.getDocuments(getDocumentType(), false).remove(this.getSelectedDocument());
 				this.setSelectedDocument(null);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments());
+			viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments(getDocumentType(), false));
 			viewer.refresh();
 		}
 	}
@@ -172,7 +171,7 @@ public class DocumentsEditor extends GenericKlerkEditor{
 
 	@Override
 	protected void refreshButtonClicked() {
-		viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments());
+		viewer.setInput(DocumentsModelProvider.INSTANCE.getDocuments(getDocumentType(), true));
 		viewer.refresh();
 	}
 
@@ -202,4 +201,9 @@ public class DocumentsEditor extends GenericKlerkEditor{
 		this.selectedDocument = selectedDocument;
 	}
 
+	/**
+	 * Define a document type for this class
+	 * @return {@link IDocumentType} value
+	 */
+	public abstract int getDocumentType();
 }

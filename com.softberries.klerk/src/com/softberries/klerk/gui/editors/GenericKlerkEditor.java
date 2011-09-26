@@ -34,6 +34,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import com.softberries.klerk.dao.to.Document;
+import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkComparator;
 import com.softberries.klerk.gui.helpers.table.SimpleKlerkFilter;
@@ -55,6 +57,10 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 		this.comparator = comp;
 		this.filter = filter;
 		this.input = input;
+		if(input != null && input instanceof DocumentEditorInput){
+			DocumentEditorInput dei = (DocumentEditorInput)input;
+			Document d = (Document)dei.getAdapter(Document.class);
+		}
 	}
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -283,6 +289,7 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 	public void setRefreshBtnTooltipText(String refreshBtnTooltipText) {
 		this.refreshBtnTooltipText = refreshBtnTooltipText;
 	}
+	
 	protected abstract void createColumns(final Composite parent, final TableViewer viewer);
 	protected abstract void addButtonClicked();
 	protected abstract void deleteButtonClicked();

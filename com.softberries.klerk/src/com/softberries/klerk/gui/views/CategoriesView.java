@@ -143,9 +143,9 @@ public class CategoriesView extends ViewPart implements ISelectionChangedListene
 			IHandlerService service = (IHandlerService) this.getSite().getService(
 					IHandlerService.class);
 			if(Messages.CategoriesView_Purchases.toString().equals(selectedDomainObject.toString())){
-				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_INVOICES, null);
+				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_PURCHASES, null);
 			}else if(Messages.CategoriesView_Sales.toString().equals(selectedDomainObject.toString())){
-				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_INVOICES, null);
+				service.executeCommand(ICommandIds.CMD_OPEN_DOCUMENTS_SALES, null);
 			}else if(Messages.CategoriesView_products.toString().equals(selectedDomainObject.toString())){
 				service.executeCommand(ICommandIds.CMD_OPEN_INVENTORY_PRODUCTS, null);
 			}else if(Messages.CategoriesView_companies.toString().equals(selectedDomainObject.toString())){

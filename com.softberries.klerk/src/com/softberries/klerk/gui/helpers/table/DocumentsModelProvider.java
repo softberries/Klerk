@@ -13,15 +13,20 @@ public enum DocumentsModelProvider {
 	private List<Document> documents;
 
 	private DocumentsModelProvider() {
-		try {
-			documents = new DocumentDao().findAll();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
-	public List<Document> getDocuments() {
-		return documents;
+	public List<Document> getDocuments(int DOC_TYPE, final boolean refresh) {
+		if(!refresh && documents == null){
+			return documents;
+		}else{
+			try {
+				documents = new DocumentDao().findAllByType(DOC_TYPE);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return documents;
+		}
 	}
 
 }
