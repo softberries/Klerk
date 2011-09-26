@@ -2,11 +2,15 @@ package com.softberries.klerk.reports;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -38,6 +42,16 @@ public class ReportManager {
 							tempDir.getAbsolutePath()
 									+ System.getProperty("file.separator")
 									+ "reports/");
+			String filePath = tempDir.getAbsolutePath()
+					+ System.getProperty("file.separator")
+					+ "reports"
+					+ System.getProperty("file.separator")
+					+ "invoice_items_locale_" + Locale.getDefault() + ".properties";
+			System.out.println("PATH: " + filePath);
+            FileInputStream fis = new FileInputStream( filePath );
+            
+            ResourceBundle bundle = new PropertyResourceBundle(fis);
+			parameters.put("REPORT_RESOURCE_BUNDLE", bundle);
 			fullFileName = tempDir.getAbsolutePath()
 					+ System.getProperty("file.separator") + fileName;
 

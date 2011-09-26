@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="faktura_cube" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="50" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="faktury_test"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/kris/Downloads/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="buyerLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[buyerLbl]]></fieldDescription>
+	</field>
+	<field name="copy" class="java.lang.String">
+		<fieldDescription><![CDATA[copy]]></fieldDescription>
+	</field>
+	<field name="createdDate" class="java.lang.String">
+		<fieldDescription><![CDATA[createdDate]]></fieldDescription>
+	</field>
+	<field name="createdDateLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[createdDateLbl]]></fieldDescription>
+	</field>
+	<field name="creatorLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[creatorLbl]]></fieldDescription>
+	</field>
+	<field name="document" class="com.softberries.klerk.dao.to.Document">
+		<fieldDescription><![CDATA[document]]></fieldDescription>
+	</field>
+	<field name="dueDate" class="java.lang.String">
+		<fieldDescription><![CDATA[dueDate]]></fieldDescription>
+	</field>
+	<field name="dueDateLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[dueDateLbl]]></fieldDescription>
+	</field>
+	<field name="footerLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[footerLbl]]></fieldDescription>
+	</field>
+	<field name="notesLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[notesLbl]]></fieldDescription>
+	</field>
+	<field name="paymentMethodLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[paymentMethodLbl]]></fieldDescription>
+	</field>
+	<field name="placeCreatedLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[placeCreatedLbl]]></fieldDescription>
+	</field>
+	<field name="receiver" class="java.lang.String">
+		<fieldDescription><![CDATA[receiver]]></fieldDescription>
+	</field>
+	<field name="receiverLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[receiverLbl]]></fieldDescription>
+	</field>
+	<field name="sellerLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[sellerLbl]]></fieldDescription>
+	</field>
+	<field name="toPayInWords" class="java.lang.String">
+		<fieldDescription><![CDATA[toPayInWords]]></fieldDescription>
+	</field>
+	<field name="toPayInWordsLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[toPayInWordsLbl]]></fieldDescription>
+	</field>
+	<field name="toPayLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[toPayLbl]]></fieldDescription>
+	</field>
+	<field name="transactionDate" class="java.lang.String">
+		<fieldDescription><![CDATA[transactionDate]]></fieldDescription>
+	</field>
+	<field name="transactionDateLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[transactionDateLbl]]></fieldDescription>
+	</field>
+	<field name="vatIdLbl" class="java.lang.String">
+		<fieldDescription><![CDATA[vatIdLbl]]></fieldDescription>
+	</field>
+	<field name="toPayCurrency" class="java.lang.String">
+		<fieldDescription><![CDATA[toPayCurrency]]></fieldDescription>
+	</field>
+	<field name="toPayAmount" class="java.lang.String">
+		<fieldDescription><![CDATA[toPayAmount]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="231" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="112" width="553" height="119" backcolor="#FAFAFA"/>
+				<graphicElement>
+					<pen lineColor="#FEFEFE"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="21" y="122" width="100" height="20"/>
+				<textElement markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sellerLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="122" width="100" height="20"/>
+				<textElement markup="none">
+					<font isBold="true" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{buyerLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="142" width="173" height="20"/>
+				<textElement markup="none">
+					<font size="11" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getSeller().getName()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="162" width="173" height="20"/>
+				<textElement markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getSeller().getAddress().getStreet()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="44" y="202" width="150" height="20"/>
+				<textElement markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getSeller().getVatid()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="202" width="23" height="20"/>
+				<textElement markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vatIdLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="142" width="209" height="20"/>
+				<textElement markup="none">
+					<font size="11" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getBuyer().getName()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="162" width="209" height="20"/>
+				<textElement markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getBuyer().getAddress().getStreet()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="182" width="46" height="20"/>
+				<textElement markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getBuyer().getAddress().getPostCode()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="202" width="186" height="20"/>
+				<textElement markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getBuyer().getVatid()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="202" width="23" height="20"/>
+				<textElement markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vatIdLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="182" width="42" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getSeller().getAddress().getPostCode()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="182" width="131" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getSeller().getAddress().getCity()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="364" y="182" width="163" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getBuyer().getAddress().getCity()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="149" y="71" width="215" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getPlaceCreated()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="364" y="0" width="189" height="20"/>
+				<textElement>
+					<font size="15" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{copy}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="0" width="343" height="20"/>
+				<textElement>
+					<font size="15" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getTitle()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="31" width="116" height="20"/>
+				<textElement textAlignment="Right" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{createdDateLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="149" y="31" width="215" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{createdDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="71" width="116" height="20"/>
+				<textElement textAlignment="Right" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{placeCreatedLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="51" width="116" height="20"/>
+				<textElement textAlignment="Right" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{transactionDateLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="149" y="51" width="215" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{transactionDate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="101" width="555" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CECECE"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="4" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="3"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CACACA"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="129" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="125" backcolor="#DFDFDF"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{document}.getItems())]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "invoice_items_subreport.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="3"/>
+	</columnFooter>
+	<lastPageFooter>
+		<band height="353">
+			<rectangle>
+				<reportElement x="22" y="212" width="230" height="64"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CFCFCF"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="297" y="212" width="230" height="64"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CDCDCD"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="22" y="276" width="230" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="true" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{creatorLbl}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="555" height="3"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CACACA"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement x="4" y="119" width="552" height="92" backcolor="#FAFAFA"/>
+				<graphicElement>
+					<pen lineColor="#FEF7F7"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="131" y="119" width="144" height="20" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{toPayLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="119" width="151" height="20" backcolor="#DCDCDC"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{toPayAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="448" y="119" width="100" height="20" backcolor="#DCDCDC"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{toPayCurrency}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="139" width="100" height="20"/>
+				<textElement textAlignment="Right" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{toPayInWordsLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="139" width="251" height="35"/>
+				<textElement markup="none">
+					<font isItalic="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{toPayInWords}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="309" width="95" height="20"/>
+				<textElement markup="none">
+					<font size="8" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{notesLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="96" y="309" width="457" height="20"/>
+				<textElement markup="none">
+					<font size="8" isItalic="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getNotes()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="95" width="555" height="3"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CACACA"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="165" y="174" width="110" height="20"/>
+				<textElement textAlignment="Right" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{paymentMethodLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="174" width="179" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getPaymentMethod()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="194" width="110" height="20"/>
+				<textElement textAlignment="Right" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dueDateLbl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="194" width="179" height="20"/>
+				<textElement>
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dueDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="276" width="230" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true" isItalic="true" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{receiverLbl}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="21" y="224" width="230" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{document}.getCreator().getFullName()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="297" y="224" width="230" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true" pdfFontName="Helvetica" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{receiver}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="333" width="553" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
+					<font size="8" isItalic="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{footerLbl}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="149" y="15" width="404" height="63"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{document}.getVatLevelItems())]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "vat_levels_subreport.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

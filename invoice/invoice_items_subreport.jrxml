@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pozycje_faktury_cube" pageWidth="555" pageHeight="572" orientation="Landscape" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1" mode="Opaque" backcolor="#F4F5F5">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 ==0]]></conditionExpression>
+			<style backcolor="#D4DED9"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="PozycjeFakturyDataSet"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="product" class="com.softberries.klerk.dao.to.Product">
+		<fieldDescription><![CDATA[product]]></fieldDescription>
+	</field>
+	<field name="quantity" class="java.lang.String">
+		<fieldDescription><![CDATA[quantity]]></fieldDescription>
+	</field>
+	<field name="priceNetSingle" class="java.lang.String">
+		<fieldDescription><![CDATA[priceNetSingle]]></fieldDescription>
+	</field>
+	<field name="taxValue" class="java.lang.String">
+		<fieldDescription><![CDATA[taxValue]]></fieldDescription>
+	</field>
+	<field name="priceNetAll" class="java.lang.String">
+		<fieldDescription><![CDATA[priceNetAll]]></fieldDescription>
+	</field>
+	<field name="priceTaxAll" class="java.lang.String">
+		<fieldDescription><![CDATA[priceTaxAll]]></fieldDescription>
+	</field>
+	<field name="priceGrossAll" class="java.lang.String">
+		<fieldDescription><![CDATA[priceGrossAll]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="37" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="1" width="555" height="33" backcolor="#F0F0F0"/>
+				<graphicElement>
+					<pen lineColor="#FDFBFB"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="0" width="32" height="33" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="0" width="121" height="33" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{itemName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="153" y="0" width="22" height="33" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{measureType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="1" width="34" height="32" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="209" y="1" width="55" height="32" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{netPrice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="264" y="1" width="50" height="33" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{vatLevel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="1" width="88" height="32" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{netValue}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="0" width="60" height="32" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{vatValue}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="462" y="1" width="93" height="31" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{grossValue}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="33" width="555" height="1" forecolor="#FF00EA"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CBCBCB"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="32" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="32" y="0" width="121" height="33" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{product}.getName()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="175" y="0" width="34" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="209" y="0" width="55" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{priceNetSingle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="264" y="0" width="50" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{taxValue}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="314" y="0" width="88" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{priceNetAll}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="402" y="0" width="60" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{priceTaxAll}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="462" y="0" width="93" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{priceGrossAll}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="153" y="0" width="22" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{product}.getMeasurement()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="33" width="555" height="1" forecolor="#FF00FF"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#C7C7C7"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

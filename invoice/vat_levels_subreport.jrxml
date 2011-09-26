@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stawki_vat_cube" pageWidth="400" pageHeight="572" orientation="Landscape" columnWidth="400" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="grossValue" class="java.lang.String">
+		<fieldDescription><![CDATA[grossValue]]></fieldDescription>
+	</field>
+	<field name="netValue" class="java.lang.String">
+		<fieldDescription><![CDATA[netValue]]></fieldDescription>
+	</field>
+	<field name="vatLevel" class="java.lang.String">
+		<fieldDescription><![CDATA[vatLevel]]></fieldDescription>
+	</field>
+	<field name="vatValue" class="java.lang.String">
+		<fieldDescription><![CDATA[vatValue]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="1" width="400" height="20" backcolor="#F0F0F0"/>
+				<graphicElement>
+					<pen lineColor="#FEFEFE"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[Wg stawki VAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="20" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[Wartość Netto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="20" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[Wartość VAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="20" backcolor="#DCDCDC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<text><![CDATA[Wartość Brutto]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="400" height="1" forecolor="#FF00FD"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#CCCCCC"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vatLevel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{netValue}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vatValue}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{grossValue}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="20" width="400" height="1" forecolor="#FE01FE"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#C7C7C7"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>
