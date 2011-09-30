@@ -51,6 +51,9 @@ public class ReportManager {
             FileInputStream fis = new FileInputStream( filePath );
             
             ResourceBundle bundle = new PropertyResourceBundle(fis);
+            
+            Locale locale = new Locale( "pl", "PL" );
+            parameters.put("REPORT_LOCALE", locale);
 			parameters.put("REPORT_RESOURCE_BUNDLE", bundle);
 			fullFileName = tempDir.getAbsolutePath()
 					+ System.getProperty("file.separator") + fileName;
