@@ -29,34 +29,34 @@
 					<pen lineColor="#FEFEFE"/>
 				</graphicElement>
 			</rectangle>
-			<staticText>
+			<textField>
 				<reportElement x="0" y="0" width="100" height="20" backcolor="#DCDCDC"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font isBold="true" pdfEncoding="Cp1250"/>
 				</textElement>
-				<text><![CDATA[Wg stawki VAT]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{accordingToVAT}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement x="100" y="0" width="100" height="20" backcolor="#DCDCDC"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font isBold="true" pdfEncoding="Cp1250"/>
 				</textElement>
-				<text><![CDATA[Wartość Netto]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{netPrice}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement x="200" y="0" width="100" height="20" backcolor="#DCDCDC"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font isBold="true" pdfEncoding="Cp1250"/>
 				</textElement>
-				<text><![CDATA[Wartość VAT]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{vatValue}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement x="300" y="0" width="100" height="20" backcolor="#DCDCDC"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font isBold="true" pdfEncoding="Cp1250"/>
 				</textElement>
-				<text><![CDATA[Wartość Brutto]]></text>
-			</staticText>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{grossValue}]]></textFieldExpression>
+			</textField>
 			<line>
 				<reportElement x="0" y="20" width="400" height="1" forecolor="#FF00FD"/>
 				<graphicElement>
