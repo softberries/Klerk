@@ -121,6 +121,11 @@
             id="com.softberries.klerk.preferences.company"
             name="Company">
       </page>
+      <page
+            class="com.softberries.klerk.preferences.WorkspacePreferencePage"
+            id="com.softberries.klerk.preferences.workspace"
+            name="Workspace">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.views">

@@ -122,6 +122,8 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 	private String docTitle = "";
 	private Person docCreatedBy;
 	private Company docBuyer;
+	//skip the validation on the editor start, once the editor starts 
+	private boolean started = false;
 
 
 	public SingleDocumentEditor() {
@@ -159,9 +161,6 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		setInput(input);
 		document = (Document) input.getAdapter(Document.class);
 		setPartName(document.getTitle());
-		for(DocumentItem di : this.document.getItems()){
-			addPropertyChangeListeners(di);
-		}
 		this.document.setVatLevelItems(new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems()));
 		this.document.setSeller(companyFactory.getCompanyFromPreferences());
 		this.document.setCreatedDate(new java.util.Date());
@@ -170,6 +169,9 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		docTitle = this.document.getTitle();
 		docBuyer = this.document.getBuyer();
 		docCreatedBy = this.document.getCreator();
+		for(DocumentItem di : this.document.getItems()){
+			addPropertyChangeListeners(di);
+		}
 	}
 
 	private void addPropertyChangeListeners(DocumentItem di){
@@ -476,6 +478,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		data.colspan = 2;
 		sectionNotes.setLayoutData(data);
 		m_bindingContext = initDataBindings();
+		this.started = true;
 	}
 	private String getToPayText() {
 		StringBuilder builder = new StringBuilder();
@@ -940,7 +943,8 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
 	}
 	protected void enableSave(boolean drt) {
-		if(drt &&
+		if(started && 
+				drt &&
 				docBuyer != null &&
 				!docBuyer.getFullName().isEmpty() &&
 				!docTitle.isEmpty() &&
