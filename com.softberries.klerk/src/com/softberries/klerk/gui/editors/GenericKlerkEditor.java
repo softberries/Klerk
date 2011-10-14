@@ -34,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
 
+import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
 import com.softberries.klerk.gui.helpers.Messages;
@@ -47,6 +48,7 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 	protected SimpleKlerkComparator comparator;
 	protected SimpleKlerkFilter filter;
 	protected Object input;
+	protected Document selectedDocument;
 	
 	private String addBtnTooltipText = Messages.GenericKlerkEditor_add;
 	private String editBtnTooltipText = Messages.GenericKlerkEditor_edit;
@@ -62,6 +64,15 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 			Document d = (Document)dei.getAdapter(Document.class);
 		}
 	}
+
+	protected void openEditor(Document newD, int type) {
+		LogUtil.logInfo("Opening document: " + type);
+		switch(type){
+			case 0: openSingleObjectEditor(new DocumentEditorInput(newD), SinglePurchaseEditor.ID);
+			case 1: openSingleObjectEditor(new DocumentEditorInput(newD), SingleSaleEditor.ID);
+		}
+	}
+	
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {

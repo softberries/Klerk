@@ -132,8 +132,7 @@ public abstract class DocumentsEditor extends GenericKlerkEditor{
 		newD.setCreator(new Person());
 		newD.setBuyer(new Company());
 		newD.setSeller(new Company());
-		openSingleObjectEditor(new DocumentEditorInput(newD), SingleDocumentEditor.ID);
-
+		openEditor(newD, getDocumentType());
 	}
 
 	@Override
@@ -166,7 +165,7 @@ public abstract class DocumentsEditor extends GenericKlerkEditor{
 			MessageDialog.openInformation(shell, "Information", "Nothing to edit");
 			return;
 		}
-		openSingleObjectEditor(new DocumentEditorInput(this.getSelectedDocument()), SingleDocumentEditor.ID);
+		openEditor(this.getSelectedDocument(), getDocumentType());
 	}
 
 	@Override
@@ -178,7 +177,7 @@ public abstract class DocumentsEditor extends GenericKlerkEditor{
 	@Override
 	protected void onDoubleClick(IStructuredSelection selection) {
 		Document d = (Document) selection.getFirstElement();
-		openSingleObjectEditor(new DocumentEditorInput(d), SingleDocumentEditor.ID);
+		openEditor(d, getDocumentType());
 	}
 
 	@Override

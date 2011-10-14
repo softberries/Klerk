@@ -157,13 +157,6 @@
             name="Sales Document Editor">
       </editor>
       <editor
-            class="com.softberries.klerk.gui.editors.SingleDocumentEditor"
-            default="false"
-            icon="icons/png/invoices.png"
-            id="com.softberries.klerk.gui.editors.SingleDocument"
-            name="Single Document">
-      </editor>
-      <editor
             class="com.softberries.klerk.gui.editors.ProductsEditor"
             icon="icons/png/products.png"
             id="com.softberries.klerk.gui.editors.ProductsEditor"
@@ -210,6 +203,20 @@
             icon="icons/png/documents.png"
             id="com.softberries.klerk.gui.editors.PurchaseDocumentsEditor"
             name="Purchases Document Editor">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.SinglePurchaseEditor"
+            default="false"
+            icon="icons/png/invoices.png"
+            id="com.softberries.klerk.gui.editors.SinglePurchaseEditor"
+            name="Single Purchase">
+      </editor>
+      <editor
+            class="com.softberries.klerk.gui.editors.SingleSaleEditor"
+            default="false"
+            icon="icons/png/invoices.png"
+            id="com.softberries.klerk.gui.editors.SingleSaleEditor"
+            name="Single Sale">
       </editor>
    </extension>
    <extension

@@ -99,10 +99,10 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class SingleDocumentEditor extends EditorPart implements PropertyChangeListener{
+public abstract class SingleDocumentEditor extends EditorPart implements PropertyChangeListener{
 	private DataBindingContext m_bindingContext;
 
-	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument"; //$NON-NLS-1$
+//	public static final String ID = "com.softberries.klerk.gui.editors.SingleDocument"; //$NON-NLS-1$
 	
 	
 	private Document document;
@@ -135,6 +135,7 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		DocumentDao dao = new DocumentDao();
 		try {
 			if(this.document.getId() == null){
+				this.document.setDocumentType(getDocumentType());
 				dao.create(this.document);
 				DocumentsModelProvider.INSTANCE.getDocuments(this.document.getDocumentType(), false).add(this.document);
 			}else{
@@ -968,4 +969,11 @@ public class SingleDocumentEditor extends EditorPart implements PropertyChangeLi
 		}
 		return null;
 	}
+
+	/**
+	 * This method is used when saving new document object
+	 * The subclass must specify which document type we are saving
+	 * @return document type constant
+	 */
+	public abstract int getDocumentType();
 }
