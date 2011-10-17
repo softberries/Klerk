@@ -1,6 +1,7 @@
 package com.softberries.klerk.dao;
 
 import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,13 +20,6 @@ import org.apache.commons.dbutils.QueryRunner;
  */
 public abstract class GenericDao<T> {
 	
-	/**
-	 * Default constructor, initializes database {@link filePath}
-	 * with default value
-	 */
-	public GenericDao(){
-		this.filePath = "~/.klerk/klerk";
-	}
 	/**
 	 * Pass specific {@link filePath} to the dao
 	 * @param filePath

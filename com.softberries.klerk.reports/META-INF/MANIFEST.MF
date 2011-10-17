@@ -17,3 +17,5 @@ Export-Package: com.softberries.klerk.reports;
    org.osgi.framework,
    com.softberries.klerk.dao.to"
 Eclipse-BuddyPolicy: app
+Bundle-ClassPath: src/resources/,
+ .

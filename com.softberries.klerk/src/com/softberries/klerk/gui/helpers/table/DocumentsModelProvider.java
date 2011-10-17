@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.softberries.klerk.dao.to.*;
 import com.softberries.klerk.dao.*;
+import com.softberries.klerk.gui.editors.GenericKlerkEditor;
 
 
 public enum DocumentsModelProvider {
@@ -21,7 +22,7 @@ public enum DocumentsModelProvider {
 			return documents;
 		}else{
 			try {
-				documents = new DocumentDao().findAllByType(DOC_TYPE);
+				documents = new DocumentDao(GenericKlerkEditor.DB_FOLDER_PATH).findAllByType(DOC_TYPE);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

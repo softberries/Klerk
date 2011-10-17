@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.softberries.klerk.dao.CompanyDao;
 import com.softberries.klerk.dao.to.Company;
+import com.softberries.klerk.gui.editors.GenericKlerkEditor;
 
 public enum CompaniesModelProvider {
 	INSTANCE;
@@ -13,7 +14,7 @@ public enum CompaniesModelProvider {
 
 	private CompaniesModelProvider() {
 		try {
-			companies = new CompanyDao().findAll();
+			companies = new CompanyDao(GenericKlerkEditor.DB_FOLDER_PATH).findAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

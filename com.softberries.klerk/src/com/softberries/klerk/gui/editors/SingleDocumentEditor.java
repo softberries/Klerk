@@ -132,7 +132,7 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		DocumentDao dao = new DocumentDao();
+		DocumentDao dao = new DocumentDao(GenericKlerkEditor.DB_FOLDER_PATH);
 		try {
 			if(this.document.getId() == null){
 				this.document.setDocumentType(getDocumentType());

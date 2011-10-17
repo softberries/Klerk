@@ -31,10 +31,6 @@ public class PeopleDao extends GenericDao<Person> {
 	public PeopleDao(String databasefilepath) {
 		super(databasefilepath);
 	}
-	//TODO - this constructor should be removed later
-	public PeopleDao(){
-		super();
-	}
 	@Override
 	public List<Person> findAll() throws SQLException {
 		List<Person> people = new ArrayList<Person>();

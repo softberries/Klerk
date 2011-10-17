@@ -16,6 +16,11 @@ import com.softberries.klerk.dao.to.DocumentItem;
 
 public class DocumentItemDao {
 	
+	private String path;
+	
+	public DocumentItemDao(String path){
+		this.path = path;
+	}
 	private static final String SQL_INSERT_DOCUMENTITEM = "INSERT INTO DOCUMENTITEM(priceNetSingle, priceGrossSingle, priceTaxSingle, priceNetAll, priceGrossAll, priceTaxAll, taxValue, quantity, product_id, document_id, product_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_DOCUMENTITEM = "DELETE FROM DOCUMENTITEM WHERE id = ?";
 	private static final String SQL_FIND_DOCUMENTITEM_BY_ID = "SELECT * FROM DOCUMENTITEM WHERE id = ?";
@@ -28,7 +33,7 @@ public class DocumentItemDao {
 		List<DocumentItem> items = new ArrayList<DocumentItem>();
 		ResultSetHandler<List<DocumentItem>> h = new BeanListHandler<DocumentItem>(DocumentItem.class);
 		items = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL, h); 
-		ProductDao pdao = new ProductDao();
+		ProductDao pdao = new ProductDao(path);
 		for(DocumentItem di : items){
 			di.setProduct(pdao.find(di.getProduct_id(), run, conn));
 		}
@@ -38,7 +43,7 @@ public class DocumentItemDao {
 		List<DocumentItem> items = new ArrayList<DocumentItem>();
 		ResultSetHandler<List<DocumentItem>> h = new BeanListHandler<DocumentItem>(DocumentItem.class);
 		items = run.query(conn, SQL_FIND_DOCUMENTITEM_ALL_BY_DOCUMENT_ID, h, docId); 
-		ProductDao pdao = new ProductDao();
+		ProductDao pdao = new ProductDao(this.path);
 		for(DocumentItem di : items){
 			di.setProduct(pdao.find(di.getProduct_id(), run, conn));
 		}
@@ -49,7 +54,7 @@ public class DocumentItemDao {
 		DocumentItem p = null;
 		ResultSetHandler<DocumentItem> h = new BeanHandler<DocumentItem>(DocumentItem.class);
 		p = run.query(conn, SQL_FIND_DOCUMENTITEM_BY_ID, h, id); 
-		ProductDao pdao = new ProductDao();
+		ProductDao pdao = new ProductDao(this.path);
 		p.setProduct(pdao.find(p.getProduct_id(), run, conn));
 		return p;
 	}

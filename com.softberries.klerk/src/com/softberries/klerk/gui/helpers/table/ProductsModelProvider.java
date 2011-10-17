@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.softberries.klerk.dao.ProductDao;
 import com.softberries.klerk.dao.to.Product;
+import com.softberries.klerk.gui.editors.GenericKlerkEditor;
 
 public enum ProductsModelProvider {
 	INSTANCE;
@@ -13,7 +14,7 @@ public enum ProductsModelProvider {
 
 	private ProductsModelProvider() {
 		try {
-			products = new ProductDao().findAll();
+			products = new ProductDao(GenericKlerkEditor.DB_FOLDER_PATH).findAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

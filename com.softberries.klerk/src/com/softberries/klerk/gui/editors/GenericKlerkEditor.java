@@ -1,6 +1,9 @@
 package com.softberries.klerk.gui.editors;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -49,11 +52,13 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 	protected SimpleKlerkFilter filter;
 	protected Object input;
 	protected Document selectedDocument;
+	public static final String DB_FOLDER_PATH = Platform.getInstallLocation().getURL().getPath() + "database" + System.getProperty("file.separator") + "klerk";
 	
 	private String addBtnTooltipText = Messages.GenericKlerkEditor_add;
 	private String editBtnTooltipText = Messages.GenericKlerkEditor_edit;
 	private String deleteBtnTooltipText = Messages.GenericKlerkEditor_delete;
 	private String refreshBtnTooltipText = Messages.GenericKlerkEditor_refresh;
+
 	
 	public GenericKlerkEditor(SimpleKlerkComparator comp, SimpleKlerkFilter filter, Object input){
 		this.comparator = comp;

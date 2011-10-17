@@ -30,11 +30,6 @@ public class DocumentDao extends GenericDao<Document>{
 	public DocumentDao(String databasefilepath) {
 		super(databasefilepath);
 	}
-	//TODO - this constructor should be removed later
-	public DocumentDao(){
-		super();
-	}
-
 	@Override
 	public List<Document> findAll() throws SQLException {
 		List<Document> documents = new ArrayList<Document>();
@@ -43,9 +38,9 @@ public class DocumentDao extends GenericDao<Document>{
 			ResultSetHandler<List<Document>> h = new BeanListHandler<Document>(Document.class);
 			documents = run.query(conn, SQL_FIND_DOCUMENT_ALL, h); 
 			//find items
-			DocumentItemDao idao = new DocumentItemDao();
-			CompanyDao cdao = new CompanyDao();
-			PeopleDao pdao = new PeopleDao();
+			DocumentItemDao idao = new DocumentItemDao(this.filePath);
+			CompanyDao cdao = new CompanyDao(this.filePath);
+			PeopleDao pdao = new PeopleDao(this.filePath);
 			
 			for(Document d : documents){
 				d.setItems(idao.findAllByDocumentId(d.getId(), run, conn));
@@ -66,9 +61,9 @@ public class DocumentDao extends GenericDao<Document>{
 			ResultSetHandler<List<Document>> h = new BeanListHandler<Document>(Document.class);
 			documents = run.query(conn, SQL_FIND_DOCUMENT_BY_TYPE, h, DOC_TYPE); 
 			//find items
-			DocumentItemDao idao = new DocumentItemDao();
-			CompanyDao cdao = new CompanyDao();
-			PeopleDao pdao = new PeopleDao();
+			DocumentItemDao idao = new DocumentItemDao(this.filePath);
+			CompanyDao cdao = new CompanyDao(this.filePath);
+			PeopleDao pdao = new PeopleDao(this.filePath);
 			
 			for(Document d : documents){
 				d.setItems(idao.findAllByDocumentId(d.getId(), run, conn));
@@ -90,9 +85,9 @@ public class DocumentDao extends GenericDao<Document>{
 			ResultSetHandler<Document> h = new BeanHandler<Document>(Document.class);
 			d = run.query(conn, SQL_FIND_DOCUMENT_BY_ID, h, id); 
 			//find items, creator, seller and buyer
-			DocumentItemDao idao = new DocumentItemDao();
-			CompanyDao cdao = new CompanyDao();
-			PeopleDao pdao = new PeopleDao();
+			DocumentItemDao idao = new DocumentItemDao(this.filePath);
+			CompanyDao cdao = new CompanyDao(this.filePath);
+			PeopleDao pdao = new PeopleDao(this.filePath);
 			d.setItems(idao.findAllByDocumentId(d.getId(), run, conn));
 			d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
 			d.setCreator(pdao.find(d.getCreator_id(), run, conn, st, generatedKeys));
@@ -131,7 +126,7 @@ public class DocumentDao extends GenericDao<Document>{
 	            throw new SQLException("Creating document failed, no generated key obtained.");
 	        }
 	      //if the document creation was successful, add document items
-	        DocumentItemDao idao = new DocumentItemDao();
+	        DocumentItemDao idao = new DocumentItemDao(this.filePath);
 	        for(DocumentItem di : d.getItems()){
 	        	di.setDocument_id(d.getId());
 	        	idao.create(di, run, conn, generatedKeys);
@@ -170,7 +165,7 @@ public class DocumentDao extends GenericDao<Document>{
 	        }
 	        
 	        //delete unused items
-	        DocumentItemDao idao = new DocumentItemDao();
+	        DocumentItemDao idao = new DocumentItemDao(this.filePath);
 			List<DocumentItem> toDel = new ArrayList<DocumentItem>();
 			if(d.getId() != null){
 				List<DocumentItem> existingItems = idao.findAllByDocumentId(d.getId(), run, conn);
@@ -223,7 +218,7 @@ public class DocumentDao extends GenericDao<Document>{
 	public void delete(Long id) throws SQLException {
 		//delete items
 		Document toDel = find(id);
-		DocumentItemDao iDao = new DocumentItemDao();
+		DocumentItemDao iDao = new DocumentItemDao(this.filePath);
 		try {
 			init();
 			for(DocumentItem di : toDel.getItems()){

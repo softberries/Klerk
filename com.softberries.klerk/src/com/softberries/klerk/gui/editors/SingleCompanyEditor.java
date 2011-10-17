@@ -82,7 +82,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		CompanyDao dao = new CompanyDao();
+		CompanyDao dao = new CompanyDao(GenericKlerkEditor.DB_FOLDER_PATH);
 		try {
 			if (company.getId() == null) {
 				dao.create(company);

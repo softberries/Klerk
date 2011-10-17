@@ -115,7 +115,7 @@ public class CompaniesEditor extends GenericKlerkEditor {
 		}
 		boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete this company?");
 		if(confirmed){
-			CompanyDao dao = new CompanyDao();
+			CompanyDao dao = new CompanyDao(DB_FOLDER_PATH);
 			try {
 				dao.delete(this.getSelectedCompany().getId());
 				closeOpenedEditorForThisItem(new CompanyEditorInput(this.getSelectedCompany()));

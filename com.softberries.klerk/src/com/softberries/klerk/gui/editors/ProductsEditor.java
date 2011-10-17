@@ -91,7 +91,7 @@ public class ProductsEditor extends GenericKlerkEditor{
 		}
 		boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete this product?");
 		if(confirmed){
-			ProductDao dao = new ProductDao();
+			ProductDao dao = new ProductDao(DB_FOLDER_PATH);
 			try {
 				dao.delete(this.getSelectedProduct().getId());
 				closeOpenedEditorForThisItem(new ProductEditorInput(this.getSelectedProduct()));

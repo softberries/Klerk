@@ -79,7 +79,7 @@ ISelectionListener{
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		PeopleDao dao = new PeopleDao();
+		PeopleDao dao = new PeopleDao(GenericKlerkEditor.DB_FOLDER_PATH);
 		person.setFirstName(firstName);
 		person.setLastName(lastName);
 		person.setEmail(email);

@@ -28,10 +28,6 @@ public class CompanyDao extends GenericDao<Company> {
 	public CompanyDao(String databasefilepath) {
 		super(databasefilepath);
 	}
-	//TODO - this constructor should be removed later
-	public CompanyDao(){
-		super();
-	}
 	@Override
 	public List<Company> findAll() throws SQLException {
 		List<Company> companies = new ArrayList<Company>();

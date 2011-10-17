@@ -53,7 +53,7 @@ public class PeopleEditor extends GenericKlerkEditor{
 		}
 		boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete this person?");
 		if(confirmed){
-			PeopleDao dao = new PeopleDao();
+			PeopleDao dao = new PeopleDao(DB_FOLDER_PATH);
 			try {
 				dao.delete(this.getSelectedPerson().getId());
 				closeOpenedEditorForThisItem(new PersonEditorInput(this.getSelectedPerson()));

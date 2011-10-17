@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -35,18 +36,16 @@ public class ReportManager {
 		String fullFileName = null;
 		DocumentWrapper dw = docList.get(0);
 		System.out.println("DOC title: " + dw.getDocument().getTitle());
+	
 		try {
+			URL url = Platform.getInstallLocation().getURL();
+			String path = url.getPath()+  "reports" + System.getProperty("file.separator");
+			System.out.println("PATH from installation folder: " + path);
 			Map parameters = new HashMap();
-			parameters
-					.put("SUBREPORT_DIR",
-							tempDir.getAbsolutePath()
-									+ System.getProperty("file.separator")
-									+ "reports/");
-			String filePath = tempDir.getAbsolutePath()
-					+ System.getProperty("file.separator")
-					+ "reports"
-					+ System.getProperty("file.separator")
-					+ "invoice_items_locale_" + Locale.getDefault() + ".properties";
+
+			parameters.put("SUBREPORT_DIR", path);
+
+			String filePath = path + "invoice_items_locale_" + Locale.getDefault() + ".properties";
 			System.out.println("PATH: " + filePath);
             FileInputStream fis = new FileInputStream( filePath );
             
@@ -74,7 +73,6 @@ public class ReportManager {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-
+		} 
 	}
 }

@@ -25,10 +25,6 @@ public class ProductDao extends GenericDao<Product>{
 	public ProductDao(String databasefilepath) {
 		super(databasefilepath);
 	}
-	//TODO - this constructor should be removed later
-	public ProductDao(){
-		super();
-	}
 	
 	@Override
 	public List<Product> findAll() throws SQLException {

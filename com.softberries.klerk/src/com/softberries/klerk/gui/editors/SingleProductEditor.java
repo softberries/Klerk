@@ -94,7 +94,7 @@ public class SingleProductEditor extends SingleObjectEditor {
 	 */
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		ProductDao dao = new ProductDao();
+		ProductDao dao = new ProductDao(GenericKlerkEditor.DB_FOLDER_PATH);
 		product.setCode(prepareProductCode(product.getCode().toUpperCase()));
 		try {
 			//if {@value product} doesn't have id set it means that its a new product

@@ -144,7 +144,7 @@ public abstract class DocumentsEditor extends GenericKlerkEditor{
 		}
 		boolean confirmed = MessageDialog.openConfirm(shell, "Confirm", "Are you sure you want to delete this document?");
 		if(confirmed){
-			DocumentDao dao = new DocumentDao();
+			DocumentDao dao = new DocumentDao(DB_FOLDER_PATH);
 			try {
 				dao.delete(this.getSelectedDocument().getId());
 				closeOpenedEditorForThisItem(new DocumentEditorInput(this.getSelectedDocument()));

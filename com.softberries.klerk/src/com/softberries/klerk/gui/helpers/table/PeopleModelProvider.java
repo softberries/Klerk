@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.softberries.klerk.dao.PeopleDao;
 import com.softberries.klerk.dao.to.Person;
+import com.softberries.klerk.gui.editors.GenericKlerkEditor;
 
 public enum PeopleModelProvider  {
 	INSTANCE;
@@ -13,7 +14,7 @@ public enum PeopleModelProvider  {
 
 	private PeopleModelProvider() {
 		try {
-			people = new PeopleDao().findAll();
+			people = new PeopleDao(GenericKlerkEditor.DB_FOLDER_PATH).findAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
