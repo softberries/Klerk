@@ -207,14 +207,14 @@
       <editor
             class="com.softberries.klerk.gui.editors.SinglePurchaseEditor"
             default="false"
-            icon="icons/png/invoices.png"
+            icon="icons/png/invoices_purchases.png"
             id="com.softberries.klerk.gui.editors.SinglePurchaseEditor"
             name="Single Purchase">
       </editor>
       <editor
             class="com.softberries.klerk.gui.editors.SingleSaleEditor"
             default="false"
-            icon="icons/png/invoices.png"
+            icon="icons/png/invoices_sales.png"
             id="com.softberries.klerk.gui.editors.SingleSaleEditor"
             name="Single Sale">
       </editor>
