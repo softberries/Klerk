@@ -74,7 +74,9 @@ public abstract class GenericKlerkEditor extends EditorPart implements IDoubleCl
 		LogUtil.logInfo("Opening document: " + type);
 		switch(type){
 			case 0: openSingleObjectEditor(new DocumentEditorInput(newD), SinglePurchaseEditor.ID);
+			break;
 			case 1: openSingleObjectEditor(new DocumentEditorInput(newD), SingleSaleEditor.ID);
+			break;
 		}
 	}
 	

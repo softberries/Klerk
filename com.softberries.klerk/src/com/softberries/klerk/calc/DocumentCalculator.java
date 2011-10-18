@@ -19,6 +19,9 @@ public class DocumentCalculator {
 	private static final String PRICE_ALL_GROSS = "GROSS";
 
 	public DocumentItem calculateByQuantity(DocumentItem di, Object value){
+		if(!isANumber(value.toString())){
+			return di;
+		}
 		try{
 			//get new quantity value
 			Money quantity = new Money(new BigDecimal(value.toString()).setScale(2));
@@ -45,6 +48,9 @@ public class DocumentCalculator {
 	}
 
 	public DocumentItem calculateByBasePrice(DocumentItem di, Object value) {
+		if(!isANumber(value.toString())){
+			return di;
+		}
 		Money priceNet = new Money(new BigDecimal(value.toString()).setScale(2));
 		di.setPriceNetSingle(priceNet.getAmount().setScale(2).toPlainString());
 		//no exception here? get the rest of the values
@@ -66,6 +72,9 @@ public class DocumentCalculator {
 	}
 
 	public DocumentItem calculateByPriceNetAll(DocumentItem di, Object value) {
+		if(!isANumber(value.toString())){
+			return di;
+		}
 		Money priceNetAll = new Money(new BigDecimal(value.toString()).setScale(2));
 		di.setPriceNetAll(priceNetAll.getAmount().setScale(2).toPlainString());
 		//no exception here? get the rest of the values
@@ -86,6 +95,9 @@ public class DocumentCalculator {
 		return di;
 	}
 	public DocumentItem calculateByPriceGrossAll(DocumentItem di, Object value) {
+		if(!isANumber(value.toString())){
+			return di;
+		}
 		Money priceGrossAll = new Money(new BigDecimal(value.toString()).setScale(2));
 		di.setPriceGrossAll(priceGrossAll.getAmount().setScale(2).toPlainString());
 		
@@ -111,6 +123,9 @@ public class DocumentCalculator {
 		return di;
 	}
 	public DocumentItem calculateByTaxPercent(DocumentItem di, Object value) {
+		if(!isANumber(value.toString())){
+			return di;
+		}
 		Money taxPercentFull = new Money(new BigDecimal(value.toString()).setScale(2));
 		di.setTaxValue(taxPercentFull.getAmount().setScale(2).toPlainString());
 		Money taxPercent = new Money(new BigDecimal(di.getTaxValue()).setScale(2)).div(100.00);
@@ -192,4 +207,13 @@ public class DocumentCalculator {
 		}
 		return result;
 	}
+	private boolean isANumber(String s) {
+	    try { 
+	        BigDecimal a = new BigDecimal(s); 
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+
 }
