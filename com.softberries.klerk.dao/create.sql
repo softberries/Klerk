@@ -64,8 +64,8 @@ CREATE  TABLE IF NOT EXISTS `document` (
   `documentType` BIGINT  NOT NULL ,
   `creator_id` BIGINT  NOT NULL ,
   `buyer_id` BIGINT  NOT NULL ,
-  FOREIGN KEY (`creator_id`) REFERENCES `person`(`id`),
-  FOREIGN KEY (`buyer_id`) REFERENCES `company`(`id`) )
+  `seller_id` BIGINT  NOT NULL ,
+  FOREIGN KEY (`creator_id`) REFERENCES `person`(`id`))
 ;
 
 

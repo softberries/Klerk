@@ -84,7 +84,7 @@ public class SingleCompanyEditor extends SingleObjectEditor implements
 	public void doSave(IProgressMonitor monitor) {
 		CompanyDao dao = new CompanyDao(GenericKlerkEditor.DB_FOLDER_PATH);
 		try {
-			if (company.getId() == null) {
+			if (company.getId() == null || company.getId().longValue() == 0) {
 				dao.create(company);
 				CompaniesModelProvider.INSTANCE.getCompanies().add(company);
 			} else {

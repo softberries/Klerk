@@ -113,7 +113,9 @@ public abstract class DocumentsEditor extends GenericKlerkEditor{
 			@Override
 			public void update(ViewerCell cell) {
 				String notes = ((Document) cell.getElement()).getNotes();
-				notes = notes.replaceAll("\\r\\n|\\r|\\n", " ");
+				if(notes != null){
+					notes = notes.replaceAll("\\r\\n|\\r|\\n", " ");
+				}
 				cell.setText(notes);
 			}
 		});
@@ -132,6 +134,7 @@ public abstract class DocumentsEditor extends GenericKlerkEditor{
 		newD.setCreator(new Person());
 		newD.setBuyer(new Company());
 		newD.setSeller(new Company());
+		newD.setDocumentType(getDocumentType());
 		openEditor(newD, getDocumentType());
 	}
 

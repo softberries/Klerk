@@ -26,6 +26,7 @@ public class Document implements Serializable{
 	
 	public Document(){
 		buyer = new Company();
+		seller = new Company();
 	}
 	
 	

@@ -123,6 +123,7 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 	private String docTitle = "";
 	private Person docCreatedBy;
 	private Company docBuyer;
+	private Company docSeller;
 	//skip the validation on the editor start, once the editor starts 
 	private boolean started = false;
 
@@ -164,12 +165,18 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		document = (Document) input.getAdapter(Document.class);
 		setPartName(document.getTitle());
 		this.document.setVatLevelItems(new DocumentCalculator().getSummaryTaxLevelItems(this.document.getItems()));
-		this.document.setSeller(companyFactory.getCompanyFromPreferences());
+		Company c = companyFactory.getCompanyFromPreferences();
+		if(this.document.getDocumentType() == IDocumentType.INVOICE_PURCHASE){
+			this.document.setBuyer(c);
+		}else{
+			this.document.setSeller(c);
+		}
 		this.document.setCreatedDate(new java.util.Date());
 		this.document.setDueDate(new java.util.Date());
 		this.document.setTransactionDate(new java.util.Date());
 		docTitle = this.document.getTitle();
 		docBuyer = this.document.getBuyer();
+		docSeller = this.document.getSeller();
 		docCreatedBy = this.document.getCreator();
 		for(DocumentItem di : this.document.getItems()){
 			addPropertyChangeListeners(di);
@@ -277,6 +284,8 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		sellerTxt.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
+				docSeller = getCurrentContractor(sellerTxt.getText());
+				document.setSeller(docSeller);
 				enableSave(true);
 			}
 		});
@@ -311,7 +320,7 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		buyerTxt.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				docBuyer = getCurrentBuyer(buyerTxt.getText());
+				docBuyer = getCurrentContractor(buyerTxt.getText());
 				document.setBuyer(docBuyer);
 				enableSave(true);
 			}
@@ -499,6 +508,8 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		}else{ //sale document
 			sellerTxt.setEnabled(false);
 			sellerTxt.setEditable(false);
+			buyerTxt.setEnabled(true);
+			buyerTxt.setEditable(true);
 		}
 		
 	}
@@ -950,9 +961,12 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 	protected DataBindingContext initDataBindings() {
 		DataBindingContext bindingContext = new DataBindingContext();
 		//
-		IObservableValue sellerTxtObserveTextObserveWidget = SWTObservables.observeText(sellerTxt, SWT.Modify);
-		IObservableValue documentSellerObserveValue = PojoObservables.observeValue(document, "seller");
-		bindingContext.bindValue(sellerTxtObserveTextObserveWidget, documentSellerObserveValue, null, null);
+//		IObservableValue sellerTxtObserveTextObserveWidget = SWTObservables.observeText(sellerTxt, SWT.Modify);
+//		IObservableValue buyerTxtObserveTextObserveWidget = SWTObservables.observeText(buyerTxt, SWT.Modify);
+//		IObservableValue documentSellerObserveValue = PojoObservables.observeValue(document, "seller");
+//		IObservableValue documentBuyerObserveValue = PojoObservables.observeValue(document, "buyer");
+//		bindingContext.bindValue(sellerTxtObserveTextObserveWidget, documentSellerObserveValue, null, null);
+//		bindingContext.bindValue(buyerTxtObserveTextObserveWidget, documentBuyerObserveValue, null, null);
 		//
 		return bindingContext;
 	}
@@ -983,7 +997,7 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 			firePropertyChange(ISaveablePart.PROP_DIRTY);
 		}
 	}
-	private Company getCurrentBuyer(String fullName) {
+	private Company getCurrentContractor(String fullName) {
 		List<Company> comps = CompaniesModelProvider.INSTANCE.getCompanies();
 		for(Company c : comps){
 			if(c.getFullName().equals(fullName)){

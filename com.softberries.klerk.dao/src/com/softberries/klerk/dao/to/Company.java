@@ -24,6 +24,7 @@ public class Company  implements Serializable{
 	public Company(){
 		//this prevents many NullPointerExceptions in the future
 		this.addresses = new ArrayList<Address>();
+		this.id = new Long(0);
 	}
 	public Long getId() {
 		return id;
@@ -134,9 +135,6 @@ public class Company  implements Serializable{
 		this.address = address;
 	}
 	public String getFullName() {
-		if(this.getName() == null || this.getVatid() == null){
-			return "";
-		}
 		return this.toString();
 	}
 	public void setFullName(String fullName) {
@@ -144,6 +142,9 @@ public class Company  implements Serializable{
 	}
 	@Override
 	public String toString() {
+		if(this.getName() == null || this.getVatid() == null){
+			return "";
+		}
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getName());
 		builder.append(" Vat Id: ");

@@ -14,18 +14,19 @@ import com.softberries.klerk.dao.to.Address;
 import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
+import com.softberries.klerk.dao.to.IDocumentType;
 import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 
 public class DocumentDao extends GenericDao<Document>{
 
-	private static final String SQL_INSERT_DOCUMENT = "INSERT INTO DOCUMENT(title, notes, createdDate, transactionDate, dueDate, placeCreated, documentType, creator_id, buyer_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_INSERT_DOCUMENT = "INSERT INTO DOCUMENT(title, notes, createdDate, transactionDate, dueDate, placeCreated, documentType, creator_id, buyer_id, seller_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_DELETE_DOCUMENT = "DELETE FROM DOCUMENT WHERE id = ?";
 	private static final String SQL_FIND_DOCUMENT_BY_ID = "SELECT * FROM DOCUMENT WHERE id = ?";
 	private static final String SQL_FIND_DOCUMENT_BY_TYPE = "SELECT * FROM DOCUMENT WHERE documentType = ?";
 	private static final String SQL_DELETE_ALL_DOCUMENTS = "DELETE FROM DOCUMENT WHERE id > 0";
 	private static final String SQL_FIND_DOCUMENT_ALL = "SELECT * FROM DOCUMENT";
-	private static final String SQL_UPDATE_DOCUMENT = "UPDATE DOCUMENT SET title = ?, notes = ?, createdDate = ?, transactionDate = ?, dueDate = ?, placeCreated = ?, documentType = ?, creator_id = ?, buyer_id = ? WHERE id = ?";
+	private static final String SQL_UPDATE_DOCUMENT = "UPDATE DOCUMENT SET title = ?, notes = ?, createdDate = ?, transactionDate = ?, dueDate = ?, placeCreated = ?, documentType = ?, creator_id = ?, buyer_id = ?, seller_id = ? WHERE id = ?";
 	
 	public DocumentDao(String databasefilepath) {
 		super(databasefilepath);
@@ -44,7 +45,11 @@ public class DocumentDao extends GenericDao<Document>{
 			
 			for(Document d : documents){
 				d.setItems(idao.findAllByDocumentId(d.getId(), run, conn));
-				d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
+				if(d.getDocumentType() == IDocumentType.INVOICE_PURCHASE){
+					d.setSeller(cdao.find(d.getSeller_id(), run, conn, st, generatedKeys));
+				}else{
+					d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
+				}
 				d.setCreator(pdao.find(d.getCreator_id(), run, conn, st, generatedKeys));
 			}
 		} catch (ClassNotFoundException e) {
@@ -67,7 +72,11 @@ public class DocumentDao extends GenericDao<Document>{
 			
 			for(Document d : documents){
 				d.setItems(idao.findAllByDocumentId(d.getId(), run, conn));
-				d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
+				if(d.getDocumentType() == IDocumentType.INVOICE_PURCHASE){
+					d.setSeller(cdao.find(d.getSeller_id(), run, conn, st, generatedKeys));
+				}else{
+					d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
+				}
 				d.setCreator(pdao.find(d.getCreator_id(), run, conn, st, generatedKeys));
 			}
 		} catch (ClassNotFoundException e) {
@@ -89,7 +98,11 @@ public class DocumentDao extends GenericDao<Document>{
 			CompanyDao cdao = new CompanyDao(this.filePath);
 			PeopleDao pdao = new PeopleDao(this.filePath);
 			d.setItems(idao.findAllByDocumentId(d.getId(), run, conn));
-			d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
+			if(d.getDocumentType() == IDocumentType.INVOICE_PURCHASE){
+				d.setSeller(cdao.find(d.getSeller_id(), run, conn, st, generatedKeys));
+			}else{
+				d.setBuyer(cdao.find(d.getBuyer_id(), run, conn, st, generatedKeys));
+			}
 			d.setCreator(pdao.find(d.getCreator_id(), run, conn, st, generatedKeys));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -113,6 +126,7 @@ public class DocumentDao extends GenericDao<Document>{
 	        st.setInt(7, d.getDocumentType());
 	        st.setLong(8, d.getCreator().getId());
 	        st.setLong(9, d.getBuyer().getId());
+	        st.setLong(10, d.getSeller().getId());
 	        // run the query
 	        int i = st.executeUpdate();    
 	        System.out.println("i: " + i);
@@ -156,7 +170,8 @@ public class DocumentDao extends GenericDao<Document>{
 	        st.setInt(7, d.getDocumentType());
 	        st.setLong(8, d.getCreator().getId());
 	        st.setLong(9, d.getBuyer().getId());
-	        st.setLong(10, d.getId());
+	        st.setLong(10, d.getSeller().getId());
+	        st.setLong(11, d.getId());
 	        // run the query
 	        int i = st.executeUpdate();    
 	        System.out.println("i: " + i);
