@@ -71,8 +71,10 @@ public class DocumentCalculator {
 		//no exception here? get the rest of the values
 		Money quantity = new Money(new BigDecimal(di.getQuantity()).setScale(2));
 		Money taxPercent = new Money(new BigDecimal(di.getTaxValue()).setScale(2)).div(100.00);
-		
-		Money priceNet = new Money(new BigDecimal(priceNetAll.getAmount().setScale(2).toPlainString()).setScale(2)).div(quantity.getAmount().doubleValue());
+		Money priceNet = new Money(new BigDecimal("0"));
+		if(quantity.getAmount().doubleValue() > 0){
+			priceNet = new Money(new BigDecimal(priceNetAll.getAmount().setScale(2).toPlainString()).setScale(2)).div(quantity.getAmount().doubleValue());
+		}
 		Money grossSingleCalc = priceNet.times(taxPercent.getAmount().doubleValue()).plus(priceNet);
 		Money priceGrossAllCalc = priceNetAll.times(taxPercent.getAmount().doubleValue()).plus(priceNetAll);
 		Money taxValueAll = priceGrossAllCalc.minus(priceNetAll);
@@ -90,7 +92,10 @@ public class DocumentCalculator {
 		//no exception here? get the rest of the values
 		Money quantity = new Money(new BigDecimal(di.getQuantity()).setScale(2));
 		Money taxPercent = new Money(new BigDecimal(di.getTaxValue()).setScale(2)).div(100.00);
-		Money grossSingleCalc = new Money(new BigDecimal(priceGrossAll.getAmount().setScale(2).toPlainString()).setScale(2)).div(quantity.getAmount().setScale(2).doubleValue());
+		Money grossSingleCalc = new Money(new BigDecimal("0"));
+		if(quantity.getAmount().setScale(2).doubleValue() > 0){
+			grossSingleCalc = new Money(new BigDecimal(priceGrossAll.getAmount().setScale(2).toPlainString()).setScale(2)).div(quantity.getAmount().setScale(2).doubleValue());
+		}
 		System.out.println("Gross single: " + grossSingleCalc.getAmount().toPlainString());
 		Money priceNetSingle = grossSingleCalc.minus(grossSingleCalc.times(taxPercent.getAmount().setScale(2).doubleValue()));
 		System.out.println("Net single: " + priceNetSingle.getAmount().toPlainString());

@@ -208,7 +208,8 @@ public class DocumentDao extends GenericDao<Document>{
 	private String printAllDIs(List<DocumentItem> items) {
 		StringBuilder builder = new StringBuilder();
 		for(DocumentItem di : items){
-			String temp = "di id: " + di.getId().longValue() + ", di docid: " + di.getDocument_id().longValue();
+			Long diId = di.getId();
+			String temp = "di id: " + diId + ", di docid: " + di.getDocument_id().longValue();
 			builder.append(temp);
 			builder.append("\n");
 		}

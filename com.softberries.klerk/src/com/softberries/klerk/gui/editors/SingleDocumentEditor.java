@@ -364,6 +364,8 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		sectionGeneral.setClient(sectionGeneralClient);
 		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
+		data.grabVertical = true;
+		data.valign = TableWrapData.FILL;
 		sectionGeneral.setLayoutData(data);
 		// invoice items section
 		Section sectionItems = toolkit.createSection(form.getBody(),
@@ -387,6 +389,8 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		sectionItems.setClient(sectionItemsClient);
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
+		data.grabVertical = true;
+		data.valign = TableWrapData.FILL;
 		sectionItems.setLayoutData(data);
 		
 		
@@ -537,7 +541,7 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, itemsTableViewer);
 		final Table table = itemsTableViewer.getTable();
-		TableWrapData twd_table = new TableWrapData(TableWrapData.LEFT, TableWrapData.FILL_GRAB, 1, 1);
+		TableWrapData twd_table = new TableWrapData(TableWrapData.FILL, TableWrapData.FILL_GRAB, 1, 1);
 		twd_table.heightHint = 72;
 		table.setLayoutData(twd_table);
 		table.setHeaderVisible(true);
@@ -821,6 +825,7 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 	                document.getItems().add(it);
 	                itemsTableViewer.refresh();
         			refreshSummaryToPayLbl();
+        			form.reflow(true);
 	            }
 	        });
 			return button;
