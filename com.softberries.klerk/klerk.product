@@ -20,7 +20,9 @@
 
    <splash
       location="com.softberries.klerk"
-      startupProgressRect="5,275,445,15" />
+      startupProgressRect="5,275,445,15"
+      startupMessageRect="7,252,445,20"
+      startupForegroundColor="FFFFFF" />
    <launcher name="klerk">
       <solaris/>
       <win useIco="false">
@@ -32,7 +34,6 @@
 
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="com.ibm.icu"/>
