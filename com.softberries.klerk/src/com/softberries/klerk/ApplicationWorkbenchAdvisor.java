@@ -6,6 +6,11 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.softberries.klerk.gui.perspectives.MainPerspective;
 
+/**
+ * 
+ * @author krzysztof.grajek@softberries.com
+ *
+ */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 

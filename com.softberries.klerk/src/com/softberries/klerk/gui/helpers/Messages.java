@@ -27,6 +27,9 @@ public class Messages extends NLS {
 	public static String DatabasePreferencePage_database_password;
 	public static String DatabasePreferencePage_database_url;
 	public static String DatabasePreferencePage_database_username;
+	public static String DocumentCalculator_GROSS;
+	public static String DocumentCalculator_NET;
+	public static String DocumentCalculator_TaxLevel;
 	public static String DocumentsEditor_creator;
 	public static String DocumentsEditor_date_created;
 	public static String DocumentsEditor_due_date;

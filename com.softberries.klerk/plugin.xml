@@ -73,11 +73,6 @@
             name="Products">
       </command>
       <command
-            defaultHandler="com.softberries.klerk.commands.AddProductCommand"
-            id="com.softberries.klerk.commands.AddProductHandler"
-            name="Add Product">
-      </command>
-      <command
             defaultHandler="com.softberries.klerk.commands.OpenPeopleCommand"
             id="com.softberries.klerk.commands.openadministration_people"
             name="Open People Editor">

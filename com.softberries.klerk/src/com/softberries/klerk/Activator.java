@@ -18,6 +18,7 @@ import com.softberries.klerk.gui.helpers.IImageKeys;
 
 /**
  * The activator class controls the plug-in life cycle
+ * @author krzysztof.grajek@softberries.com
  */
 public class Activator extends AbstractUIPlugin {
 
@@ -77,6 +78,8 @@ public class Activator extends AbstractUIPlugin {
 	}
 	/**
 	 * Add some images to the {@link ImageRegistry}
+	 * Image handles specified below are mainly used for
+	 * category tree creation.
 	 */
 	@Override
     protected void initializeImageRegistry(ImageRegistry registry) {

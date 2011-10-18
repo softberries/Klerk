@@ -9,19 +9,26 @@ import java.util.List;
 
 import net.sf.swtaddons.autocomplete.text.AutocompleteTextInput;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -59,10 +66,10 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.softberries.klerk.Activator;
 import com.softberries.klerk.LogUtil;
-import com.softberries.klerk.RunJob1;
 import com.softberries.klerk.calc.DocumentCalculator;
 import com.softberries.klerk.dao.DocumentDao;
 import com.softberries.klerk.dao.to.Company;
@@ -89,16 +96,6 @@ import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemSelect
 import com.softberries.klerk.gui.helpers.table.editingsupport.DocumentItemTaxPercentES;
 import com.softberries.klerk.gui.validators.FieldNotEmptyValidator;
 import com.softberries.klerk.reports.ReportManager;
-
-import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public abstract class SingleDocumentEditor extends EditorPart implements PropertyChangeListener{
 	private DataBindingContext m_bindingContext;

@@ -12,6 +12,11 @@ import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
+/**
+ * 
+ * @author krzysztof.grajek@softberries.com
+ *
+ */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private MenuManager showViewMenuMgr;

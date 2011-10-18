@@ -9,18 +9,16 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * Handles 'Exit' menu action
+ * 
+ * @author krzysztof.grajek@softberries.com
+ *
+ */
 public class ExitHandler implements IHandler {
-	private static final String PERSISTENCE_UNIT = "com.softberries.klerk.pu";
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
-		Map<String, Object> props = new HashMap<String,Object>();
-		props.put("eclipselink.ddl-generation", "create-tables");
-		props.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
-		props.put("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/klerk");
-		props.put("javax.persistence.jdbc.user", "root");
-		props.put("javax.persistence.jdbc.password", "adminadmin");
-		
 		HandlerUtil.getActiveWorkbenchWindow(event).close();
 		return null;
 	}

@@ -12,15 +12,18 @@ import org.eclipse.ui.internal.part.NullEditorInput;
 
 import com.softberries.klerk.gui.editors.CompaniesEditor;
 
+/**
+ * 
+ * @author krzysztof.grajek@softberries.com
+ *
+ */
 public class OpenCompaniesCommand implements IHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		System.out.println("open document");
 		 IWorkbenchPage page;
 		 IEditorInput input = new NullEditorInput();
 		 page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage ();
-		 // else if in ViewPart // page = getSite ().getPage ();
 		 try {
 			page.openEditor(input, CompaniesEditor.ID);
 		} catch (PartInitException e) {
