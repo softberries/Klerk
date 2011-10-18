@@ -69,6 +69,7 @@ import com.softberries.klerk.dao.to.Company;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.dao.to.DocumentItem;
 import com.softberries.klerk.dao.to.DocumentWrapper;
+import com.softberries.klerk.dao.to.IDocumentType;
 import com.softberries.klerk.dao.to.Person;
 import com.softberries.klerk.dao.to.Product;
 import com.softberries.klerk.dao.to.VatLevelItem;
@@ -265,8 +266,10 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		twd_sellerLbl.indent = 55;
 		sellerLbl.setLayoutData(twd_sellerLbl);
 		sellerTxt = toolkit.createText(sectionGeneralClient, "", SWT.BORDER); //$NON-NLS-1$
-		sellerTxt.setEnabled(false);
-		sellerTxt.setEditable(false);
+		
+		bindValidator(sellerTxt, document.getSeller(), "fullName", new FieldNotEmptyValidator("This field cannot be empty!")); //$NON-NLS-1$
+		new AutocompleteTextInput(sellerTxt, getCompanyNames(CompaniesModelProvider.INSTANCE.getCompanies()));
+		
 		TableWrapData twd_sellerTxt = new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP, 1, 1);
 		twd_sellerTxt.indent = 5;
 		twd_sellerTxt.align = TableWrapData.FILL;
@@ -393,7 +396,6 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		data.valign = TableWrapData.FILL;
 		sectionItems.setLayoutData(data);
 		
-		
 		// section summary
 		Section sectionSummary = toolkit.createSection(form.getBody(),
 				Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
@@ -482,9 +484,25 @@ public abstract class SingleDocumentEditor extends EditorPart implements Propert
 		data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.colspan = 2;
 		sectionNotes.setLayoutData(data);
+		setDocumentSpecificFieldState();
 		m_bindingContext = initDataBindings();
 		this.started = true;
 	}
+	private void setDocumentSpecificFieldState() {
+		int type = this.document.getDocumentType();
+		if(type == IDocumentType.INVOICE_PURCHASE){
+			sellerTxt.setEnabled(true);
+			sellerTxt.setEditable(true);
+			buyerTxt.setEnabled(false);
+			buyerTxt.setEditable(false);
+		
+		}else{ //sale document
+			sellerTxt.setEnabled(false);
+			sellerTxt.setEditable(false);
+		}
+		
+	}
+
 	private String getToPayText() {
 		StringBuilder builder = new StringBuilder();
 		DocumentCalculator calc = new DocumentCalculator();

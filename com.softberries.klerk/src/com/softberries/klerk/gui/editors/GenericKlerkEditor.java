@@ -1,7 +1,5 @@
 package com.softberries.klerk.gui.editors;
 
-import java.net.URL;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -36,7 +34,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wb.swt.ResourceManager;
-
 import com.softberries.klerk.LogUtil;
 import com.softberries.klerk.dao.to.Document;
 import com.softberries.klerk.gui.editors.input.DocumentEditorInput;
